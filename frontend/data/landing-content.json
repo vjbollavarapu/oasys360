@@ -1,0 +1,428 @@
+{
+  "hero": {
+    "title": "The Future of Business Finance is Here",
+    "subtitle": "AI-powered accounting, Web3 integration, and global compliance in one unified platform. Join the revolution.",
+    "cta": {
+      "primary": "Join Waitlist",
+      "secondary": "Watch Demo"
+    },
+    "stats": {
+      "users": 15420,
+      "countries": 45,
+      "accuracy": "99.5%"
+    }
+  },
+  "features": {
+    "title": "Revolutionary Features for Modern Business",
+    "subtitle": "From AI-powered insights to Web3 integration and country-specific compliance",
+    "items": [
+      {
+        "id": "ai-accounting",
+        "title": "AI-Powered Accounting",
+        "icon": "brain",
+        "color": "blue",
+        "features": [
+          "Smart Document Processing: Automatically extract data from invoices, receipts, and bank statements with 99.5% accuracy",
+          "Predictive Analytics: Forecast cash flow, identify trends, and predict potential financial risks",
+          "Automated Reconciliation: Match transactions automatically and flag discrepancies in real-time",
+          "Intelligent Categorization: AI learns your business patterns and categorizes transactions automatically",
+          "Fraud Detection: Advanced algorithms detect unusual patterns and potential fraudulent activities"
+        ]
+      },
+      {
+        "id": "web3-integration",
+        "title": "Web3 & Blockchain Integration",
+        "icon": "zap",
+        "color": "emerald",
+        "features": [
+          "Cryptocurrency Accounting: Track and manage crypto assets with real-time market valuations",
+          "Smart Contract Integration: Automate payments and contracts using blockchain technology",
+          "DeFi Yield Tracking: Monitor decentralized finance investments and yields automatically",
+          "NFT Asset Management: Track and value non-fungible tokens for business assets",
+          "Cross-Chain Analytics: Unified view across multiple blockchain networks"
+        ]
+      },
+      {
+        "id": "e-invoicing",
+        "title": "E-Invoicing & Global Compliance",
+        "icon": "file-text",
+        "color": "orange",
+        "features": [
+          "Malaysia LHDNM Integration: Full compliance with MyInvois system and SST requirements",
+          "Real-time Validation: Instant invoice validation and approval workflows",
+          "Multi-Country Support: Compliance with GST, VAT, and tax regulations worldwide",
+          "Digital Signature: Legally binding digital signatures for all documents",
+          "Audit Trail: Complete digital audit trail for compliance and transparency"
+        ]
+      }
+    ]
+  },
+  "pricing": {
+    "title": "AI-Powered Financial Platform Pricing",
+    "subtitle": "Professional-grade AI + Web3 technology that scales with your business",
+    "toggle": {
+      "monthly": "Monthly",
+      "yearly": "Yearly (Save 15%)"
+    },
+    "plans": [
+      {
+        "id": "starter",
+        "name": "AI Core",
+        "price": {
+          "monthly": 99,
+          "yearly": 1009
+        },
+        "revenue": "Up to $25K",
+        "badge": "Best for startups",
+        "features": [
+          "✅ 99.5% AI accuracy automation",
+          "✅ Intelligent document processing",
+          "✅ Automated transaction categorization",
+          "✅ Basic financial forecasting",
+          "✅ Real-time expense tracking",
+          "✅ Mobile app access",
+          "✅ Email support",
+          "🔒 Web3 features (upgrade to unlock)",
+          "🔒 Advanced compliance automation"
+        ],
+        "popular": false
+      },
+      {
+        "id": "growth",
+        "name": "AI + Basic Web3",
+        "price": {
+          "monthly": 249,
+          "yearly": 2537
+        },
+        "revenue": "$25K - $100K",
+        "badge": "Most popular",
+        "features": [
+          "✅ Everything in AI Core",
+          "✅ Advanced AI financial insights",
+          "✅ Basic cryptocurrency accounting",
+          "✅ Simple Web3 wallet connections",
+          "✅ Team collaboration (up to 5 users)",
+          "✅ Custom reporting & analytics",
+          "✅ Priority support",
+          "✅ API access",
+          "✅ Multi-currency support",
+          "🔒 Smart contracts (upgrade to unlock)"
+        ],
+        "popular": true
+      },
+      {
+        "id": "scale",
+        "name": "AI + Full Web3",
+        "price": {
+          "monthly": 449,
+          "yearly": 4567
+        },
+        "revenue": "$100K - $500K",
+        "badge": "Future-ready",
+        "features": [
+          "✅ Everything in AI + Basic Web3",
+          "✅ Smart contract automation",
+          "✅ Advanced crypto portfolio management",
+          "✅ Blockchain transparency features",
+          "✅ Multi-chain support (ETH, BTC, SOL)",
+          "✅ Advanced compliance automation",
+          "✅ Dedicated support manager",
+          "✅ Custom integrations",
+          "✅ Advanced security protocols",
+          "✅ Multi-location support"
+        ],
+        "popular": false
+      },
+      {
+        "id": "enterprise",
+        "name": "Complete Platform",
+        "price": {
+          "monthly": 899,
+          "yearly": 9148
+        },
+        "revenue": "$500K+",
+        "badge": "Enterprise-grade",
+        "features": [
+          "✅ Everything in AI + Full Web3",
+          "✅ Custom AI models & training",
+          "✅ White-label Web3 solutions",
+          "✅ Custom smart contract development",
+          "✅ Advanced blockchain analytics",
+          "✅ 24/7 dedicated support team",
+          "✅ SLA guarantees (99.9% uptime)",
+          "✅ On-premise deployment options",
+          "✅ Unlimited users & transactions",
+          "✅ Custom compliance frameworks"
+        ],
+        "popular": false
+      }
+    ]
+  },
+  "countries": {
+    "malaysia": {
+      "name": "Malaysia",
+      "flag": "🇲🇾",
+      "compliance": ["MyInvois", "SST", "LHDNM"],
+      "features": [
+        "Full integration with Malaysia's MyInvois system",
+        "Automatic SST calculation and submission",
+        "Real-time validation with LHDNM",
+        "Compliant with all Malaysian e-invoicing requirements"
+      ],
+      "important": "Mandatory e-invoicing for businesses with annual revenue above RM100 million starting 2024."
+    },
+    "singapore": {
+      "name": "Singapore",
+      "flag": "🇸🇬",
+      "compliance": ["GST", "IRAS"],
+      "features": [
+        "GST calculation and filing",
+        "IRAS integration",
+        "Real-time tax validation",
+        "Automated compliance reporting"
+      ]
+    },
+    "indonesia": {
+      "name": "Indonesia",
+      "flag": "🇮🇩",
+      "compliance": ["PPN", "DJP"],
+      "features": [
+        "PPN calculation and submission",
+        "DJP integration",
+        "Digital signature support",
+        "Compliance automation"
+      ]
+    },
+    "thailand": {
+      "name": "Thailand",
+      "flag": "🇹🇭",
+      "compliance": ["VAT", "RD"],
+      "features": [
+        "VAT calculation and filing",
+        "Revenue Department integration",
+        "Real-time validation",
+        "Automated reporting"
+      ]
+    },
+    "philippines": {
+      "name": "Philippines",
+      "flag": "🇵🇭",
+      "compliance": ["VAT", "BIR"],
+      "features": [
+        "VAT calculation and submission",
+        "BIR integration",
+        "Digital signature support",
+        "Compliance automation"
+      ]
+    }
+  },
+  "ai": {
+    "title": "The Future of Accounting is AI-Powered",
+    "subtitle": "Transform your financial operations with cutting-edge artificial intelligence",
+    "capabilities": [
+      {
+        "name": "Document Processing Speed",
+        "value": "1000+ docs/hour",
+        "percentage": 95,
+        "color": "green"
+      },
+      {
+        "name": "Accuracy Rate",
+        "value": "99.5%",
+        "percentage": 99.5,
+        "color": "blue"
+      },
+      {
+        "name": "Time Savings",
+        "value": "85%",
+        "percentage": 85,
+        "color": "purple"
+      },
+      {
+        "name": "Cost Reduction",
+        "value": "70%",
+        "percentage": 70,
+        "color": "orange"
+      }
+    ],
+    "sections": [
+      {
+        "title": "🤖 Intelligent Automation",
+        "content": "Our AI processes thousands of documents in minutes, reducing manual data entry by 95% and eliminating human errors. From invoice processing to bank reconciliation, every task is automated with machine learning precision."
+      },
+      {
+        "title": "📊 Predictive Analytics",
+        "content": "Advanced algorithms analyze your financial data to predict cash flow, identify trends, and forecast future performance. Make data-driven decisions with confidence using AI-powered insights and recommendations."
+      },
+      {
+        "title": "🔍 Fraud Detection",
+        "content": "Real-time monitoring detects unusual patterns and potential fraudulent activities. Our AI continuously learns from your transaction history to provide increasingly accurate fraud prevention and risk assessment."
+      }
+    ]
+  },
+  "web3": {
+    "title": "Web3: The Future of Financial Technology",
+    "subtitle": "Embrace the decentralized future with blockchain-powered financial management",
+    "advantages": [
+      {
+        "title": "Transparency & Trust",
+        "icon": "check-circle",
+        "content": "All transactions are recorded on immutable blockchain ledgers, providing complete transparency and building trust with stakeholders."
+      },
+      {
+        "title": "Smart Contracts",
+        "icon": "zap",
+        "content": "Automate complex financial agreements with self-executing smart contracts, reducing intermediaries and operational costs."
+      },
+      {
+        "title": "Enhanced Security",
+        "icon": "shield",
+        "content": "Cryptographic security and decentralized architecture provide unprecedented protection against fraud and cyber attacks."
+      }
+    ],
+    "features": [
+      {
+        "title": "💎 DeFi Integration",
+        "content": "Access decentralized finance protocols for yield farming, liquidity provision, and automated trading strategies. Track all DeFi positions in real-time with comprehensive analytics."
+      },
+      {
+        "title": "🌐 Cross-Chain Support",
+        "content": "Manage assets across multiple blockchain networks including Ethereum, Polygon, BSC, and Solana. Unified dashboard for seamless cross-chain operations and portfolio management."
+      },
+      {
+        "title": "🎨 NFT Management",
+        "content": "Track, value, and manage non-fungible tokens as business assets. From digital art to real estate tokens, comprehensive NFT accounting and reporting capabilities."
+      }
+    ]
+  },
+  "waitlist": {
+    "title": "Be Among the First to Experience the Future",
+    "subtitle": "Join our exclusive waitlist and get early access to revolutionary features",
+    "count": 15420,
+    "maxCount": 50000,
+    "launchDate": "2024-03-15"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about OASYS and how AI & Web3 revolutionizes financial management",
+    "categories": [
+      {
+        "title": "General Questions",
+        "questions": [
+          {
+            "question": "What is OASYS and how is it different from traditional accounting software?",
+            "answer": "OASYS is a next-generation financial management platform that combines AI-powered automation with Web3 blockchain technology. Unlike traditional accounting software that requires manual data entry and basic reporting, OASYS automatically processes documents, predicts financial trends, manages cryptocurrency assets, and provides real-time compliance across multiple countries. It's like having a team of expert accountants, data scientists, and blockchain specialists working 24/7 for your business."
+          },
+          {
+            "question": "Is OASYS suitable for small businesses or just large enterprises?",
+            "answer": "OASYS is designed to scale with businesses of all sizes. Our Starter plan supports businesses with up to $10K revenue, while our Enterprise plan handles $200K+ revenue companies. The AI learns and adapts to your business size and complexity, providing appropriate features and automation levels. Small businesses get enterprise-level capabilities without the complexity, while large businesses get the full power of advanced AI and Web3 features."
+          },
+          {
+            "question": "How secure is my financial data with OASYS?",
+            "answer": "Security is our top priority. We use military-grade encryption, blockchain immutability, and multi-layer security protocols. Your data is protected by cryptographic hashing, distributed across secure nodes, and monitored by AI fraud detection systems. Unlike centralized systems that have single points of failure, our Web3 architecture ensures your data remains secure even if individual servers are compromised. We're SOC 2 Type II certified and comply with international data protection standards."
+          },
+          {
+            "question": "What happens to my data if I want to switch from my current accounting software?",
+            "answer": "OASYS provides seamless migration from popular accounting platforms like QuickBooks, Xero, SAP, and others. Our AI-powered migration tool automatically imports and categorizes your historical data, maps your chart of accounts, and maintains data integrity throughout the process. We also provide dedicated migration specialists and guarantee zero data loss during the transition. You can export your data anytime in standard formats, ensuring you're never locked into our platform."
+          }
+        ]
+      },
+      {
+        "title": "AI & Automation Benefits",
+        "questions": [
+          {
+            "question": "How does AI actually help with my daily accounting tasks?",
+            "answer": "OASYS AI transforms every aspect of accounting: 1) **Document Processing**: Instantly extracts data from invoices, receipts, and bank statements with 99.5% accuracy, eliminating manual data entry. 2) **Smart Categorization**: Learns your business patterns and automatically categorizes transactions, reducing classification time by 90%. 3) **Predictive Analytics**: Forecasts cash flow, identifies spending trends, and predicts when you'll need financing. 4) **Automated Reconciliation**: Matches bank transactions instantly and flags discrepancies in real-time. 5) **Fraud Detection**: Continuously monitors for unusual patterns and prevents fraudulent activities. 6) **Tax Optimization**: Suggests tax-saving strategies and ensures compliance across multiple jurisdictions."
+          },
+          {
+            "question": "Can AI really replace my accountant or bookkeeper?",
+            "answer": "AI doesn't replace your accounting team—it supercharges them. OASYS handles 85% of routine tasks like data entry, reconciliation, and basic reporting, freeing your team to focus on strategic activities like financial planning, analysis, and business advisory services. The AI acts as a 24/7 assistant that never makes calculation errors, never gets tired, and continuously learns your business patterns. Your accountants become more valuable by focusing on interpretation, strategy, and client relationships rather than manual tasks."
+          },
+          {
+            "question": "How accurate is the AI compared to human accountants?",
+            "answer": "OASYS AI achieves 99.5% accuracy in document processing and transaction categorization, significantly higher than the 85-95% accuracy of manual data entry. The AI processes thousands of documents per hour without fatigue-related errors. However, accuracy goes beyond just numbers—our AI understands context, identifies anomalies, and provides consistent results. When uncertainty arises, the system flags items for human review, combining AI efficiency with human judgment for optimal accuracy."
+          },
+          {
+            "question": "What specific accounting processes can AI automate in my business?",
+            "answer": "OASYS AI automates virtually every accounting process: **Accounts Payable**: Invoice capture, validation, approval workflows, and payment scheduling. **Accounts Receivable**: Invoice generation, payment tracking, and collection reminders. **Bank Reconciliation**: Automatic transaction matching and discrepancy identification. **Expense Management**: Receipt processing, categorization, and policy compliance checking. **Financial Reporting**: Real-time report generation and variance analysis. **Tax Preparation**: Automatic calculation, form population, and compliance checking. **Inventory Management**: Real-time tracking, valuation, and reorder point optimization. **Payroll Processing**: Calculation, deduction management, and regulatory compliance."
+          },
+          {
+            "question": "How does AI help with financial forecasting and business planning?",
+            "answer": "OASYS AI analyzes historical data, market trends, and business patterns to provide sophisticated forecasting: **Cash Flow Prediction**: Predicts cash positions up to 12 months ahead with 90% accuracy. **Revenue Forecasting**: Identifies seasonal trends and growth patterns to project future income. **Expense Optimization**: Suggests cost-cutting opportunities and identifies spending anomalies. **Scenario Planning**: Models different business scenarios and their financial impact. **Risk Assessment**: Identifies potential financial risks before they become problems. **Growth Planning**: Recommends optimal timing for expansion, hiring, or investment decisions. The AI continuously learns from your actual results to improve prediction accuracy over time."
+          }
+        ]
+      },
+      {
+        "title": "Web3 & Cryptocurrency",
+        "questions": [
+          {
+            "question": "Why should my traditional business care about Web3 and blockchain technology?",
+            "answer": "Web3 isn't just about cryptocurrency—it's about creating transparent, secure, and efficient business processes. For traditional businesses, Web3 offers: **Supply Chain Transparency**: Track products from origin to customer with immutable records. **Smart Contracts**: Automate payments, royalties, and agreements without intermediaries. **Enhanced Security**: Protect against fraud with cryptographic verification. **Global Payments**: Accept payments from anywhere instantly with minimal fees. **Audit Trail**: Maintain permanent, tamper-proof records for compliance. **Customer Trust**: Provide verifiable proof of authenticity, quality, and ethical sourcing. **Cost Reduction**: Eliminate intermediaries and reduce transaction fees by up to 70%."
+          },
+          {
+            "question": "How does OASYS handle cryptocurrency accounting and tax compliance?",
+            "answer": "OASYS provides comprehensive crypto accounting that traditional software can't match: **Real-time Valuation**: Tracks crypto assets with live market prices across 1000+ tokens. **Multi-Chain Support**: Manages assets across Ethereum, Bitcoin, Polygon, BSC, Solana, and more. **DeFi Integration**: Tracks yield farming, staking rewards, and liquidity pool gains/losses. **Tax Optimization**: Calculates gains/losses using FIFO, LIFO, or specific identification methods. **Regulatory Compliance**: Generates reports for tax authorities in 40+ countries. **Transaction Tracking**: Maintains detailed records of all crypto transactions with source verification. **Automated Bookkeeping**: Converts crypto transactions to traditional accounting entries automatically."
+          },
+          {
+            "question": "What are Smart Contracts and how can they benefit my business operations?",
+            "answer": "Smart Contracts are self-executing digital agreements that automatically enforce terms without intermediaries. OASYS helps you leverage them for: **Automated Payments**: Release payments automatically when milestones are met. **Supplier Agreements**: Pay vendors instantly upon delivery confirmation. **Employee Contracts**: Automate salary, bonus, and commission payments. **Customer Refunds**: Process refunds automatically based on predefined conditions. **Licensing Agreements**: Distribute royalties automatically to multiple parties. **Insurance Claims**: Process claims instantly when conditions are verified. **Subscription Services**: Manage recurring payments with automatic renewals or cancellations. Benefits include 50% faster payment processing, 80% reduction in disputes, and 24/7 automated execution."
+          },
+          {
+            "question": "How does blockchain technology improve financial transparency and auditing?",
+            "answer": "Blockchain creates an immutable audit trail that revolutionizes financial transparency: **Permanent Records**: Every transaction is permanently recorded and cannot be altered or deleted. **Real-time Auditing**: Auditors can verify transactions instantly without waiting for period-end records. **Reduced Fraud**: Cryptographic verification makes it virtually impossible to manipulate financial data. **Stakeholder Access**: Provide controlled access to real-time financial data for investors, lenders, and partners. **Compliance Automation**: Automatically generate audit trails that meet regulatory requirements. **Cost Reduction**: Reduce audit costs by up to 60% through automated verification. **Trust Building**: Provide verifiable proof of financial accuracy to all stakeholders."
+          },
+          {
+            "question": "Can OASYS help me accept cryptocurrency payments from customers?",
+            "answer": "Yes! OASYS provides a complete crypto payment solution: **Payment Processing**: Accept Bitcoin, Ethereum, stablecoins, and 200+ cryptocurrencies. **Instant Conversion**: Automatically convert crypto to your local currency to avoid volatility. **Global Reach**: Accept payments from customers worldwide without traditional banking limitations. **Low Fees**: Reduce payment processing fees by up to 70% compared to credit cards. **Fast Settlement**: Receive funds in minutes instead of days. **Automated Accounting**: All crypto payments are automatically recorded in your books with proper categorization. **Tax Handling**: Automatic calculation of gains/losses and tax implications for each transaction. **Compliance**: Meet regulatory requirements for crypto payment processing in your jurisdiction."
+          }
+        ]
+      },
+      {
+        "title": "Stock & Investment Management",
+        "questions": [
+          {
+            "question": "How does AI help with stock portfolio management and investment decisions?",
+            "answer": "OASYS AI transforms investment management with advanced analytics: **Portfolio Optimization**: AI analyzes your holdings and suggests optimal asset allocation based on risk tolerance and goals. **Market Analysis**: Real-time analysis of market trends, news sentiment, and technical indicators. **Risk Assessment**: Identifies portfolio risks and suggests hedging strategies. **Performance Tracking**: Detailed analytics on returns, volatility, and benchmark comparisons. **Automated Rebalancing**: Maintains target allocations automatically. **Tax-Loss Harvesting**: Identifies opportunities to offset gains with strategic losses. **Research Automation**: AI summarizes earnings reports, news, and analyst recommendations. **Timing Analysis**: Suggests optimal entry and exit points based on technical and fundamental analysis."
+          },
+          {
+            "question": "Can OASYS track and manage both traditional stocks and cryptocurrency investments?",
+            "answer": "Absolutely! OASYS provides unified investment tracking across all asset classes: **Traditional Assets**: Stocks, bonds, ETFs, mutual funds, options, and commodities. **Cryptocurrency**: Bitcoin, Ethereum, altcoins, DeFi tokens, and NFTs. **Alternative Investments**: Real estate tokens, art tokens, and other tokenized assets. **Cross-Platform Integration**: Connects with major brokerages, crypto exchanges, and DeFi protocols. **Unified Reporting**: Single dashboard showing all investments with real-time valuations. **Tax Coordination**: Manages tax implications across different asset types and jurisdictions. **Performance Analytics**: Compare performance across traditional and crypto assets. **Risk Management**: Assess correlation risks between traditional and digital assets."
+          },
+          {
+            "question": "How does blockchain technology benefit stock trading and investment tracking?",
+            "answer": "Blockchain revolutionizes investment management through: **Immutable Records**: Every trade is permanently recorded, eliminating settlement disputes. **Instant Settlement**: Stock trades settle in minutes instead of T+2 days. **Fractional Ownership**: Own fractions of expensive stocks through tokenization. **24/7 Trading**: Trade tokenized stocks outside traditional market hours. **Reduced Costs**: Eliminate intermediaries and reduce trading fees by up to 80%. **Global Access**: Invest in markets worldwide without traditional barriers. **Transparent Ownership**: Cryptographic proof of ownership stored on blockchain. **Automated Compliance**: Smart contracts ensure regulatory compliance automatically. **Reduced Counterparty Risk**: Decentralized settlement eliminates broker default risk."
+          },
+          {
+            "question": "What investment insights can AI provide that I can't get elsewhere?",
+            "answer": "OASYS AI provides unique insights unavailable in traditional platforms: **Multi-Source Analysis**: Combines financial data, news sentiment, social media trends, and on-chain blockchain data. **Predictive Modeling**: Uses machine learning to predict price movements with 70% accuracy. **Risk Pattern Recognition**: Identifies subtle risk patterns across thousands of data points. **Correlation Analysis**: Discovers hidden correlations between assets, sectors, and market conditions. **Behavioral Analysis**: Analyzes your trading patterns and suggests improvements. **Real-time Alerts**: AI monitors markets 24/7 and alerts you to opportunities or risks. **Custom Strategies**: Develops personalized investment strategies based on your goals and risk tolerance. **Market Inefficiency Detection**: Identifies arbitrage opportunities and market mispricings. **Economic Impact Analysis**: Predicts how economic events will affect your specific portfolio."
+          },
+          {
+            "question": "How does OASYS help with investment tax reporting and compliance?",
+            "answer": "OASYS simplifies complex investment tax compliance: **Automated Calculations**: Computes capital gains/losses using optimal tax methods (FIFO, LIFO, specific ID). **Multi-Jurisdiction Support**: Handles tax rules for 40+ countries and US state requirements. **Wash Sale Detection**: Automatically identifies and adjusts for wash sale violations. **Tax-Loss Harvesting**: Suggests strategic trades to minimize tax liability. **Foreign Asset Reporting**: Generates required forms for international investments (FBAR, Form 8938). **Cryptocurrency Compliance**: Handles complex crypto tax rules including staking, DeFi, and NFTs. **Real-time Tax Impact**: Shows tax implications before executing trades. **Audit Support**: Maintains detailed records and documentation for tax audits. **Professional Integration**: Connects with tax preparers and provides necessary documentation automatically."
+          }
+        ]
+      },
+      {
+        "title": "Implementation & Support",
+        "questions": [
+          {
+            "question": "How long does it take to implement OASYS in my business?",
+            "answer": "Implementation timeline depends on business complexity: **Small Business (Starter Plan)**: 1-2 weeks with automated setup and basic training. **Medium Business (Growth/Scale Plans)**: 2-4 weeks including data migration, custom integrations, and team training. **Enterprise**: 4-8 weeks with custom development, complex integrations, and comprehensive training programs. Our implementation includes: data migration, system integration, team training, workflow customization, and ongoing support. 95% of businesses are fully operational within their planned timeframe."
+          },
+          {
+            "question": "What kind of training and support do you provide?",
+            "answer": "OASYS provides comprehensive training and support: **Onboarding**: Dedicated implementation specialist guides you through setup. **Training Programs**: Live webinars, video tutorials, and hands-on workshops. **24/7 Support**: Round-the-clock technical support for all plans. **Knowledge Base**: Extensive documentation, FAQs, and best practices. **Community Forum**: Connect with other users and share experiences. **Regular Updates**: Monthly feature updates and quarterly training sessions. **Account Management**: Dedicated account managers for Growth+ plans. **Custom Training**: Tailored training programs for enterprise customers. **Certification**: OASYS user certification program for your team."
+          },
+          {
+            "question": "How do you ensure OASYS stays compliant with changing regulations?",
+            "answer": "Regulatory compliance is continuously maintained through: **Real-time Updates**: AI monitors regulatory changes across 40+ countries and updates rules automatically. **Expert Team**: In-house compliance specialists track regulatory developments. **Government Integration**: Direct API connections with tax authorities for real-time validation. **Automated Alerts**: Immediate notifications when regulations affect your business. **Version Control**: Maintains historical compliance records for audit purposes. **Multi-Jurisdiction Support**: Handles complex international compliance requirements. **Regular Audits**: Third-party compliance audits ensure accuracy. **Future-Proofing**: AI predicts likely regulatory changes and prepares systems in advance."
+          },
+          {
+            "question": "What happens if OASYS doesn't work well for my specific business needs?",
+            "answer": "We're confident OASYS will exceed your expectations, but we offer multiple safeguards: **30-Day Money-Back Guarantee**: Full refund if you're not satisfied within 30 days. **Free Trial**: Test all features with sample data before committing. **Customization**: Extensive customization options to match your specific workflows. **API Access**: Build custom integrations for unique requirements. **Data Export**: Easy export in standard formats if you decide to switch. **Migration Support**: Help transitioning to other systems if needed. **Flexible Contracts**: Month-to-month options available (annual plans offer better pricing). **Dedicated Support**: Work with specialists to optimize OASYS for your needs."
+          }
+        ]
+      }
+    ]
+  }
+} 

@@ -1,0 +1,578 @@
+{
+  "plans": [
+    {
+      "id": "ai_core",
+      "name": "AI Core",
+      "description": "Essential AI-powered accounting for startups",
+      "price": 99,
+      "yearlyPrice": 990,
+      "type": "business",
+      "badge": "Best for startups",
+      "userLimits": {
+        "maxUsers": 5,
+        "maxTransactions": 1000
+      },
+      "moduleAccess": [
+        {
+          "module": "accounting",
+          "enabled": true,
+          "features": [
+            "basic_journal_entries",
+            "chart_of_accounts",
+            "financial_reports",
+            "bank_reconciliation",
+            "ai_categorization",
+            "e_invoicing",
+            "digital_signatures"
+          ]
+        },
+        {
+          "module": "banking",
+          "enabled": true,
+          "features": [
+            "single_currency",
+            "basic_reconciliation"
+          ]
+        },
+        {
+          "module": "reports",
+          "enabled": true,
+          "features": [
+            "p_and_l",
+            "balance_sheet",
+            "cash_flow",
+            "standard_exports"
+          ]
+        }
+      ],
+      "features": [
+        {
+          "name": "AI Transaction Categorization",
+          "included": true
+        },
+        {
+          "name": "Basic Financial Reports",
+          "included": true
+        },
+        {
+          "name": "Bank Reconciliation",
+          "included": true
+        },
+        {
+          "name": "E-invoicing & Digital Signatures",
+          "included": true
+        },
+        {
+          "name": "Email Support",
+          "included": true
+        },
+        {
+          "name": "Multi-Currency Support",
+          "included": false,
+          "locked": true
+        },
+        {
+          "name": "Web3 Integration",
+          "included": false,
+          "locked": true
+        },
+        {
+          "name": "Advanced Inventory",
+          "included": false,
+          "locked": true
+        }
+      ],
+      "supportLevel": "email"
+    },
+    {
+      "id": "ai_basic_web3",
+      "name": "AI + Basic Web3",
+      "description": "Full accounting suite with basic Web3 features",
+      "price": 249,
+      "yearlyPrice": 2490,
+      "type": "business",
+      "badge": "Most popular",
+      "userLimits": {
+        "maxUsers": 15,
+        "maxTransactions": 5000
+      },
+      "moduleAccess": [
+        {
+          "module": "accounting",
+          "enabled": true,
+          "features": [
+            "advanced_journal_entries",
+            "approval_workflow",
+            "fiscal_year_management",
+            "multi_currency",
+            "ai_insights"
+          ]
+        },
+        {
+          "module": "banking",
+          "enabled": true,
+          "features": [
+            "multi_currency",
+            "advanced_reconciliation",
+            "automated_imports"
+          ]
+        },
+        {
+          "module": "inventory",
+          "enabled": true,
+          "features": [
+            "basic_stock_tracking",
+            "purchase_orders",
+            "valuation_methods"
+          ]
+        },
+        {
+          "module": "sales",
+          "enabled": true,
+          "features": [
+            "invoicing",
+            "quotes",
+            "customer_management"
+          ]
+        },
+        {
+          "module": "purchase",
+          "enabled": true,
+          "features": [
+            "vendor_management",
+            "purchase_orders",
+            "expense_tracking"
+          ]
+        },
+        {
+          "module": "web3",
+          "enabled": true,
+          "features": [
+            "basic_wallet_connect",
+            "crypto_transaction_tracking",
+            "blockchain_verification"
+          ]
+        },
+        {
+          "module": "documents",
+          "enabled": true,
+          "features": [
+            "document_storage",
+            "blockchain_timestamping"
+          ]
+        }
+      ],
+      "features": [
+        {
+          "name": "Everything in AI Core",
+          "included": true
+        },
+        {
+          "name": "Multi-Currency Support",
+          "included": true
+        },
+        {
+          "name": "Inventory Management",
+          "included": true
+        },
+        {
+          "name": "Sales & Purchase Modules",
+          "included": true
+        },
+        {
+          "name": "Basic Web3 Integration",
+          "included": true
+        },
+        {
+          "name": "Approval Workflows",
+          "included": true
+        },
+        {
+          "name": "Chat Support",
+          "included": true
+        },
+        {
+          "name": "Advanced Web3 Features",
+          "included": false,
+          "locked": true
+        }
+      ],
+      "supportLevel": "chat"
+    },
+    {
+      "id": "ai_full_web3",
+      "name": "AI + Full Web3",
+      "description": "Complete platform with advanced Web3 capabilities",
+      "price": 449,
+      "yearlyPrice": 4490,
+      "type": "business",
+      "badge": "Future-ready",
+      "userLimits": {
+        "maxUsers": 25,
+        "maxTransactions": 10000
+      },
+      "moduleAccess": [
+        {
+          "module": "accounting",
+          "enabled": true,
+          "features": [
+            "full_suite",
+            "advanced_ai_insights",
+            "predictive_analytics",
+            "custom_reports"
+          ]
+        },
+        {
+          "module": "web3",
+          "enabled": true,
+          "features": [
+            "advanced_smart_contracts",
+            "defi_integration",
+            "multi_chain_support",
+            "dao_governance"
+          ]
+        },
+        {
+          "module": "inventory",
+          "enabled": true,
+          "features": [
+            "advanced_tracking",
+            "multi_location",
+            "lot_tracking",
+            "manufacturing_bom"
+          ]
+        }
+      ],
+      "features": [
+        {
+          "name": "Everything in AI + Basic Web3",
+          "included": true
+        },
+        {
+          "name": "Advanced Web3 Features",
+          "included": true
+        },
+        {
+          "name": "Smart Contract Management",
+          "included": true
+        },
+        {
+          "name": "DeFi Integration",
+          "included": true
+        },
+        {
+          "name": "Multi-chain Support",
+          "included": true
+        },
+        {
+          "name": "Advanced Inventory",
+          "included": true
+        },
+        {
+          "name": "Priority Support",
+          "included": true
+        }
+      ],
+      "supportLevel": "priority"
+    },
+    {
+      "id": "complete_platform",
+      "name": "Complete Platform",
+      "description": "Enterprise-grade solution with all features",
+      "price": 899,
+      "yearlyPrice": 8990,
+      "type": "business",
+      "badge": "Enterprise-grade",
+      "userLimits": {
+        "maxUsers": 100,
+        "maxTransactions": -1
+      },
+      "moduleAccess": [
+        {
+          "module": "accounting",
+          "enabled": true,
+          "features": ["*"]
+        },
+        {
+          "module": "banking",
+          "enabled": true,
+          "features": ["*"]
+        },
+        {
+          "module": "inventory",
+          "enabled": true,
+          "features": ["*"]
+        },
+        {
+          "module": "sales",
+          "enabled": true,
+          "features": ["*"]
+        },
+        {
+          "module": "purchase",
+          "enabled": true,
+          "features": ["*"]
+        },
+        {
+          "module": "web3",
+          "enabled": true,
+          "features": ["*"]
+        },
+        {
+          "module": "documents",
+          "enabled": true,
+          "features": ["*"]
+        },
+        {
+          "module": "reports",
+          "enabled": true,
+          "features": ["*"]
+        },
+        {
+          "module": "security",
+          "enabled": true,
+          "features": ["*"]
+        },
+        {
+          "module": "mobile",
+          "enabled": true,
+          "features": ["*"]
+        }
+      ],
+      "features": [
+        {
+          "name": "Everything in AI + Full Web3",
+          "included": true
+        },
+        {
+          "name": "Unlimited Transactions",
+          "included": true
+        },
+        {
+          "name": "Advanced Security & Compliance",
+          "included": true
+        },
+        {
+          "name": "Custom Integrations",
+          "included": true
+        },
+        {
+          "name": "API Access",
+          "included": true
+        },
+        {
+          "name": "White-label Options",
+          "included": true
+        },
+        {
+          "name": "Dedicated Support",
+          "included": true
+        }
+      ],
+      "supportLevel": "dedicated"
+    },
+    {
+      "id": "firm_professional",
+      "name": "Firm Professional",
+      "description": "Perfect for small to medium accounting firms",
+      "price": 699,
+      "yearlyPrice": 6990,
+      "type": "firm",
+      "badge": "Recommended for firms",
+      "userLimits": {
+        "maxUsers": 25,
+        "maxClients": 100,
+        "maxTransactions": -1
+      },
+      "moduleAccess": [
+        {
+          "module": "multi_client",
+          "enabled": true,
+          "features": [
+            "client_management",
+            "client_portal",
+            "consolidated_reporting",
+            "client_billing"
+          ]
+        },
+        {
+          "module": "accounting",
+          "enabled": true,
+          "features": [
+            "full_suite",
+            "audit_trail",
+            "firm_templates",
+            "client_collaboration"
+          ]
+        },
+        {
+          "module": "reports",
+          "enabled": true,
+          "features": [
+            "client_reports",
+            "firm_analytics",
+            "consolidated_views",
+            "custom_branding"
+          ]
+        },
+        {
+          "module": "documents",
+          "enabled": true,
+          "features": [
+            "client_document_sharing",
+            "e_signature",
+            "audit_documentation"
+          ]
+        }
+      ],
+      "firmFeatures": [
+        {
+          "name": "Multi-Client Dashboard",
+          "included": true
+        },
+        {
+          "name": "Client Portal Access",
+          "included": true
+        },
+        {
+          "name": "Consolidated Reporting",
+          "included": true
+        },
+        {
+          "name": "Firm Branding",
+          "included": true
+        },
+        {
+          "name": "Client Billing Module",
+          "included": true
+        },
+        {
+          "name": "Advanced Audit Trail",
+          "included": true
+        },
+        {
+          "name": "Priority Firm Support",
+          "included": true
+        },
+        {
+          "name": "Advanced Web3 Features",
+          "included": false,
+          "locked": true
+        }
+      ],
+      "supportLevel": "firm_priority"
+    },
+    {
+      "id": "firm_enterprise",
+      "name": "Firm Enterprise",
+      "description": "Complete solution for large accounting firms",
+      "price": 1299,
+      "yearlyPrice": 12990,
+      "type": "firm",
+      "badge": "Enterprise firms",
+      "userLimits": {
+        "maxUsers": 100,
+        "maxClients": 500,
+        "maxTransactions": -1
+      },
+      "moduleAccess": [
+        {
+          "module": "multi_client",
+          "enabled": true,
+          "features": ["*"]
+        },
+        {
+          "module": "accounting",
+          "enabled": true,
+          "features": ["*"]
+        },
+        {
+          "module": "web3",
+          "enabled": true,
+          "features": [
+            "enterprise_blockchain",
+            "client_crypto_services",
+            "advanced_smart_contracts"
+          ]
+        },
+        {
+          "module": "reports",
+          "enabled": true,
+          "features": ["*"]
+        },
+        {
+          "module": "security",
+          "enabled": true,
+          "features": [
+            "advanced_rbac",
+            "client_isolation",
+            "compliance_reporting"
+          ]
+        }
+      ],
+      "firmFeatures": [
+        {
+          "name": "Everything in Firm Professional",
+          "included": true
+        },
+        {
+          "name": "Advanced Web3 for Clients",
+          "included": true
+        },
+        {
+          "name": "Enterprise Security",
+          "included": true
+        },
+        {
+          "name": "Advanced Client Isolation",
+          "included": true
+        },
+        {
+          "name": "Custom API Integration",
+          "included": true
+        },
+        {
+          "name": "White-label Client Portal",
+          "included": true
+        },
+        {
+          "name": "Dedicated Account Manager",
+          "included": true
+        }
+      ],
+      "supportLevel": "dedicated_firm"
+    }
+  ],
+  "supportLevels": {
+    "email": {
+      "name": "Email Support",
+      "responseTime": "24-48 hours",
+      "channels": ["email"]
+    },
+    "chat": {
+      "name": "Chat Support",
+      "responseTime": "4-8 hours",
+      "channels": ["email", "chat"]
+    },
+    "priority": {
+      "name": "Priority Support",
+      "responseTime": "2-4 hours",
+      "channels": ["email", "chat", "phone"]
+    },
+    "dedicated": {
+      "name": "Dedicated Support",
+      "responseTime": "1 hour",
+      "channels": ["email", "chat", "phone", "dedicated_manager"]
+    },
+    "firm_priority": {
+      "name": "Firm Priority Support",
+      "responseTime": "2 hours",
+      "channels": ["email", "chat", "phone", "firm_specialist"]
+    },
+    "dedicated_firm": {
+      "name": "Dedicated Firm Support",
+      "responseTime": "30 minutes",
+      "channels": ["email", "chat", "phone", "dedicated_manager", "on_site"]
+    }
+  }
+} 

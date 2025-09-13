@@ -1,0 +1,103 @@
+{
+  "public_navigation": {
+    "main": [
+      {"label": "Home", "icon": "home", "url": "/"},
+      {"label": "About", "icon": "info", "url": "/about"},
+      {"label": "Contact", "icon": "contact", "url": "/contact"},
+      {"label": "Login", "icon": "login", "url": "/login"},
+      {"label": "Register", "icon": "register", "url": "/register"}
+    ]
+  },
+  "multi_tenant_navigation": {
+    "admin": [
+      {"label": "System Dashboard", "icon": "dashboard", "url": "/system/dashboard"},
+      {"label": "All Tenants", "icon": "tenants", "url": "/system/tenants"},
+      {"label": "System Users", "icon": "users", "url": "/system/users"},
+      {"label": "System Settings", "icon": "settings", "url": "/system/settings"},
+      {"label": "System Reports", "icon": "reports", "url": "/system/reports"},
+      {"label": "System Health", "icon": "health", "url": "/system/health"},
+      {"label": "Backup Management", "icon": "backup", "url": "/system/backup"},
+      {"label": "Audit Logs", "icon": "audit", "url": "/system/audit"}
+    ]
+  },
+  "tenant_navigation": {
+    "admin": [
+      {"label": "Dashboard", "icon": "dashboard", "url": "/dashboard"},
+      {"label": "Users", "icon": "users", "url": "/users"},
+      {"label": "Company Settings", "icon": "settings", "url": "/settings"},
+      {"label": "Accounting", "icon": "accounting", "url": "/accounting", "children": [
+        {"label": "Chart of Accounts", "url": "/accounting/accounts"},
+        {"label": "Journal Entries", "url": "/accounting/journal-entries"},
+        {"label": "Financial Reports", "url": "/accounting/reports"}
+      ]},
+      {"label": "Invoicing", "icon": "invoicing", "url": "/invoicing", "children": [
+        {"label": "Invoices", "url": "/invoicing/invoices"},
+        {"label": "Templates", "url": "/invoicing/templates"},
+        {"label": "Payments", "url": "/invoicing/payments"}
+      ]},
+      {"label": "Banking", "icon": "banking", "url": "/banking", "children": [
+        {"label": "Accounts", "url": "/banking/accounts"},
+        {"label": "Transactions", "url": "/banking/transactions"},
+        {"label": "Reconciliation", "url": "/banking/reconciliation"}
+      ]},
+      {"label": "Sales", "icon": "sales", "url": "/sales", "children": [
+        {"label": "Customers", "url": "/sales/customers"},
+        {"label": "Orders", "url": "/sales/orders"},
+        {"label": "Quotes", "url": "/sales/quotes"}
+      ]},
+      {"label": "Purchase", "icon": "purchase", "url": "/purchase", "children": [
+        {"label": "Suppliers", "url": "/purchase/suppliers"},
+        {"label": "Orders", "url": "/purchase/orders"},
+        {"label": "Receipts", "url": "/purchase/receipts"}
+      ]},
+      {"label": "AI Processing", "icon": "ai", "url": "/ai", "children": [
+        {"label": "Documents", "url": "/ai/documents"},
+        {"label": "Categorization", "url": "/ai/categorization"},
+        {"label": "Extraction", "url": "/ai/extraction"}
+      ]},
+      {"label": "Web3 Integration", "icon": "web3", "url": "/web3", "children": [
+        {"label": "Wallets", "url": "/web3/wallets"},
+        {"label": "Transactions", "url": "/web3/transactions"},
+        {"label": "DeFi Protocols", "url": "/web3/defi"}
+      ]},
+      {"label": "Inventory", "icon": "inventory", "url": "/inventory", "children": [
+        {"label": "Items", "url": "/inventory/items"},
+        {"label": "Stock", "url": "/inventory/stock"},
+        {"label": "Warehouses", "url": "/inventory/warehouses"}
+      ]},
+      {"label": "Reports", "icon": "reports", "url": "/reports"},
+      {"label": "Documents", "icon": "documents", "url": "/documents"}
+    ],
+    "manager": [
+      {"label": "Dashboard", "icon": "dashboard", "url": "/dashboard"},
+      {"label": "Accounting", "icon": "accounting", "url": "/accounting", "children": [
+        {"label": "Chart of Accounts", "url": "/accounting/accounts"},
+        {"label": "Journal Entries", "url": "/accounting/journal-entries"},
+        {"label": "Financial Reports", "url": "/accounting/reports"}
+      ]},
+      {"label": "Invoicing", "icon": "invoicing", "url": "/invoicing", "children": [
+        {"label": "Invoices", "url": "/invoicing/invoices"},
+        {"label": "Payments", "url": "/invoicing/payments"}
+      ]},
+      {"label": "Banking", "icon": "banking", "url": "/banking", "children": [
+        {"label": "Accounts", "url": "/banking/accounts"},
+        {"label": "Transactions", "url": "/banking/transactions"}
+      ]},
+      {"label": "Sales", "icon": "sales", "url": "/sales", "children": [
+        {"label": "Customers", "url": "/sales/customers"},
+        {"label": "Orders", "url": "/sales/orders"}
+      ]},
+      {"label": "Purchase", "icon": "purchase", "url": "/purchase", "children": [
+        {"label": "Suppliers", "url": "/purchase/suppliers"},
+        {"label": "Orders", "url": "/purchase/orders"}
+      ]},
+      {"label": "Reports", "icon": "reports", "url": "/reports"}
+    ],
+    "user": [
+      {"label": "Dashboard", "icon": "dashboard", "url": "/dashboard"},
+      {"label": "Profile", "icon": "profile", "url": "/profile"},
+      {"label": "Invoices", "icon": "invoicing", "url": "/invoicing/invoices"},
+      {"label": "Documents", "icon": "documents", "url": "/documents"}
+    ]
+  }
+}
