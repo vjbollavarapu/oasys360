@@ -1,0 +1,37 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://oasys.com/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /dashboard/
+Disallow: /accounting/
+Disallow: /banking/
+Disallow: /invoicing/
+Disallow: /inventory/
+Disallow: /mobile/
+Disallow: /web3/
+Disallow: /ai-processing/
+Disallow: /documents/
+Disallow: /purchase/
+Disallow: /sales/
+Disallow: /reporting/
+Disallow: /platform-admin/
+Disallow: /tenants/
+
+# Allow important pages
+Allow: /
+Allow: /demo
+Allow: /contact
+Allow: /privacy-policy
+Allow: /terms-of-service
+Allow: /features
+Allow: /documentation
+Allow: /api-docs
+
+# Crawl delay
+Crawl-delay: 1
