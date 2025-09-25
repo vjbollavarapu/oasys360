@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { Providers } from "./providers"
@@ -31,8 +31,7 @@ export const metadata: Metadata = {
   publisher: "OASYS",
   generator: 'Next.js',
   manifest: '/manifest.json',
-  themeColor: '#4A90E2',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
+  metadataBase: new URL('https://oasys.com'),
   robots: {
     index: true,
     follow: true,
@@ -85,6 +84,14 @@ export const metadata: Metadata = {
     yahoo: 'your-yahoo-verification-code',
   },
   category: 'technology',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: '#4A90E2',
 }
 
 export default function RootLayout({
