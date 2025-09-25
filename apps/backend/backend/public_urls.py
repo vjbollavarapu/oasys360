@@ -50,6 +50,7 @@ public_api_patterns = [
     # path('tenant/', include('tenant.urls')),
     # path('user/', include('user.urls')),
     # path('navigation/', PublicNavigationAPIView.as_view(), name='public-navigation'),
+    path('marketing/', include('marketing_forms.urls')),
 ]
 
 urlpatterns = [

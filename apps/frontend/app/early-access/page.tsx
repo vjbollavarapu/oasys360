@@ -37,11 +37,29 @@ export default function EarlyAccessPage() {
 
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Here you would typically send the data to your backend
-    console.log("Early Access Application:", formData)
-    setIsSubmitted(true)
+    
+    try {
+      const response = await fetch('/api/v1/marketing/early-access/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+      
+      if (response.ok) {
+        setIsSubmitted(true)
+      } else {
+        const errorData = await response.json()
+        console.error('Error submitting request:', errorData)
+        alert('Error submitting request. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error submitting request:', error)
+      alert('Error submitting request. Please try again.')
+    }
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

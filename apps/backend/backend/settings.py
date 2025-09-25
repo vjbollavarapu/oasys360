@@ -123,6 +123,7 @@ TENANT_APPS = [
     'contact_sales',
     'inventory',
     'invoicing',
+    'marketing_forms',
     'mobile',
     'platform_admin',
     'purchase',
