@@ -48,12 +48,7 @@ export default function HeroSection() {
                   <Button 
                     size="lg" 
                     className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                    onClick={() => {
-                      const element = document.querySelector('#pricing')
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' })
-                      }
-                    }}
+                    onClick={() => window.open('/beta-program', '_blank')}
                   >
                     Join Beta Program
                     <ArrowRight className="ml-2 w-5 h-5" />

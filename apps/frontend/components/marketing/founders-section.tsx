@@ -25,7 +25,7 @@ export function FoundersSection() {
       name: "VJ Bollavarapu", 
       title: "Co-Founder, CTO",
       initials: "VJ",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=vjbollavarapu&backgroundColor=1a1a2e&clothing=hoodie&clothingColor=262e33&hair=short&hairColor=2c1810&skinColor=fdbcb4&eyes=happy&eyebrows=raised&mouth=smile",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=vjbollavarapu&backgroundColor=1a1a2e",
       description: "Technology innovator specializing in AI, blockchain, and scalable software architecture. Architecting the future of financial technology.",
       expertise: ["AI/ML", "Blockchain", "Software Architecture", "Web3"],
       icon: Briefcase

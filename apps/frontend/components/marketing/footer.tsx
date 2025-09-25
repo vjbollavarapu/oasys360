@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { OasysLogo } from "./oasys-logo"
 import { 
@@ -307,11 +308,11 @@ export function Footer() {
                 © 2024 OASYS. All rights reserved. Beta launch - Building the future with AI and blockchain technology.
               </div>
               <div className="flex items-center gap-6 text-sm text-gray-400">
-                <span className="hover:text-white transition-colors cursor-pointer">Beta Program</span>
+                <Link href="/beta-program" className="hover:text-white transition-colors cursor-pointer">Beta Program</Link>
                 <span>•</span>
-                <span className="hover:text-white transition-colors cursor-pointer">Early Access</span>
+                <Link href="/early-access" className="hover:text-white transition-colors cursor-pointer">Early Access</Link>
                 <span>•</span>
-                <span className="hover:text-white transition-colors cursor-pointer">Founder Feedback</span>
+                <Link href="/founder-feedback" className="hover:text-white transition-colors cursor-pointer">Founder Feedback</Link>
               </div>
             </div>
           </div>
