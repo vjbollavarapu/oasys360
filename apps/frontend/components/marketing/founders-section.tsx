@@ -16,7 +16,7 @@ export function FoundersSection() {
       name: "Viswa",
       title: "Co-Founder, CEO & CAO",
       initials: "V",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=viswa&backgroundColor=264653&clothing=blazer_shirt&clothingColor=262e33",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=viswa&backgroundColor=264653",
       description: "Visionary leader with expertise in business strategy and financial operations. Driving OASYS towards revolutionizing the accounting industry.",
       expertise: ["Business Strategy", "Financial Operations", "Leadership"],
       icon: Award
@@ -25,7 +25,7 @@ export function FoundersSection() {
       name: "VJ Bollavarapu", 
       title: "Co-Founder, CTO",
       initials: "VJ",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=vjbollavarapu&backgroundColor=1a1a2e&clothing=hoodie&clothingColor=262e33",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=vjbollavarapu&backgroundColor=1a1a2e",
       description: "Technology innovator specializing in AI, blockchain, and scalable software architecture. Architecting the future of financial technology.",
       expertise: ["AI/ML", "Blockchain", "Software Architecture", "Web3"],
       icon: Briefcase
