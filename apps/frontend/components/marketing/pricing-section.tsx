@@ -216,7 +216,7 @@ export function PricingSection() {
           </div>
 
           {/* Pricing Cards */}
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-20">
+          <div className="grid lg:grid-cols-2 md:grid-cols-2 gap-8 mb-20">
             {plans.map((plan) => {
               const colors = getColorClasses(plan.color)
               const price = isYearly ? plan.yearlyPrice : plan.monthlyPrice
