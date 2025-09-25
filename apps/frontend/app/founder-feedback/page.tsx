@@ -240,7 +240,7 @@ export default function FounderFeedbackPage() {
             </div>
 
             {/* Feedback Form */}
-            <Card className="shadow-xl">
+            <Card className="shadow-xl bg-white">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold text-gray-900">
                   Send Your Feedback

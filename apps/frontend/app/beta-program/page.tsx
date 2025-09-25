@@ -191,7 +191,7 @@ export default function BetaProgramPage() {
             </div>
 
             {/* Application Form */}
-            <Card className="shadow-xl">
+            <Card className="shadow-xl bg-white">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold text-gray-900">
                   Apply for Beta Access
