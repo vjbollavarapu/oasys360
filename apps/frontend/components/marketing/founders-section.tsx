@@ -16,7 +16,7 @@ export function FoundersSection() {
       name: "Viswa",
       title: "Co-Founder, CEO & CAO",
       initials: "V",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=viswa&backgroundColor=264653,2a9d8f,e9c46a,f4a261,e76f51&clothing=blazer_shirt&clothingColor=262e33&hair=short&hairColor=2c1810&skinColor=fdbcb4&eyes=happy&eyebrows=raised&mouth=smile&accessories=blank&accessoriesProbability=0",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=viswa&backgroundColor=264653&clothing=blazer_shirt&clothingColor=262e33",
       description: "Visionary leader with expertise in business strategy and financial operations. Driving OASYS towards revolutionizing the accounting industry.",
       expertise: ["Business Strategy", "Financial Operations", "Leadership"],
       icon: Award
@@ -25,7 +25,7 @@ export function FoundersSection() {
       name: "VJ Bollavarapu", 
       title: "Co-Founder, CTO",
       initials: "VJ",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=vjbollavarapu&backgroundColor=1a1a2e,16213e,0f3460,e94560&clothing=hoodie&clothingColor=262e33&hair=short&hairColor=2c1810&skinColor=fdbcb4&eyes=happy&eyebrows=raised&mouth=smile&accessories=blank&accessoriesProbability=0",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=vjbollavarapu&backgroundColor=1a1a2e&clothing=hoodie&clothingColor=262e33",
       description: "Technology innovator specializing in AI, blockchain, and scalable software architecture. Architecting the future of financial technology.",
       expertise: ["AI/ML", "Blockchain", "Software Architecture", "Web3"],
       icon: Briefcase
@@ -63,7 +63,14 @@ export function FoundersSection() {
                     {/* Avatar */}
                     <div className="relative mb-6">
                       <Avatar className="w-24 h-24 ring-4 ring-blue-100 group-hover:ring-blue-200 transition-all duration-300">
-                        <AvatarImage src={founder.avatar} alt={`${founder.name} avatar`} />
+                        <AvatarImage 
+                          src={founder.avatar} 
+                          alt={`${founder.name} avatar`}
+                          onError={(e) => {
+                            console.log(`Avatar failed to load for ${founder.name}:`, founder.avatar);
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
                         <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-2xl font-bold">
                           {founder.initials}
                         </AvatarFallback>
