@@ -1,0 +1,226 @@
+{
+  "country_code": "MY",
+  "country_name": "Malaysia",
+  "description": "Standard Chart of Accounts for Malaysia (based on MFRS)",
+  "accounts": [
+    {
+      "code": "1000",
+      "name": "Assets",
+      "type": "asset",
+      "normal_balance": "debit",
+      "description": "Total Assets",
+      "is_system": true,
+      "children": [
+        {
+          "code": "1100",
+          "name": "Current Assets",
+          "type": "asset",
+          "normal_balance": "debit",
+          "description": "Current Assets",
+          "is_system": true,
+          "children": [
+            {
+              "code": "1110",
+              "name": "Cash and Cash Equivalents",
+              "type": "asset",
+              "normal_balance": "debit",
+              "description": "Cash on hand and in bank accounts",
+              "is_system": true
+            },
+            {
+              "code": "1120",
+              "name": "Accounts Receivable",
+              "type": "asset",
+              "normal_balance": "debit",
+              "description": "Trade receivables from customers",
+              "is_system": true
+            },
+            {
+              "code": "1130",
+              "name": "Inventory",
+              "type": "asset",
+              "normal_balance": "debit",
+              "description": "Stock and inventory",
+              "is_system": true
+            },
+            {
+              "code": "1140",
+              "name": "Prepaid Expenses",
+              "type": "asset",
+              "normal_balance": "debit",
+              "description": "Prepaid expenses and deposits",
+              "is_system": true
+            }
+          ]
+        },
+        {
+          "code": "1200",
+          "name": "Non-Current Assets",
+          "type": "asset",
+          "normal_balance": "debit",
+          "description": "Non-Current Assets",
+          "is_system": true,
+          "children": [
+            {
+              "code": "1210",
+              "name": "Property, Plant and Equipment",
+              "type": "asset",
+              "normal_balance": "debit",
+              "description": "Fixed assets",
+              "is_system": true
+            },
+            {
+              "code": "1220",
+              "name": "Intangible Assets",
+              "type": "asset",
+              "normal_balance": "debit",
+              "description": "Intangible assets",
+              "is_system": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "2000",
+      "name": "Liabilities",
+      "type": "liability",
+      "normal_balance": "credit",
+      "description": "Total Liabilities",
+      "is_system": true,
+      "children": [
+        {
+          "code": "2100",
+          "name": "Current Liabilities",
+          "type": "liability",
+          "normal_balance": "credit",
+          "description": "Current Liabilities",
+          "is_system": true,
+          "children": [
+            {
+              "code": "2110",
+              "name": "Accounts Payable",
+              "type": "liability",
+              "normal_balance": "credit",
+              "description": "Trade payables to suppliers",
+              "is_system": true
+            },
+            {
+              "code": "2120",
+              "name": "SST Payable",
+              "type": "liability",
+              "normal_balance": "credit",
+              "description": "SST collected and payable to RMCD",
+              "is_system": true
+            },
+            {
+              "code": "2130",
+              "name": "Accrued Expenses",
+              "type": "liability",
+              "normal_balance": "credit",
+              "description": "Accrued expenses and liabilities",
+              "is_system": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "3000",
+      "name": "Equity",
+      "type": "equity",
+      "normal_balance": "credit",
+      "description": "Shareholders' Equity",
+      "is_system": true,
+      "children": [
+        {
+          "code": "3100",
+          "name": "Share Capital",
+          "type": "equity",
+          "normal_balance": "credit",
+          "description": "Issued share capital",
+          "is_system": true
+        },
+        {
+          "code": "3200",
+          "name": "Retained Earnings",
+          "type": "equity",
+          "normal_balance": "credit",
+          "description": "Accumulated retained earnings",
+          "is_system": true
+        }
+      ]
+    },
+    {
+      "code": "4000",
+      "name": "Revenue",
+      "type": "revenue",
+      "normal_balance": "credit",
+      "description": "Operating Revenue",
+      "is_system": true,
+      "children": [
+        {
+          "code": "4100",
+          "name": "Sales Revenue",
+          "type": "revenue",
+          "normal_balance": "credit",
+          "description": "Revenue from sales of goods",
+          "is_system": true
+        },
+        {
+          "code": "4200",
+          "name": "Service Revenue",
+          "type": "revenue",
+          "normal_balance": "credit",
+          "description": "Revenue from services",
+          "is_system": true
+        }
+      ]
+    },
+    {
+      "code": "5000",
+      "name": "Expenses",
+      "type": "expense",
+      "normal_balance": "debit",
+      "description": "Operating Expenses",
+      "is_system": true,
+      "children": [
+        {
+          "code": "5100",
+          "name": "Cost of Goods Sold",
+          "type": "expense",
+          "normal_balance": "debit",
+          "description": "Direct costs of goods sold",
+          "is_system": true
+        },
+        {
+          "code": "5200",
+          "name": "Operating Expenses",
+          "type": "expense",
+          "normal_balance": "debit",
+          "description": "General operating expenses",
+          "is_system": true,
+          "children": [
+            {
+              "code": "5210",
+              "name": "Salaries and Wages",
+              "type": "expense",
+              "normal_balance": "debit",
+              "description": "Employee salaries and wages",
+              "is_system": true
+            },
+            {
+              "code": "5270",
+              "name": "SST Input Tax",
+              "type": "expense",
+              "normal_balance": "debit",
+              "description": "SST paid on purchases (claimable)",
+              "is_system": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

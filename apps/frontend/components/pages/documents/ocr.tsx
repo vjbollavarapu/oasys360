@@ -19,7 +19,7 @@ import {
 
 export function OCRProcessingOverview() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">OCR Processing</h1>
@@ -28,11 +28,11 @@ export function OCRProcessingOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Brain className="h-4 w-4 mr-2" />
             Process Documents
           </Button>
@@ -40,7 +40,7 @@ export function OCRProcessingOverview() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="rounded-full p-1 h-auto grid w-full grid-cols-3">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="queue">Processing Queue</TabsTrigger>
           <TabsTrigger value="results">Results</TabsTrigger>
@@ -48,34 +48,40 @@ export function OCRProcessingOverview() {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Documents Processed</CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Documents Processed</CardTitle>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-2xl">
+                  <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">1,247</div>
-                <p className="text-xs text-muted-foreground">This month</p>
+                <p className="text-xs text-muted-foreground mt-2">This month</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Accuracy Rate</CardTitle>
-                <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Accuracy Rate</CardTitle>
+                <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-2xl">
+                  <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">96.8%</div>
-                <p className="text-xs text-muted-foreground">Average accuracy</p>
+                <p className="text-xs text-muted-foreground mt-2">Average accuracy</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">In Queue</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">In Queue</CardTitle>
+                <div className="p-3 bg-orange-100 dark:bg-orange-900/20 rounded-2xl">
+                  <Clock className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">12</div>
-                <p className="text-xs text-muted-foreground">Awaiting processing</p>
+                <p className="text-xs text-muted-foreground mt-2">Awaiting processing</p>
               </CardContent>
             </Card>
             <Card>

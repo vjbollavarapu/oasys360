@@ -1,716 +1,457 @@
-"use client"
+/**
+ * Accounting Settings Component
+ * Manages accounting configuration and settings
+ */
 
-import React, { useState } from 'react'
-import { useOrganization } from '@/hooks/use-organization'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Settings, Building2, DollarSign, Calendar, Plus, Edit, Save, X, Check, Clock, Shield, Database, Zap } from 'lucide-react'
+"use client";
 
-interface Currency {
-  code: string
-  name: string
-  symbol: string
-  exchangeRate: number
-  isBaseCurrency: boolean
-  isActive: boolean
-  lastUpdated: string
-}
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
+import { 
+  Settings as SettingsIcon,
+  Save,
+  RefreshCw,
+  DollarSign,
+  Calendar,
+  FileText,
+  AlertCircle,
+  CheckCircle,
+  Building2,
+} from 'lucide-react';
+import { useErrorHandler } from '@/hooks/use-error-handler';
 
-export function SettingsPage() {
-  const { currentOrganization, organizations } = useOrganization()
-  
-  // State management
-  const [activeTab, setActiveTab] = useState("organizations")
-  const [isAddOrgDialogOpen, setIsAddOrgDialogOpen] = useState(false)
-  const [isAddCurrencyDialogOpen, setIsAddCurrencyDialogOpen] = useState(false)
+export function AccountingSettingsOverview() {
+  const { handleError, withErrorHandling } = useErrorHandler();
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  // Mock currencies data
-  const [currencies, setCurrencies] = useState<Currency[]>([
-    { code: 'USD', name: 'US Dollar', symbol: '$', exchangeRate: 1.0, isBaseCurrency: true, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
-    { code: 'EUR', name: 'Euro', symbol: '€', exchangeRate: 0.85, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
-    { code: 'GBP', name: 'British Pound', symbol: '£', exchangeRate: 0.73, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
-    { code: 'JPY', name: 'Japanese Yen', symbol: '¥', exchangeRate: 110.0, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
-    { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$', exchangeRate: 1.35, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' }
-  ])
+  // Form state - TODO: Load from API when available
+  const [settings, setSettings] = useState({
+    // General Settings
+    companyName: '',
+    fiscalYearStart: '01-01',
+    fiscalYearEnd: '12-31',
+    baseCurrency: 'USD',
+    defaultLanguage: 'en',
+    
+    // Accounting Settings
+    enableAutoPosting: false,
+    requireJournalEntryApproval: true,
+    defaultChartOfAccounts: '',
+    allowNegativeBalances: false,
+    roundingMethod: 'half_up',
+    
+    // Reporting Settings
+    dateFormat: 'MM/DD/YYYY',
+    numberFormat: 'en-US',
+    showZeroBalances: true,
+    groupByDepartment: false,
+    
+    // Tax Settings
+    enableTaxManagement: false,
+    defaultTaxRate: 0,
+    taxInclusive: false,
+    
+    // Integration Settings
+    enableBankSync: false,
+    autoReconcile: false,
+    enableInvoiceAutoNumbering: true,
+  });
 
-  // Form states
-  const [newOrg, setNewOrg] = useState<any>({})
-  const [newCurrency, setNewCurrency] = useState<Partial<Currency>>({})
-
-  const timezones = [
-    { value: 'America/New_York', label: 'Eastern Time (ET)' },
-    { value: 'America/Chicago', label: 'Central Time (CT)' },
-    { value: 'America/Los_Angeles', label: 'Pacific Time (PT)' },
-    { value: 'Europe/London', label: 'Greenwich Mean Time (GMT)' },
-    { value: 'Europe/Paris', label: 'Central European Time (CET)' },
-    { value: 'Asia/Tokyo', label: 'Japan Standard Time (JST)' },
-    { value: 'Asia/Singapore', label: 'Singapore Standard Time (SGT)' },
-    { value: 'Australia/Sydney', label: 'Australian Eastern Time (AET)' }
-  ]
-
-  const handleAddOrganization = () => {
-    console.log('Adding organization:', newOrg)
-    setIsAddOrgDialogOpen(false)
-    setNewOrg({})
-  }
-
-  const handleAddCurrency = () => {
-    if (newCurrency.code && newCurrency.name && newCurrency.symbol) {
-      const currency: Currency = {
-        code: newCurrency.code,
-        name: newCurrency.name,
-        symbol: newCurrency.symbol,
-        exchangeRate: newCurrency.exchangeRate || 1.0,
-        isBaseCurrency: false,
-        isActive: true,
-        lastUpdated: new Date().toISOString()
-      }
-      setCurrencies(prev => [...prev, currency])
-      setIsAddCurrencyDialogOpen(false)
-      setNewCurrency({})
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      // TODO: Save to API when available
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Show success message
+    } catch (error) {
+      handleError(error, 'Failed to save settings');
+    } finally {
+      setSaving(false);
     }
-  }
-
-  const toggleCurrencyStatus = (code: string) => {
-    setCurrencies(prev => prev.map(currency => 
-      currency.code === code 
-        ? { ...currency, isActive: !currency.isActive }
-        : currency
-    ))
-  }
-
-  if (!currentOrganization) {
-    return <div>Loading...</div>
-  }
+  };
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-blue-900">Settings</h2>
-          <p className="text-blue-600">
-            Configure organizations, currencies, and system preferences
+          <h1 className="text-3xl font-bold tracking-tight">Accounting Settings</h1>
+          <p className="text-muted-foreground">
+            Configure accounting preferences and defaults
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="text-blue-700 border-blue-200">
-            <Database className="h-4 w-4 mr-2" />
-            Export Settings
+        <div className="flex items-center space-x-2">
+          <Button 
+            variant="outline" 
+            className="rounded-full"
+            onClick={() => {}}
+            disabled={loading}
+          >
+            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            Reset
           </Button>
-          <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-            <Save className="h-4 w-4 mr-2" />
-            Save All Changes
+          <Button 
+            className="rounded-full"
+            onClick={handleSave}
+            disabled={saving}
+          >
+            {saving ? (
+              <>
+                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4 mr-2" />
+                Save Settings
+              </>
+            )}
           </Button>
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 bg-blue-50">
-          <TabsTrigger value="organizations" className="data-[state=active]:bg-blue-100">
-            <Building2 className="h-4 w-4 mr-2" />
-            Organizations
-          </TabsTrigger>
-          <TabsTrigger value="currencies" className="data-[state=active]:bg-blue-100">
-            <DollarSign className="h-4 w-4 mr-2" />
-            Currencies
-          </TabsTrigger>
-          <TabsTrigger value="fiscal" className="data-[state=active]:bg-blue-100">
-            <Calendar className="h-4 w-4 mr-2" />
-            Fiscal Setup
-          </TabsTrigger>
-          <TabsTrigger value="security" className="data-[state=active]:bg-blue-100">
-            <Shield className="h-4 w-4 mr-2" />
-            Security
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Organizations Management */}
-        <TabsContent value="organizations" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold text-blue-800">Organization Management</h3>
-              <p className="text-sm text-blue-600">Manage multiple organizations and their settings</p>
+      {/* General Settings */}
+      <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Building2 className="w-5 h-5" />
+            General Settings
+          </CardTitle>
+          <CardDescription>Basic accounting configuration</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="companyName">Company Name</Label>
+              <Input
+                id="companyName"
+                value={settings.companyName}
+                onChange={(e) => setSettings({ ...settings, companyName: e.target.value })}
+                className="rounded-xl"
+                placeholder="Enter company name"
+              />
             </div>
-            <Dialog open={isAddOrgDialogOpen} onOpenChange={setIsAddOrgDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-700">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Organization
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-gradient-to-br from-blue-50 to-blue-100">
-                <DialogHeader>
-                  <DialogTitle className="text-blue-800">Add New Organization</DialogTitle>
-                  <DialogDescription className="text-blue-600">
-                    Create a new organization with complete setup
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-6 py-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-blue-800">Organization Name</Label>
-                      <Input 
-                        placeholder="OASYS Technologies Inc."
-                        className="border-blue-200"
-                        onChange={(e) => setNewOrg((prev: any) => ({...prev, name: e.target.value}))}
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-blue-800">Organization Code</Label>
-                      <Input 
-                        placeholder="OASYS-US"
-                        className="border-blue-200"
-                        onChange={(e) => setNewOrg((prev: any) => ({...prev, code: e.target.value}))}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label className="text-blue-800">Legal Name</Label>
-                    <Input 
-                      placeholder="OASYS Technologies Incorporated"
-                      className="border-blue-200"
-                      onChange={(e) => setNewOrg((prev: any) => ({...prev, legalName: e.target.value}))}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-blue-800">Tax ID</Label>
-                      <Input 
-                        placeholder="12-3456789"
-                        className="border-blue-200"
-                        onChange={(e) => setNewOrg((prev: any) => ({...prev, taxId: e.target.value}))}
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-blue-800">Primary Currency</Label>
-                      <Select onValueChange={(value) => setNewOrg((prev: any) => ({...prev, fiscal: {...prev.fiscal, currency: value}}))}>
-                        <SelectTrigger className="border-blue-200">
-                          <SelectValue placeholder="Select currency" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {currencies.filter(c => c.isActive).map(currency => (
-                            <SelectItem key={currency.code} value={currency.code}>
-                              {currency.code} - {currency.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-blue-800">Fiscal Year Start</Label>
-                      <Select onValueChange={(value) => setNewOrg((prev: any) => ({...prev, fiscal: {...prev.fiscal, yearStart: value}}))}>
-                        <SelectTrigger className="border-blue-200">
-                          <SelectValue placeholder="Select start month" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="01-01">January 1st</SelectItem>
-                          <SelectItem value="04-01">April 1st</SelectItem>
-                          <SelectItem value="04-06">April 6th (UK)</SelectItem>
-                          <SelectItem value="07-01">July 1st</SelectItem>
-                          <SelectItem value="10-01">October 1st</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label className="text-blue-800">Timezone</Label>
-                      <Select onValueChange={(value) => setNewOrg((prev: any) => ({...prev, fiscal: {...prev.fiscal, timezone: value}}))}>
-                        <SelectTrigger className="border-blue-200">
-                          <SelectValue placeholder="Select timezone" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {timezones.map(tz => (
-                            <SelectItem key={tz.value} value={tz.value}>
-                              {tz.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsAddOrgDialogOpen(false)} className="border-blue-200 text-blue-700">
-                    Cancel
-                  </Button>
-                  <Button onClick={handleAddOrganization} className="bg-blue-600 hover:bg-blue-700">
-                    Create Organization
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-gradient-to-r from-blue-100 to-blue-150 border-b border-blue-200">
-                    <TableHead className="text-blue-800">Organization</TableHead>
-                    <TableHead className="text-blue-800">Code</TableHead>
-                    <TableHead className="text-blue-800">Currency</TableHead>
-                    <TableHead className="text-blue-800">Fiscal Year</TableHead>
-                    <TableHead className="text-blue-800">Status</TableHead>
-                    <TableHead className="text-blue-800 text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {organizations?.map((org) => (
-                    <TableRow key={org.id} className="hover:bg-blue-50/50">
-                      <TableCell>
-                        <div>
-                          <div className="font-medium text-blue-900">{org.name}</div>
-                          <div className="text-sm text-blue-600">{org.address}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="border-blue-200 text-blue-700">
-                          {org.code}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="h-4 w-4 text-blue-600" />
-                          <span className="text-blue-800">{org.currency}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-blue-800">
-                          {new Date(`2024-${org.fiscalYearStart}`).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={org.isActive ? "default" : "secondary"} className={org.isActive ? "bg-blue-100 text-blue-800" : ""}>
-                          {org.isActive ? "Active" : "Inactive"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-blue-600 hover:bg-blue-100">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-blue-600 hover:bg-blue-100">
-                            <Settings className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Currency Management */}
-        <TabsContent value="currencies" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold text-blue-800">Currency Management</h3>
-              <p className="text-sm text-blue-600">Manage currencies and exchange rates</p>
+            <div className="space-y-2">
+              <Label htmlFor="baseCurrency">Base Currency</Label>
+              <Select value={settings.baseCurrency} onValueChange={(value) => setSettings({ ...settings, baseCurrency: value })}>
+                <SelectTrigger className="rounded-xl">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="USD">USD - US Dollar</SelectItem>
+                  <SelectItem value="EUR">EUR - Euro</SelectItem>
+                  <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                  <SelectItem value="MYR">MYR - Malaysian Ringgit</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Dialog open={isAddCurrencyDialogOpen} onOpenChange={setIsAddCurrencyDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-700">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Currency
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="bg-gradient-to-br from-blue-50 to-blue-100">
-                <DialogHeader>
-                  <DialogTitle className="text-blue-800">Add New Currency</DialogTitle>
-                  <DialogDescription className="text-blue-600">
-                    Add a new currency with exchange rate
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-blue-800">Currency Code</Label>
-                      <Input 
-                        placeholder="EUR"
-                        className="border-blue-200"
-                        onChange={(e) => setNewCurrency(prev => ({...prev, code: e.target.value}))}
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-blue-800">Symbol</Label>
-                      <Input 
-                        placeholder="€"
-                        className="border-blue-200"
-                        onChange={(e) => setNewCurrency(prev => ({...prev, symbol: e.target.value}))}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label className="text-blue-800">Currency Name</Label>
-                    <Input 
-                      placeholder="Euro"
-                      className="border-blue-200"
-                      onChange={(e) => setNewCurrency(prev => ({...prev, name: e.target.value}))}
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-blue-800">Exchange Rate (to base currency)</Label>
-                    <Input 
-                      type="number"
-                      step="0.0001"
-                      placeholder="0.85"
-                      className="border-blue-200"
-                      onChange={(e) => setNewCurrency(prev => ({...prev, exchangeRate: parseFloat(e.target.value)}))}
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsAddCurrencyDialogOpen(false)} className="border-blue-200 text-blue-700">
-                    Cancel
-                  </Button>
-                  <Button onClick={handleAddCurrency} className="bg-blue-600 hover:bg-blue-700">
-                    Add Currency
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-                <CardHeader className="bg-gradient-to-r from-blue-100 to-blue-150 border-b border-blue-200">
-                  <CardTitle className="text-blue-800">Currency List</CardTitle>
-                  <CardDescription className="text-blue-600">
-                    Manage currencies and their exchange rates
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-blue-50">
-                        <TableHead className="text-blue-800">Currency</TableHead>
-                        <TableHead className="text-blue-800">Exchange Rate</TableHead>
-                        <TableHead className="text-blue-800">Last Updated</TableHead>
-                        <TableHead className="text-blue-800">Status</TableHead>
-                        <TableHead className="text-blue-800 text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {currencies.map((currency) => (
-                        <TableRow key={currency.code} className="hover:bg-blue-50/50">
-                          <TableCell>
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                <span className="text-blue-800 font-semibold text-sm">{currency.symbol}</span>
-                              </div>
-                              <div>
-                                <div className="font-medium text-blue-900">{currency.code}</div>
-                                <div className="text-sm text-blue-600">{currency.name}</div>
-                              </div>
-                              {currency.isBaseCurrency && (
-                                <Badge variant="outline" className="border-blue-300 text-blue-700 text-xs">
-                                  Base
-                                </Badge>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="text-blue-800 font-mono">{currency.exchangeRate.toFixed(4)}</div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="text-blue-600 text-sm">
-                              {new Date(currency.lastUpdated).toLocaleDateString()}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant={currency.isActive ? "default" : "secondary"} className={currency.isActive ? "bg-blue-100 text-blue-800" : ""}>
-                              {currency.isActive ? "Active" : "Inactive"}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end gap-2">
-                              <Button 
-                                size="sm" 
-                                variant="ghost" 
-                                className="h-8 w-8 p-0 text-blue-600 hover:bg-blue-100"
-                                onClick={() => toggleCurrencyStatus(currency.code)}
-                              >
-                                {currency.isActive ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
-                              </Button>
-                              <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-blue-600 hover:bg-blue-100">
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
+            <div className="space-y-2">
+              <Label htmlFor="fiscalYearStart">Fiscal Year Start</Label>
+              <Input
+                id="fiscalYearStart"
+                type="text"
+                value={settings.fiscalYearStart}
+                onChange={(e) => setSettings({ ...settings, fiscalYearStart: e.target.value })}
+                className="rounded-xl"
+                placeholder="MM-DD (e.g., 01-01)"
+              />
             </div>
-
-            <div>
-              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-                <CardHeader className="bg-gradient-to-r from-blue-100 to-blue-150 border-b border-blue-200">
-                  <CardTitle className="text-blue-800">Exchange Rate Update</CardTitle>
-                  <CardDescription className="text-blue-600">
-                    Update rates manually or automatically
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4 pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-blue-800 font-medium">Auto-update rates</Label>
-                      <p className="text-sm text-blue-600">Update rates daily at 9:00 AM</p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-                  
-                  <div>
-                    <Label className="text-blue-800">Rate Source</Label>
-                    <Select defaultValue="xe">
-                      <SelectTrigger className="border-blue-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="xe">XE.com</SelectItem>
-                        <SelectItem value="ecb">European Central Bank</SelectItem>
-                        <SelectItem value="fed">Federal Reserve</SelectItem>
-                        <SelectItem value="manual">Manual Entry</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                    <Zap className="h-4 w-4 mr-2" />
-                    Update All Rates Now
-                  </Button>
-
-                  <Alert className="border-blue-200 bg-blue-50">
-                    <Clock className="h-4 w-4 text-blue-600" />
-                    <AlertDescription className="text-blue-700">
-                      Last update: Today at 9:00 AM
-                    </AlertDescription>
-                  </Alert>
-                </CardContent>
-              </Card>
+            <div className="space-y-2">
+              <Label htmlFor="fiscalYearEnd">Fiscal Year End</Label>
+              <Input
+                id="fiscalYearEnd"
+                type="text"
+                value={settings.fiscalYearEnd}
+                onChange={(e) => setSettings({ ...settings, fiscalYearEnd: e.target.value })}
+                className="rounded-xl"
+                placeholder="MM-DD (e.g., 12-31)"
+              />
             </div>
           </div>
-        </TabsContent>
+        </CardContent>
+      </Card>
 
-        {/* Fiscal Setup */}
-        <TabsContent value="fiscal" className="space-y-6">
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-            <CardHeader className="bg-gradient-to-r from-blue-100 to-blue-150 border-b border-blue-200">
-              <CardTitle className="text-blue-800">Fiscal Year Configuration</CardTitle>
-              <CardDescription className="text-blue-600">
-                Configure fiscal year behavior and defaults
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6 pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-blue-800 font-medium">Auto-lock periods</Label>
-                      <p className="text-sm text-blue-600">Automatically lock periods when year closes</p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-blue-800 font-medium">Require audit before close</Label>
-                      <p className="text-sm text-blue-600">Audit must be completed before year-end</p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-blue-800 font-medium">Allow posting to prior periods</Label>
-                      <p className="text-sm text-blue-600">Post transactions to locked periods</p>
-                    </div>
-                    <Switch />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-blue-800 font-medium">Auto-create next year</Label>
-                      <p className="text-sm text-blue-600">Create next fiscal year automatically</p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <Label className="text-blue-800 font-medium">Default Period Type</Label>
-                    <p className="text-sm text-blue-600 mb-2">Default period structure for new fiscal years</p>
-                    <Select defaultValue="annual">
-                      <SelectTrigger className="border-blue-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="monthly">Monthly (12 periods)</SelectItem>
-                        <SelectItem value="quarterly">Quarterly (4 periods)</SelectItem>
-                        <SelectItem value="annual">Annual (1 period)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label className="text-blue-800 font-medium">Retained Earnings Account</Label>
-                    <p className="text-sm text-blue-600 mb-2">Account for retained earnings transfer</p>
-                    <Input 
-                      defaultValue="3100-Retained Earnings"
-                      className="border-blue-200"
-                    />
-                  </div>
-
-                  <div>
-                    <Label className="text-blue-800 font-medium">Closing Reminder (Days)</Label>
-                    <p className="text-sm text-blue-600 mb-2">Days before year-end to send reminders</p>
-                    <Input 
-                      type="number"
-                      defaultValue={30}
-                      className="border-blue-200"
-                    />
-                  </div>
-                </div>
+      {/* Accounting Settings */}
+      <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="w-5 h-5" />
+            Accounting Settings
+          </CardTitle>
+          <CardDescription>Configure accounting behavior and defaults</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="autoPosting">Enable Auto Posting</Label>
+                <p className="text-sm text-muted-foreground">
+                  Automatically post journal entries without approval
+                </p>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Security Settings */}
-        <TabsContent value="security" className="space-y-6">
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-            <CardHeader className="bg-gradient-to-r from-blue-100 to-blue-150 border-b border-blue-200">
-              <CardTitle className="text-blue-800">Security & Compliance</CardTitle>
-              <CardDescription className="text-blue-600">
-                Configure security settings and compliance requirements
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6 pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-blue-800 font-medium">Two-Factor Authentication</Label>
-                      <p className="text-sm text-blue-600">Require 2FA for all users</p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-blue-800 font-medium">Audit Trail</Label>
-                      <p className="text-sm text-blue-600">Log all user actions</p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-blue-800 font-medium">Data Encryption</Label>
-                      <p className="text-sm text-blue-600">Encrypt sensitive data at rest</p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-
-                  <div>
-                    <Label className="text-blue-800 font-medium">Password Policy</Label>
-                    <p className="text-sm text-blue-600 mb-2">Minimum password requirements</p>
-                    <Select defaultValue="strong">
-                      <SelectTrigger className="border-blue-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="basic">Basic (8 characters)</SelectItem>
-                        <SelectItem value="moderate">Moderate (12 characters, mixed case)</SelectItem>
-                        <SelectItem value="strong">Strong (16 characters, symbols)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <Label className="text-blue-800 font-medium">Data Retention Period</Label>
-                    <p className="text-sm text-blue-600 mb-2">How long to keep archived data</p>
-                    <Select defaultValue="7">
-                      <SelectTrigger className="border-blue-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="3">3 years</SelectItem>
-                        <SelectItem value="5">5 years</SelectItem>
-                        <SelectItem value="7">7 years (recommended)</SelectItem>
-                        <SelectItem value="10">10 years</SelectItem>
-                        <SelectItem value="indefinite">Indefinite</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label className="text-blue-800 font-medium">Session Timeout</Label>
-                    <p className="text-sm text-blue-600 mb-2">Inactivity timeout duration</p>
-                    <Select defaultValue="30">
-                      <SelectTrigger className="border-blue-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="15">15 minutes</SelectItem>
-                        <SelectItem value="30">30 minutes</SelectItem>
-                        <SelectItem value="60">60 minutes</SelectItem>
-                        <SelectItem value="120">2 hours</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label className="text-blue-800 font-medium">Failed Login Attempts</Label>
-                    <p className="text-sm text-blue-600 mb-2">Lock account after failed attempts</p>
-                    <Select defaultValue="5">
-                      <SelectTrigger className="border-blue-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="3">3 attempts</SelectItem>
-                        <SelectItem value="5">5 attempts</SelectItem>
-                        <SelectItem value="10">10 attempts</SelectItem>
-                        <SelectItem value="unlimited">Unlimited</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+              <Switch
+                id="autoPosting"
+                checked={settings.enableAutoPosting}
+                onCheckedChange={(checked) => setSettings({ ...settings, enableAutoPosting: checked })}
+              />
+            </div>
+            
+            <Separator />
+            
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="requireApproval">Require Journal Entry Approval</Label>
+                <p className="text-sm text-muted-foreground">
+                  Require approval before posting journal entries
+                </p>
               </div>
+              <Switch
+                id="requireApproval"
+                checked={settings.requireJournalEntryApproval}
+                onCheckedChange={(checked) => setSettings({ ...settings, requireJournalEntryApproval: checked })}
+              />
+            </div>
+            
+            <Separator />
+            
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="negativeBalances">Allow Negative Balances</Label>
+                <p className="text-sm text-muted-foreground">
+                  Allow accounts to have negative balances
+                </p>
+              </div>
+              <Switch
+                id="negativeBalances"
+                checked={settings.allowNegativeBalances}
+                onCheckedChange={(checked) => setSettings({ ...settings, allowNegativeBalances: checked })}
+              />
+            </div>
+            
+            <Separator />
+            
+            <div className="space-y-2">
+              <Label htmlFor="roundingMethod">Rounding Method</Label>
+              <Select value={settings.roundingMethod} onValueChange={(value) => setSettings({ ...settings, roundingMethod: value })}>
+                <SelectTrigger className="rounded-xl">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="half_up">Half Up (Standard)</SelectItem>
+                  <SelectItem value="half_down">Half Down</SelectItem>
+                  <SelectItem value="ceil">Always Round Up</SelectItem>
+                  <SelectItem value="floor">Always Round Down</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-              <Alert className="border-blue-200 bg-blue-50">
-                <Shield className="h-4 w-4 text-blue-600" />
-                <AlertTitle className="text-blue-800">Security Status</AlertTitle>
-                <AlertDescription className="text-blue-700">
-                  All security features are properly configured. Last security audit: November 2024
-                </AlertDescription>
-              </Alert>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      {/* Reporting Settings */}
+      <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="w-5 h-5" />
+            Reporting Settings
+          </CardTitle>
+          <CardDescription>Configure report formats and display options</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="dateFormat">Date Format</Label>
+              <Select value={settings.dateFormat} onValueChange={(value) => setSettings({ ...settings, dateFormat: value })}>
+                <SelectTrigger className="rounded-xl">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="MM/DD/YYYY">MM/DD/YYYY</SelectItem>
+                  <SelectItem value="DD/MM/YYYY">DD/MM/YYYY</SelectItem>
+                  <SelectItem value="YYYY-MM-DD">YYYY-MM-DD</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="numberFormat">Number Format</Label>
+              <Select value={settings.numberFormat} onValueChange={(value) => setSettings({ ...settings, numberFormat: value })}>
+                <SelectTrigger className="rounded-xl">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en-US">1,234.56 (US)</SelectItem>
+                  <SelectItem value="en-GB">1,234.56 (UK)</SelectItem>
+                  <SelectItem value="de-DE">1.234,56 (EU)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          
+          <Separator />
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="showZero">Show Zero Balances in Reports</Label>
+                <p className="text-sm text-muted-foreground">
+                  Include accounts with zero balance in reports
+                </p>
+              </div>
+              <Switch
+                id="showZero"
+                checked={settings.showZeroBalances}
+                onCheckedChange={(checked) => setSettings({ ...settings, showZeroBalances: checked })}
+              />
+            </div>
+            
+            <Separator />
+            
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="groupByDept">Group by Department</Label>
+                <p className="text-sm text-muted-foreground">
+                  Group transactions by department in reports
+                </p>
+              </div>
+              <Switch
+                id="groupByDept"
+                checked={settings.groupByDepartment}
+                onCheckedChange={(checked) => setSettings({ ...settings, groupByDepartment: checked })}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Tax Settings */}
+      <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <DollarSign className="w-5 h-5" />
+            Tax Settings
+          </CardTitle>
+          <CardDescription>Configure tax management options</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="enableTax">Enable Tax Management</Label>
+                <p className="text-sm text-muted-foreground">
+                  Enable tax calculation and tracking
+                </p>
+              </div>
+              <Switch
+                id="enableTax"
+                checked={settings.enableTaxManagement}
+                onCheckedChange={(checked) => setSettings({ ...settings, enableTaxManagement: checked })}
+              />
+            </div>
+            
+            {settings.enableTaxManagement && (
+              <>
+                <Separator />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="defaultTaxRate">Default Tax Rate (%)</Label>
+                    <Input
+                      id="defaultTaxRate"
+                      type="number"
+                      value={settings.defaultTaxRate}
+                      onChange={(e) => setSettings({ ...settings, defaultTaxRate: parseFloat(e.target.value) || 0 })}
+                      className="rounded-xl"
+                      placeholder="0.00"
+                      step="0.01"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between pt-8">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="taxInclusive">Tax Inclusive Pricing</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Prices include tax by default
+                      </p>
+                    </div>
+                    <Switch
+                      id="taxInclusive"
+                      checked={settings.taxInclusive}
+                      onCheckedChange={(checked) => setSettings({ ...settings, taxInclusive: checked })}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Integration Settings */}
+      <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <SettingsIcon className="w-5 h-5" />
+            Integration Settings
+          </CardTitle>
+          <CardDescription>Configure external integrations</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="bankSync">Enable Bank Synchronization</Label>
+                <p className="text-sm text-muted-foreground">
+                  Automatically sync bank transactions
+                </p>
+              </div>
+              <Switch
+                id="bankSync"
+                checked={settings.enableBankSync}
+                onCheckedChange={(checked) => setSettings({ ...settings, enableBankSync: checked })}
+              />
+            </div>
+            
+            <Separator />
+            
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="autoReconcile">Auto Reconcile Transactions</Label>
+                <p className="text-sm text-muted-foreground">
+                  Automatically match bank transactions
+                </p>
+              </div>
+              <Switch
+                id="autoReconcile"
+                checked={settings.autoReconcile}
+                onCheckedChange={(checked) => setSettings({ ...settings, autoReconcile: checked })}
+                disabled={!settings.enableBankSync}
+              />
+            </div>
+            
+            <Separator />
+            
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="autoNumbering">Enable Invoice Auto Numbering</Label>
+                <p className="text-sm text-muted-foreground">
+                  Automatically assign invoice numbers
+                </p>
+              </div>
+              <Switch
+                id="autoNumbering"
+                checked={settings.enableInvoiceAutoNumbering}
+                onCheckedChange={(checked) => setSettings({ ...settings, enableInvoiceAutoNumbering: checked })}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  )
+  );
 }

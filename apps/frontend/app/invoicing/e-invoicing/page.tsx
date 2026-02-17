@@ -1,8 +1,19 @@
-"use client"
+/**
+ * E-Invoicing Page
+ * Main page for LHDN e-invoicing setup and management
+ */
 
-import { useState, useEffect } from "react"
+"use client";
+
+import { DashboardLayout } from "@/components/dashboard-layout"
 import { EInvoicingSetup } from "@/components/pages/invoicing/e-invoicing"
 
 export default function EInvoicingPage() {
-  return <EInvoicingSetup />
+  return (
+    <DashboardLayout>
+      <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
+        <EInvoicingSetup />
+      </div>
+    </DashboardLayout>
+  )
 }

@@ -616,11 +616,11 @@ export default function CompliancePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
                 <h4 className="font-semibold mb-2">Compliance Team</h4>
-                <p className="text-sm opacity-90">compliance@oasys.com</p>
+                <p className="text-sm opacity-90">compliance@oasys360.com</p>
               </div>
               <div>
                 <h4 className="font-semibold mb-2">Regulatory Updates</h4>
-                <p className="text-sm opacity-90">regulations@oasys.com</p>
+                <p className="text-sm opacity-90">regulations@oasys360.com</p>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

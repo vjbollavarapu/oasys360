@@ -31,7 +31,7 @@ export function SecurityOverview() {
   })
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Security Settings</h1>
@@ -39,14 +39,14 @@ export function SecurityOverview() {
             Manage system security and access controls
           </p>
         </div>
-        <Button>
+        <Button className="rounded-full">
           <Shield className="h-4 w-4 mr-2" />
           Security Scan
         </Button>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="rounded-full p-1 h-auto grid w-full grid-cols-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="authentication">Authentication</TabsTrigger>
           <TabsTrigger value="access">Access Control</TabsTrigger>
@@ -55,49 +55,57 @@ export function SecurityOverview() {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Security Score</CardTitle>
-                <Shield className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Security Score</CardTitle>
+                <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-2xl">
+                  <Shield className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">85%</div>
-                <p className="text-xs text-muted-foreground">Good</p>
+                <p className="text-xs text-muted-foreground mt-2">Good</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Active Sessions</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Active Sessions</CardTitle>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-2xl">
+                  <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">12</div>
-                <p className="text-xs text-muted-foreground">Users online</p>
+                <p className="text-xs text-muted-foreground mt-2">Users online</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Failed Logins</CardTitle>
-                <XCircle className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Failed Logins</CardTitle>
+                <div className="p-3 bg-red-100 dark:bg-red-900/20 rounded-2xl">
+                  <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">3</div>
-                <p className="text-xs text-muted-foreground">Last 24 hours</p>
+                <p className="text-xs text-muted-foreground mt-2">Last 24 hours</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Security Alerts</CardTitle>
-                <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Security Alerts</CardTitle>
+                <div className="p-3 bg-orange-100 dark:bg-orange-900/20 rounded-2xl">
+                  <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">1</div>
-                <p className="text-xs text-muted-foreground">Active alerts</p>
+                <p className="text-xs text-muted-foreground mt-2">Active alerts</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Recent Security Events</CardTitle>
             </CardHeader>
@@ -107,7 +115,7 @@ export function SecurityOverview() {
                   <CheckCircle className="h-4 w-4 text-green-600" />
                   <div className="flex-1">
                     <p className="text-sm font-medium">Successful login</p>
-                    <p className="text-xs text-muted-foreground">admin@oasys.com - 2 minutes ago</p>
+                    <p className="text-xs text-muted-foreground">admin@oasys360.com - 2 minutes ago</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
@@ -131,7 +139,7 @@ export function SecurityOverview() {
 
         <TabsContent value="authentication" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
-            <Card>
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
               <CardHeader>
                 <CardTitle>Two-Factor Authentication</CardTitle>
                 <CardDescription>
@@ -142,13 +150,14 @@ export function SecurityOverview() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">2FA Status</span>
-                    <Badge className={twoFactorEnabled ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}>
+                    <Badge className={`rounded-full ${twoFactorEnabled ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300" : "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300"}`}>
                       {twoFactorEnabled ? "Enabled" : "Disabled"}
                     </Badge>
                   </div>
                   <Button 
                     variant={twoFactorEnabled ? "destructive" : "default"}
                     onClick={() => setTwoFactorEnabled(!twoFactorEnabled)}
+                    className="rounded-full"
                   >
                     {twoFactorEnabled ? "Disable" : "Enable"} 2FA
                   </Button>
@@ -156,7 +165,7 @@ export function SecurityOverview() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
               <CardHeader>
                 <CardTitle>Password Policy</CardTitle>
                 <CardDescription>
@@ -171,7 +180,7 @@ export function SecurityOverview() {
                       type="number" 
                       value={passwordPolicy.minLength}
                       onChange={(e) => setPasswordPolicy({...passwordPolicy, minLength: parseInt(e.target.value)})}
-                      className="w-full mt-1 p-2 border rounded text-sm"
+                      className="w-full mt-1 p-2 border rounded-xl text-sm"
                     />
                   </div>
                   <div className="space-y-2">
@@ -215,7 +224,7 @@ export function SecurityOverview() {
         </TabsContent>
 
         <TabsContent value="access" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Access Control</CardTitle>
               <CardDescription>
@@ -232,7 +241,7 @@ export function SecurityOverview() {
         </TabsContent>
 
         <TabsContent value="monitoring" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Security Monitoring</CardTitle>
               <CardDescription>

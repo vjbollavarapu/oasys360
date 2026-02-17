@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OASYS360 Sales Orders</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "primary-dark": "#0f4bc4",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1c2333",
+                        "border-light": "#e2e8f0",
+                        "border-dark": "#2d3748",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Scrollbar hide for clean horizontal scrolling */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen relative text-slate-800 dark:text-white pb-20 overflow-x-hidden transition-colors duration-200">
+<!-- Sticky Header -->
+<header class="sticky top-0 z-40 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-border-light dark:border-border-dark">
+<div class="flex items-center justify-between px-4 py-3">
+<h1 class="text-xl font-bold tracking-tight">Sales Orders</h1>
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-purple-500 overflow-hidden border border-white/20" data-alt="User profile avatar gradient"></div>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="px-4 pb-3">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+<span class="material-symbols-outlined text-slate-400">search</span>
+</div>
+<input class="block w-full p-3 pl-10 text-sm rounded-xl bg-white dark:bg-surface-dark border-none ring-1 ring-border-light dark:ring-border-dark placeholder-slate-400 focus:ring-2 focus:ring-primary dark:focus:ring-primary shadow-sm transition-all" placeholder="Search order #, customer, or amount..." type="text"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex flex-col gap-6 p-4">
+<!-- Stats Section -->
+<section class="grid grid-cols-2 gap-3">
+<div class="col-span-2 bg-white dark:bg-surface-dark p-5 rounded-xl shadow-sm border border-border-light dark:border-border-dark relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl text-primary">bar_chart</span>
+</div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Total Sales This Month</p>
+<div class="flex items-baseline gap-2">
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">$42,500.00</h2>
+</div>
+<div class="flex items-center gap-1 mt-2 text-emerald-500 text-sm font-semibold bg-emerald-500/10 w-fit px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-base">trending_up</span>
+<span>+15.3%</span>
+</div>
+</div>
+</section>
+<!-- Filters -->
+<section class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+<button class="whitespace-nowrap px-4 py-2 bg-primary text-white text-sm font-semibold rounded-full shadow-lg shadow-primary/20">All Orders</button>
+<button class="whitespace-nowrap px-4 py-2 bg-white dark:bg-surface-dark border border-border-light dark:border-border-dark text-slate-600 dark:text-slate-300 text-sm font-medium rounded-full">Pending Approval</button>
+<button class="whitespace-nowrap px-4 py-2 bg-white dark:bg-surface-dark border border-border-light dark:border-border-dark text-slate-600 dark:text-slate-300 text-sm font-medium rounded-full">Invoiced</button>
+<button class="whitespace-nowrap px-4 py-2 bg-white dark:bg-surface-dark border border-border-light dark:border-border-dark text-slate-600 dark:text-slate-300 text-sm font-medium rounded-full">Drafts</button>
+</section>
+<!-- Orders List -->
+<div class="flex flex-col gap-4">
+<!-- Item 1: Create Order Flow (In Progress) -->
+<div class="bg-white dark:bg-surface-dark rounded-xl border-2 border-dashed border-primary/30 p-5 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary/50"></div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-xs font-bold uppercase tracking-wider text-primary">New Order</span>
+<span class="text-xs text-slate-400">• Draft</span>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">TechFlow Systems</h3>
+</div>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<!-- Stepper -->
+<div class="mb-4">
+<div class="flex justify-between text-xs font-medium text-slate-500 dark:text-slate-400 mb-2">
+<span class="text-primary">Customer</span>
+<span class="text-primary">Items</span>
+<span>Review</span>
+<span>Confirm</span>
+</div>
+<div class="w-full h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden flex">
+<div class="w-1/4 h-full bg-primary"></div>
+<div class="w-1/4 h-full bg-primary animate-pulse"></div>
+<div class="w-1/4 h-full"></div>
+<div class="w-1/4 h-full"></div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-sm text-slate-500">2 Items added • $1,240.00</p>
+<button class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md shadow-primary/20 transition-all flex items-center gap-1">
+                        Continue <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Item 2: Detailed View (Expanded Card) -->
+<div class="bg-white dark:bg-surface-dark rounded-xl shadow-lg ring-1 ring-black/5 dark:ring-white/10 overflow-hidden transform transition-all duration-300 scale-[1.01]">
+<!-- Header of Card -->
+<div class="p-5 border-b border-border-light dark:border-border-dark">
+<div class="flex justify-between items-start">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+<span class="material-symbols-outlined">apartment</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white leading-tight">Acme Corporation</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400">#ORD-2024-089 • 2 hrs ago</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-lg font-bold text-slate-900 dark:text-white">$4,200.00</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+                                Pending
+                            </span>
+</div>
+</div>
+</div>
+<!-- Expanded Content -->
+<div class="p-5 bg-slate-50 dark:bg-[#151a25]">
+<!-- Status Timeline -->
+<div class="flex items-center justify-between mb-6 relative">
+<div class="absolute left-0 top-1/2 w-full h-0.5 bg-slate-200 dark:bg-slate-700 -z-10 transform -translate-y-1/2"></div>
+<div class="flex flex-col items-center gap-1 bg-slate-50 dark:bg-[#151a25] px-1">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center border-2 border-white dark:border-[#151a25]">
+<span class="material-symbols-outlined text-white text-[14px]">check</span>
+</div>
+<span class="text-[10px] font-semibold text-slate-500 uppercase">Draft</span>
+</div>
+<div class="flex flex-col items-center gap-1 bg-slate-50 dark:bg-[#151a25] px-1">
+<div class="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center border-2 border-white dark:border-[#151a25] ring-4 ring-amber-500/20">
+<span class="material-symbols-outlined text-white text-[14px]">hourglass_empty</span>
+</div>
+<span class="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase">Pending</span>
+</div>
+<div class="flex flex-col items-center gap-1 bg-slate-50 dark:bg-[#151a25] px-1">
+<div class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600"></div>
+<span class="text-[10px] text-slate-400 uppercase">Approve</span>
+</div>
+<div class="flex flex-col items-center gap-1 bg-slate-50 dark:bg-[#151a25] px-1">
+<div class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600"></div>
+<span class="text-[10px] text-slate-400 uppercase">Invoice</span>
+</div>
+</div>
+<!-- Line Items -->
+<div class="mb-6">
+<h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Order Items (2)</h4>
+<div class="space-y-3">
+<div class="flex justify-between items-center text-sm">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-white dark:bg-surface-dark border border-border-light dark:border-border-dark flex items-center justify-center">
+<span class="material-symbols-outlined text-base text-slate-400">dns</span>
+</div>
+<div>
+<p class="font-medium text-slate-900 dark:text-white">Enterprise Server License</p>
+<p class="text-xs text-slate-500">Qty: 10 × $350.00</p>
+</div>
+</div>
+<span class="font-medium text-slate-900 dark:text-white">$3,500.00</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-white dark:bg-surface-dark border border-border-light dark:border-border-dark flex items-center justify-center">
+<span class="material-symbols-outlined text-base text-slate-400">support_agent</span>
+</div>
+<div>
+<p class="font-medium text-slate-900 dark:text-white">Implementation Support</p>
+<p class="text-xs text-slate-500">Qty: 5 × $140.00</p>
+</div>
+</div>
+<span class="font-medium text-slate-900 dark:text-white">$700.00</span>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-dashed border-border-light dark:border-border-dark flex justify-between items-center">
+<span class="text-sm font-medium text-slate-500">Grand Total</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">$4,200.00</span>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex gap-3">
+<button class="flex-1 py-3 px-4 bg-white dark:bg-surface-dark border border-border-light dark:border-border-dark text-slate-700 dark:text-white rounded-lg font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                            Edit Order
+                        </button>
+<button class="flex-[2] py-3 px-4 bg-primary text-white rounded-lg font-bold text-sm shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+                            Convert to Invoice
+                        </button>
+</div>
+</div>
+</div>
+<!-- Item 3: Compact Row -->
+<div class="bg-white dark:bg-surface-dark rounded-xl p-4 shadow-sm border border-border-light dark:border-border-dark hover:border-primary/50 transition-colors group cursor-pointer">
+<div class="flex justify-between items-center">
+<div class="flex gap-4 items-center">
+<div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+<span class="material-symbols-outlined text-[20px]">language</span>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-base">Globex Inc.</h3>
+<div class="flex items-center gap-2">
+<p class="text-xs text-slate-500">#ORD-2024-088</p>
+<span class="w-1 h-1 bg-slate-400 rounded-full"></span>
+<span class="text-xs text-emerald-500 font-medium">Invoiced</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-base font-bold text-slate-900 dark:text-white">$1,250.00</span>
+<span class="text-xs text-slate-400">Yesterday</span>
+</div>
+</div>
+</div>
+<!-- Item 4: Compact Row -->
+<div class="bg-white dark:bg-surface-dark rounded-xl p-4 shadow-sm border border-border-light dark:border-border-dark hover:border-primary/50 transition-colors group cursor-pointer">
+<div class="flex justify-between items-center">
+<div class="flex gap-4 items-center">
+<div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
+<span class="material-symbols-outlined text-[20px]">biotech</span>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-base">Soylent Corp</h3>
+<div class="flex items-center gap-2">
+<p class="text-xs text-slate-500">#ORD-2024-087</p>
+<span class="w-1 h-1 bg-slate-400 rounded-full"></span>
+<span class="text-xs text-slate-500 font-medium">Draft</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-base font-bold text-slate-900 dark:text-white">$8,900.00</span>
+<span class="text-xs text-slate-400">Oct 24</span>
+</div>
+</div>
+</div>
+<!-- Item 5: Compact Row -->
+<div class="bg-white dark:bg-surface-dark rounded-xl p-4 shadow-sm border border-border-light dark:border-border-dark hover:border-primary/50 transition-colors group cursor-pointer opacity-70">
+<div class="flex justify-between items-center">
+<div class="flex gap-4 items-center">
+<div class="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-base">Massive Dynamic</h3>
+<div class="flex items-center gap-2">
+<p class="text-xs text-slate-500">#ORD-2024-086</p>
+<span class="w-1 h-1 bg-slate-400 rounded-full"></span>
+<span class="text-xs text-red-500 font-medium">Cancelled</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-base font-bold text-slate-900 dark:text-white line-through text-slate-400">$2,100.00</span>
+<span class="text-xs text-slate-400">Oct 22</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB: Create New Order -->
+<div class="fixed bottom-6 right-6 z-50">
+<button class="group flex items-center justify-center w-14 h-14 bg-primary text-white rounded-full shadow-xl shadow-primary/40 hover:scale-105 hover:bg-primary-dark transition-all duration-200">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform">add</span>
+</button>
+</div>
+<!-- Bottom Navigation Bar (Optional for Context) -->
+<nav class="fixed bottom-0 w-full bg-white dark:bg-[#161b26] border-t border-border-light dark:border-border-dark pb-safe pt-2 px-6 flex justify-between items-center z-40">
+<div class="flex flex-col items-center gap-1 text-primary cursor-pointer">
+<span class="material-symbols-outlined filled">shopping_cart</span>
+<span class="text-[10px] font-bold">Orders</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400 cursor-pointer hover:text-slate-600 dark:hover:text-slate-200">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px] font-medium">Products</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400 cursor-pointer hover:text-slate-600 dark:hover:text-slate-200">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[10px] font-medium">Customers</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400 cursor-pointer hover:text-slate-600 dark:hover:text-slate-200">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</div>
+</nav>
+<div class="h-16"></div> <!-- Spacer for bottom nav -->
+</body></html>

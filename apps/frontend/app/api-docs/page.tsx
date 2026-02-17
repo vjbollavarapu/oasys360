@@ -27,7 +27,7 @@ import { OasysClient } from '@oasys/sdk';
 
 const client = new OasysClient({
   apiKey: 'your_api_key_here',
-  baseUrl: 'https://api.oasys.com/v1'
+  baseUrl: 'https://api.oasys360.com/v1'
 });
 
 // Get all transactions
@@ -55,7 +55,7 @@ from oasys import OasysClient
 
 client = OasysClient(
     api_key='your_api_key_here',
-    base_url='https://api.oasys.com/v1'
+    base_url='https://api.oasys360.com/v1'
 )
 
 # Get all transactions
@@ -78,10 +78,10 @@ invoice = client.invoices.create(
     curl: `# Authentication
 curl -H "Authorization: Bearer your_api_key_here" \\
      -H "Content-Type: application/json" \\
-     https://api.oasys.com/v1/transactions
+     https://api.oasys360.com/v1/transactions
 
 # Create an invoice
-curl -X POST https://api.oasys.com/v1/invoices \\
+curl -X POST https://api.oasys360.com/v1/invoices \\
   -H "Authorization: Bearer your_api_key_here" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -222,7 +222,7 @@ curl -X POST https://api.oasys.com/v1/invoices \\
                   <div className="bg-white p-4 rounded-lg border border-blue-200">
                     <Globe className="w-8 h-8 text-blue-600 mb-2" />
                     <h4 className="font-semibold text-blue-900">Base URL</h4>
-                    <code className="text-sm text-blue-700">https://api.oasys.com/v1</code>
+                    <code className="text-sm text-blue-700">https://api.oasys360.com/v1</code>
                   </div>
                   <div className="bg-white p-4 rounded-lg border border-blue-200">
                     <Shield className="w-8 h-8 text-blue-600 mb-2" />

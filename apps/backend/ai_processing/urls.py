@@ -30,6 +30,16 @@ urlpatterns = [
     path('models/<uuid:pk>/', views.AIModelDetailView.as_view(), name='model_detail'),
     path('models/<uuid:model_id>/retrain/', views.retrain_model, name='retrain_model'),
     
+    # Fraud Detection
+    path('fraud/', views.detect_fraud, name='detect_fraud'),
+    
+    # Financial Forecasting
+    path('forecasting/', views.forecast_financials, name='forecast_financials'),
+    path('forecasting/models/', views.get_forecasting_models, name='get_forecasting_models'),
+    
+    # AI Engine Settings
+    path('settings/', views.ai_settings, name='ai_settings'),
+    
     # AI Processing Statistics
     path('stats/', views.ai_processing_stats, name='ai_processing_stats'),
 ]

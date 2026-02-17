@@ -168,17 +168,17 @@ export function AIForecasting({ className = '' }: AIForecastingProps) {
     await withErrorHandling(async () => {
       setLoading(true);
       
-      // Load forecasts
-      const forecastsResponse = await aiProcessingService.getForecasts();
-      if (forecastsResponse.success && forecastsResponse.data) {
-        setForecasts(forecastsResponse.data);
+      // Load available forecasting models
+      const modelsResponse = await aiProcessingService.getForecastingModels();
+      if (modelsResponse.success && modelsResponse.data) {
+        // Store models for use in forecast generation
+        // Note: Backend doesn't have a forecasts list endpoint, so forecasts array stays empty
       }
       
-      // Load forecast metrics
-      const metricsResponse = await aiProcessingService.getForecastMetrics();
-      if (metricsResponse.success && metricsResponse.data) {
-        setMetrics(metricsResponse.data);
-      }
+      // Note: Backend doesn't have forecast list/metrics endpoints yet
+      // These will be implemented when backend adds forecast storage
+      setForecasts([]);
+      setMetrics({});
     });
     setLoading(false);
   };
@@ -192,10 +192,32 @@ export function AIForecasting({ className = '' }: AIForecastingProps) {
     setIsGenerating(true);
     
     try {
-      const response = await aiProcessingService.generateForecast(data);
+      // Transform form data to match backend API
+      const forecastPayload = {
+        forecast_type: data.type,
+        time_series_data: [], // User should provide this or fetch from transactions
+        periods: parseInt(data.period) || 12,
+        frequency: 'monthly', // Could be derived from period selection
+        model_name: data.name,
+      };
+
+      const response = await aiProcessingService.forecastFinancials(forecastPayload);
       
       if (response.success) {
-        await loadData();
+        // Display results in a dialog
+        setSelectedForecast({
+          id: 'new',
+          name: data.name,
+          type: data.type,
+          period: data.period,
+          confidence: data.confidence,
+          status: 'completed',
+          results: response.data,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          createdBy: { id: 'current', name: 'Current User' },
+        });
+        setShowResultsDialog(true);
         setShowCreateDialog(false);
         reset();
       } else {

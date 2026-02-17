@@ -132,7 +132,7 @@ export function TenantSettings({ tenant, onUpdate }: TenantSettingsProps) {
           <Building2 className="w-8 h-8 text-blue-600" />
           <div>
             <h2 className="text-2xl font-bold">{tenant.name} Settings</h2>
-            <p className="text-muted-foreground">{tenant.domain}.oasys.com</p>
+            <p className="text-muted-foreground">{tenant.domain}.oasys360.com</p>
           </div>
         </div>
         <div className="flex items-center gap-3">

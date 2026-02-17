@@ -1,15 +1,18 @@
-from rest_framework import viewsets, status, filters
-from rest_framework.decorators import action
+from rest_framework import viewsets, status, filters, generics
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q, Sum, F
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from decimal import Decimal
 
-from .models import Item, ItemCategory, InventoryMovement, Warehouse, WarehouseStock
+from .models import Item, ItemCategory, InventoryMovement, Warehouse, WarehouseStock, InventoryValuation, InventorySettings
 from .serializers import (
     ItemSerializer, ItemCategorySerializer, InventoryMovementSerializer,
-    WarehouseSerializer, WarehouseStockSerializer, ItemDetailSerializer
+    WarehouseSerializer, WarehouseStockSerializer, ItemDetailSerializer,
+    InventoryValuationSerializer, InventorySettingsSerializer, InventorySummarySerializer
 )
 from authentication.permissions import IsTenantMember
 
@@ -224,3 +227,244 @@ class WarehouseStockViewSet(viewsets.ModelViewSet):
         )
         serializer = self.get_serializer(stock_levels, many=True)
         return Response(serializer.data)
+
+
+# Inventory Overview Stats
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsTenantMember])
+def inventory_overview_stats(request):
+    """Get inventory overview statistics"""
+    tenant = request.user.tenant
+    
+    items = Item.objects.filter(tenant=tenant, is_active=True)
+    tracked_items = items.filter(is_tracked=True)
+    
+    # Calculate statistics
+    total_items = items.count()
+    total_tracked = tracked_items.count()
+    low_stock_items = tracked_items.filter(
+        current_stock__lte=F('min_stock_level')
+    ).count()
+    reorder_items = tracked_items.filter(
+        current_stock__lte=F('reorder_point')
+    ).count()
+    
+    # Total inventory value
+    total_value = tracked_items.aggregate(
+        total=Sum(F('current_stock') * F('cost_price'))
+    )['total'] or Decimal('0.00')
+    
+    # Total warehouses
+    total_warehouses = Warehouse.objects.filter(tenant=tenant, is_active=True).count()
+    
+    # Recent movements (last 7 days)
+    recent_movements = InventoryMovement.objects.filter(
+        tenant=tenant,
+        created_at__gte=timezone.now() - timezone.timedelta(days=7)
+    ).count()
+    
+    return Response({
+        'total_items': total_items,
+        'tracked_items': total_tracked,
+        'low_stock_items': low_stock_items,
+        'reorder_items': reorder_items,
+        'total_inventory_value': float(total_value),
+        'total_warehouses': total_warehouses,
+        'recent_movements': recent_movements
+    })
+
+
+# Inventory Valuation Views
+class InventoryValuationViewSet(viewsets.ModelViewSet):
+    """ViewSet for managing Inventory Valuations"""
+    queryset = InventoryValuation.objects.none()
+    serializer_class = InventoryValuationSerializer
+    permission_classes = [IsAuthenticated, IsTenantMember]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['valuation_method', 'company']
+    ordering_fields = ['valuation_date', 'calculated_at']
+    ordering = ['-valuation_date', '-calculated_at']
+    
+    def get_queryset(self):
+        return InventoryValuation.objects.filter(tenant=self.request.user.tenant)
+    
+    def perform_create(self, serializer):
+        tenant = self.request.user.tenant
+        
+        # Calculate total inventory value based on valuation method
+        items = Item.objects.filter(tenant=tenant, is_tracked=True, is_active=True)
+        
+        total_value = Decimal('0.00')
+        total_items = items.count()
+        
+        # Simple calculation - in real implementation, this would use the valuation method
+        for item in items:
+            total_value += item.get_total_value()
+        
+        serializer.save(
+            tenant=tenant,
+            total_inventory_value=total_value,
+            total_items=total_items,
+            calculated_by=self.request.user
+        )
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsTenantMember])
+def calculate_valuation(request):
+    """Calculate inventory valuation"""
+    tenant = request.user.tenant
+    valuation_method = request.data.get('valuation_method', 'fifo')
+    valuation_date = request.data.get('valuation_date', timezone.now().date())
+    company_id = request.data.get('company_id')
+    
+    # Get items to value
+    items = Item.objects.filter(tenant=tenant, is_tracked=True, is_active=True)
+    if company_id:
+        items = items.filter(company_id=company_id)
+    
+    total_value = Decimal('0.00')
+    total_items = items.count()
+    
+    # Calculate based on valuation method
+    for item in items:
+        # Simplified calculation - real implementation would use FIFO/LIFO/etc
+        total_value += item.get_total_value()
+    
+    # Create valuation record
+    valuation_data = {
+        'tenant': tenant.id,
+        'company': company_id,
+        'valuation_method': valuation_method,
+        'valuation_date': valuation_date,
+        'total_inventory_value': total_value,
+        'total_items': total_items,
+        'currency': 'USD',
+        'calculated_by': request.user.id
+    }
+    
+    serializer = InventoryValuationSerializer(data=valuation_data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Reorder Points Views
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsTenantMember])
+def reorder_points_list(request):
+    """Get items that need reordering"""
+    tenant = request.user.tenant
+    items = Item.objects.filter(
+        tenant=tenant,
+        is_tracked=True,
+        is_active=True,
+        current_stock__lte=F('reorder_point')
+    ).order_by('current_stock')
+    
+    serializer = ItemSerializer(items, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsTenantMember])
+def bulk_update_reorder_points(request):
+    """Bulk update reorder points for multiple items"""
+    tenant = request.user.tenant
+    updates = request.data.get('updates', [])  # List of {item_id, reorder_point}
+    
+    updated_items = []
+    for update in updates:
+        item_id = update.get('item_id')
+        reorder_point = update.get('reorder_point')
+        
+        if not item_id or reorder_point is None:
+            continue
+        
+        try:
+            item = Item.objects.get(id=item_id, tenant=tenant)
+            item.reorder_point = Decimal(str(reorder_point))
+            item.save()
+            updated_items.append(ItemSerializer(item).data)
+        except Item.DoesNotExist:
+            continue
+    
+    return Response({
+        'updated_count': len(updated_items),
+        'items': updated_items
+    })
+
+
+# Barcode Scanning Views
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated, IsTenantMember])
+def barcode_lookup(request):
+    """Lookup item by barcode"""
+    tenant = request.user.tenant
+    
+    if request.method == 'GET':
+        barcode = request.query_params.get('barcode')
+    else:
+        barcode = request.data.get('barcode')
+    
+    if not barcode:
+        return Response(
+            {'error': 'Barcode is required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try:
+        item = Item.objects.get(tenant=tenant, barcode=barcode, is_active=True)
+        serializer = ItemDetailSerializer(item)
+        return Response(serializer.data)
+    except Item.DoesNotExist:
+        return Response(
+            {'error': 'Item not found with barcode'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Item.MultipleObjectsReturned:
+        # Return first match if multiple
+        item = Item.objects.filter(tenant=tenant, barcode=barcode, is_active=True).first()
+        serializer = ItemDetailSerializer(item)
+        return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsTenantMember])
+def generate_barcode(request, pk):
+    """Generate barcode for an item"""
+    tenant = request.user.tenant
+    item = get_object_or_404(Item, id=pk, tenant=tenant)
+    
+    if item.barcode:
+        return Response(
+            {'error': 'Item already has a barcode'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    # Generate barcode (simple implementation - use actual barcode generation library)
+    # For now, use SKU as barcode
+    settings = InventorySettings.objects.filter(tenant=tenant).first()
+    prefix = settings.barcode_prefix if settings else ''
+    item.barcode = f"{prefix}{item.sku}"
+    item.save()
+    
+    serializer = ItemSerializer(item)
+    return Response(serializer.data)
+
+
+# Inventory Settings Views
+class InventorySettingsView(generics.RetrieveUpdateAPIView):
+    """Retrieve and update Inventory Settings"""
+    serializer_class = InventorySettingsSerializer
+    permission_classes = [IsAuthenticated, IsTenantMember]
+    
+    def get_object(self):
+        tenant = self.request.user.tenant
+        company = getattr(self.request.user, 'company', None)
+        settings, created = InventorySettings.objects.get_or_create(
+            tenant=tenant,
+            company=company
+        )
+        return settings

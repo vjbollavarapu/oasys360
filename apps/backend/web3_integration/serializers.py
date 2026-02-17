@@ -4,6 +4,12 @@ from .models import (
     CryptoWallet, CryptoTransaction, SmartContract, DeFiProtocol, 
     DeFiPosition, TokenPrice, Web3IntegrationSettings
 )
+from .gnosis.models import (
+    GnosisSafe, GnosisSafeOwner, GnosisSafeTransaction, GnosisSafeConfirmation
+)
+from .coinbase.models import (
+    CoinbasePrimeConnection, CoinbasePrimeAccount, CoinbasePrimeOrder
+)
 
 
 class CryptoWalletSerializer(serializers.ModelSerializer):
@@ -22,8 +28,16 @@ class CryptoWalletSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at', 'updated_at']
     
     def get_balance_usd(self, obj):
-        # Calculate total balance in USD (mock conversion)
-        return obj.balance * Decimal('2000')  # Mock ETH price
+        # Calculate total balance in USD based on latest TokenPrice
+        try:
+            # Assuming 'ETH' for ethereum network, could be dynamic
+            token_price = TokenPrice.objects.filter(
+                token_symbol='ETH',
+                tenant=obj.tenant
+            ).latest('timestamp')
+            return obj.balance * token_price.price_usd
+        except TokenPrice.DoesNotExist:
+            return Decimal('0.00')
     
     def get_total_transactions(self, obj):
         return obj.transactions.count()
@@ -81,7 +95,27 @@ class DeFiProtocolSerializer(serializers.ModelSerializer):
     
     def get_total_value_locked(self, obj):
         positions = DeFiPosition.objects.filter(protocol=obj)
-        return sum(position.amount * Decimal('2000') for position in positions)  # Mock conversion
+        total_usd = Decimal('0.00')
+        for position in positions:
+            # Try to find price for the position's token
+            try:
+                price = TokenPrice.objects.filter(
+                    token_address=position.token_address,
+                    tenant=obj.tenant
+                ).latest('timestamp').price_usd
+            except TokenPrice.DoesNotExist:
+                # Fallback to ETH price if specific token not found
+                try:
+                    price = TokenPrice.objects.filter(
+                        token_symbol='ETH',
+                        tenant=obj.tenant
+                    ).latest('timestamp').price_usd
+                except TokenPrice.DoesNotExist:
+                    price = Decimal('0.00')
+            
+            total_usd += position.amount * price
+            
+        return total_usd
 
 
 class DeFiPositionSerializer(serializers.ModelSerializer):
@@ -165,3 +199,124 @@ class Web3StatsSerializer(serializers.Serializer):
     total_defi_positions = serializers.IntegerField()
     period_start = serializers.DateField()
     period_end = serializers.DateField()
+
+
+# Gnosis Safe Serializers
+class GnosisSafeOwnerSerializer(serializers.ModelSerializer):
+    """Serializer for Gnosis Safe Owner"""
+    
+    class Meta:
+        model = GnosisSafeOwner
+        fields = [
+            'id', 'safe', 'owner_address', 'name', 'is_active', 'added_at'
+        ]
+        read_only_fields = ['id', 'added_at']
+
+
+class GnosisSafeConfirmationSerializer(serializers.ModelSerializer):
+    """Serializer for Gnosis Safe Confirmation"""
+    owner_address = serializers.CharField(source='owner.owner_address', read_only=True)
+    owner_name = serializers.CharField(source='owner.name', read_only=True)
+    
+    class Meta:
+        model = GnosisSafeConfirmation
+        fields = [
+            'id', 'transaction', 'owner', 'owner_address', 'owner_name',
+            'signature', 'confirmed_at'
+        ]
+        read_only_fields = ['id', 'confirmed_at']
+
+
+class GnosisSafeTransactionSerializer(serializers.ModelSerializer):
+    """Serializer for Gnosis Safe Transaction"""
+    safe_name = serializers.CharField(source='safe.name', read_only=True)
+    safe_address = serializers.CharField(source='safe.safe_address', read_only=True)
+    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
+    confirmations = GnosisSafeConfirmationSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = GnosisSafeTransaction
+        fields = [
+            'id', 'tenant', 'safe', 'safe_name', 'safe_address', 'safe_tx_hash',
+            'to_address', 'value', 'data', 'operation', 'status', 'confirmations_count',
+            'confirmations_required', 'nonce', 'submitted_at', 'executed_at',
+            'execution_tx_hash', 'created_by', 'created_by_name', 'confirmations',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'submitted_at', 'executed_at']
+
+
+class GnosisSafeSerializer(serializers.ModelSerializer):
+    """Serializer for Gnosis Safe"""
+    owners = GnosisSafeOwnerSerializer(many=True, read_only=True)
+    total_transactions = serializers.SerializerMethodField()
+    pending_transactions = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = GnosisSafe
+        fields = [
+            'id', 'tenant', 'name', 'safe_address', 'network', 'threshold',
+            'owner_count', 'version', 'is_active', 'last_sync', 'balance',
+            'owners', 'total_transactions', 'pending_transactions',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'owner_count']
+    
+    def get_total_transactions(self, obj):
+        return obj.transactions.count()
+    
+    def get_pending_transactions(self, obj):
+        return obj.transactions.filter(status='pending').count()
+
+
+# Coinbase Prime Serializers
+class CoinbasePrimeConnectionSerializer(serializers.ModelSerializer):
+    """Serializer for Coinbase Prime Connection"""
+    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
+    total_accounts = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = CoinbasePrimeConnection
+        fields = [
+            'id', 'tenant', 'name', 'api_key', 'api_secret', 'passphrase',
+            'portfolio_id', 'environment', 'is_active', 'last_sync',
+            'created_by', 'created_by_name', 'total_accounts',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'last_sync']
+        extra_kwargs = {
+            'api_key': {'write_only': True},
+            'api_secret': {'write_only': True},
+            'passphrase': {'write_only': True},
+        }
+    
+    def get_total_accounts(self, obj):
+        return obj.accounts.count()
+
+
+class CoinbasePrimeAccountSerializer(serializers.ModelSerializer):
+    """Serializer for Coinbase Prime Account"""
+    connection_name = serializers.CharField(source='connection.name', read_only=True)
+    
+    class Meta:
+        model = CoinbasePrimeAccount
+        fields = [
+            'id', 'tenant', 'connection', 'connection_name', 'account_id',
+            'account_name', 'account_type', 'currency', 'balance',
+            'available_balance', 'last_sync', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'last_sync']
+
+
+class CoinbasePrimeOrderSerializer(serializers.ModelSerializer):
+    """Serializer for Coinbase Prime Order"""
+    connection_name = serializers.CharField(source='connection.name', read_only=True)
+    
+    class Meta:
+        model = CoinbasePrimeOrder
+        fields = [
+            'id', 'tenant', 'connection', 'connection_name', 'order_id',
+            'product_id', 'side', 'order_type', 'size', 'price', 'filled_size',
+            'status', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']

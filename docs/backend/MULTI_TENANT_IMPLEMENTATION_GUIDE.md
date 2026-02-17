@@ -1,4 +1,4 @@
-ge# Multi-Tenant Application Implementation Guide
+# Multi-Tenant Application Implementation Guide
 
 ## 📋 Table of Contents
 1. [Overview](#overview)

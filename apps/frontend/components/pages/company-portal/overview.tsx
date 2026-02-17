@@ -139,7 +139,7 @@ export function CompanyPortalOverview() {
   const companies = [
     {
       id: "1",
-      name: "TechFlow Solutions Inc.",
+      name: "oasys360 Solutions Inc.",
       type: "Headquarters",
       location: "New York, USA",
       fiscalYear: "Jan - Dec",
@@ -149,7 +149,7 @@ export function CompanyPortalOverview() {
     },
     {
       id: "2",
-      name: "TechFlow Europe Ltd.",
+      name: "oasys360 Europe Ltd.",
       type: "Regional Office",
       location: "London, UK",
       fiscalYear: "Apr - Mar",
@@ -159,7 +159,7 @@ export function CompanyPortalOverview() {
     },
     {
       id: "3",
-      name: "TechFlow APAC Pte Ltd.",
+      name: "oasys360 APAC Pte Ltd.",
       type: "Branch",
       location: "Singapore",
       fiscalYear: "Jan - Dec",

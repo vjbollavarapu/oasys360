@@ -102,20 +102,20 @@ export function BackupRestoreOverview() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "completed": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-      case "running": return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
-      case "failed": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-      case "scheduled": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+      case "completed": return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
+      case "running": return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300"
+      case "failed": return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300"
+      case "scheduled": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300"
+      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300"
     }
   }
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "full": return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
-      case "incremental": return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
-      case "differential": return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+      case "full": return "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300"
+      case "incremental": return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300"
+      case "differential": return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300"
+      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300"
     }
   }
 
@@ -124,7 +124,7 @@ export function BackupRestoreOverview() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -134,13 +134,14 @@ export function BackupRestoreOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
           <Button 
             onClick={handleCreateBackup}
             disabled={isCreatingBackup}
+            className="rounded-full"
           >
             {isCreatingBackup ? (
               <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -154,7 +155,7 @@ export function BackupRestoreOverview() {
 
       {/* Main Content */}
       <Tabs defaultValue="backups" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="rounded-full p-1 h-auto grid w-full grid-cols-3">
           <TabsTrigger value="backups">Backups</TabsTrigger>
           <TabsTrigger value="restore">Restore</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -164,19 +165,19 @@ export function BackupRestoreOverview() {
           {/* Backup Jobs */}
           <div className="space-y-4">
             {backupJobs.map((job) => (
-              <Card key={job.id} className="hover:shadow-md transition-shadow">
+              <Card key={job.id} className="rounded-2xl shadow-soft dark:shadow-soft-dark border hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
                         <h3 className="text-lg font-semibold">{job.name}</h3>
-                        <Badge className={getStatusColor(job.status)}>
+                        <Badge className={`rounded-full ${getStatusColor(job.status)}`}>
                           {job.status}
                         </Badge>
-                        <Badge className={getTypeColor(job.type)}>
+                        <Badge className={`rounded-full ${getTypeColor(job.type)}`}>
                           {job.type}
                         </Badge>
-                        <Badge variant="outline">
+                        <Badge variant="outline" className="rounded-full">
                           {job.location}
                         </Badge>
                       </div>
@@ -205,7 +206,7 @@ export function BackupRestoreOverview() {
                     
                     <div className="flex items-center space-x-2">
                       {job.status === "running" && (
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="rounded-full">
                           <Pause className="h-4 w-4" />
                         </Button>
                       )}
@@ -214,11 +215,12 @@ export function BackupRestoreOverview() {
                           variant="outline" 
                           size="sm"
                           onClick={() => handleRestore(job.id)}
+                          className="rounded-full"
                         >
                           <Upload className="h-4 w-4" />
                         </Button>
                       )}
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" className="rounded-full">
                         <Download className="h-4 w-4" />
                       </Button>
                     </div>
@@ -230,7 +232,7 @@ export function BackupRestoreOverview() {
         </TabsContent>
 
         <TabsContent value="restore" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Restore from Backup</CardTitle>
               <CardDescription>
@@ -239,7 +241,7 @@ export function BackupRestoreOverview() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="p-4 border rounded-lg">
+                <div className="p-4 border rounded-2xl">
                   <h3 className="font-medium mb-2">⚠️ Important Notes</h3>
                   <ul className="text-sm text-muted-foreground space-y-1">
                     <li>• Restoring will overwrite current data</li>
@@ -260,7 +262,7 @@ export function BackupRestoreOverview() {
 
         <TabsContent value="settings" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
-            <Card>
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
               <CardHeader>
                 <CardTitle>Backup Settings</CardTitle>
                 <CardDescription>
@@ -271,7 +273,7 @@ export function BackupRestoreOverview() {
                 <div className="space-y-4">
                   <div>
                     <label className="text-sm font-medium">Backup Frequency</label>
-                    <select className="w-full mt-1 p-2 border rounded text-sm">
+                    <select className="w-full mt-1 p-2 border rounded-xl text-sm">
                       <option>Daily</option>
                       <option>Weekly</option>
                       <option>Monthly</option>
@@ -279,7 +281,7 @@ export function BackupRestoreOverview() {
                   </div>
                   <div>
                     <label className="text-sm font-medium">Retention Period</label>
-                    <select className="w-full mt-1 p-2 border rounded text-sm">
+                    <select className="w-full mt-1 p-2 border rounded-xl text-sm">
                       <option>7 days</option>
                       <option>30 days</option>
                       <option>90 days</option>
@@ -288,7 +290,7 @@ export function BackupRestoreOverview() {
                   </div>
                   <div>
                     <label className="text-sm font-medium">Backup Location</label>
-                    <select className="w-full mt-1 p-2 border rounded text-sm">
+                    <select className="w-full mt-1 p-2 border rounded-xl text-sm">
                       <option>Local Storage</option>
                       <option>Cloud Storage</option>
                       <option>Hybrid (Local + Cloud)</option>
@@ -298,7 +300,7 @@ export function BackupRestoreOverview() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
               <CardHeader>
                 <CardTitle>Storage Information</CardTitle>
                 <CardDescription>

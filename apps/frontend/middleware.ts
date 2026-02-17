@@ -10,19 +10,16 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Define public routes that don't require authentication
+  // Note: Landing page is now in apps/uiux, not apps/frontend
   const publicRoutes = [
     '/',
     '/auth/login',
     '/auth/signup', 
     '/auth/forgot-password',
     '/auth/error',
-    '/contact',
     '/privacy-policy',
     '/terms-of-service',
-    '/demo',
-    '/documentation',
     '/api-docs',
-    '/features',
     '/api/auth', // NextAuth API routes
   ];
 

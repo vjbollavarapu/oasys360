@@ -8,14 +8,27 @@ from django.utils import timezone
 from decimal import Decimal
 from datetime import datetime, date, timedelta
 
-from .models import Invoice, InvoiceLine, InvoiceTemplate, InvoicePayment, EInvoiceSettings
+from .models import (
+    Invoice, InvoiceLine, InvoiceTemplate, InvoicePayment, EInvoiceSettings, EInvoiceSubmission,
+    InvoiceComplianceRule, ComplianceViolation, DigitalCertificate, InvoiceSignature,
+    TaxRate, TaxCategory, InvoicingSettings
+)
 from .serializers import (
     InvoiceSerializer, InvoiceLineSerializer, InvoiceWithLinesSerializer,
     InvoiceTemplateSerializer, InvoicePaymentSerializer, EInvoiceSettingsSerializer,
-    InvoiceStatsSerializer, InvoiceSummarySerializer
+    InvoiceStatsSerializer, InvoiceSummarySerializer, EInvoiceSubmissionSerializer,
+    InvoiceComplianceRuleSerializer, ComplianceViolationSerializer, DigitalCertificateSerializer,
+    InvoiceSignatureSerializer, TaxRateSerializer, TaxCategorySerializer, InvoicingSettingsSerializer
 )
 from authentication.permissions import IsAccountant, IsTenantMember
 from sales.models import Customer
+from tenants.models import Company
+from backend.tenant_utils import get_request_tenant
+from .myinvois_client import MyInvoisClient
+from .ubl_generator import UBL21Generator
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class InvoiceListView(generics.ListCreateAPIView):
@@ -24,13 +37,20 @@ class InvoiceListView(generics.ListCreateAPIView):
     permission_classes = [IsAccountant]
     
     def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return Invoice.objects.none()
         return Invoice.objects.filter(
-            tenant=self.request.user.tenant
+            tenant=tenant
         ).order_by('-invoice_date', '-created_at')
     
     def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
         serializer.save(
-            tenant=self.request.user.tenant,
+            tenant=tenant,
             created_by=self.request.user
         )
 
@@ -41,7 +61,10 @@ class InvoiceDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAccountant]
     
     def get_queryset(self):
-        return Invoice.objects.filter(tenant=self.request.user.tenant)
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return Invoice.objects.none()
+        return Invoice.objects.filter(tenant=tenant)
 
 
 class InvoiceLineListView(generics.ListCreateAPIView):
@@ -50,19 +73,26 @@ class InvoiceLineListView(generics.ListCreateAPIView):
     permission_classes = [IsAccountant]
     
     def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return InvoiceLine.objects.none()
         invoice_id = self.kwargs.get('invoice_id')
         return InvoiceLine.objects.filter(
             invoice__id=invoice_id,
-            invoice__tenant=self.request.user.tenant
+            invoice__tenant=tenant
         )
     
     def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
         invoice = get_object_or_404(
             Invoice,
             id=self.kwargs.get('invoice_id'),
-            tenant=self.request.user.tenant
+            tenant=tenant
         )
-        serializer.save(invoice=invoice)
+        serializer.save(invoice=invoice, tenant=tenant)
 
 
 class InvoiceTemplateListView(generics.ListCreateAPIView):
@@ -169,6 +199,13 @@ def send_invoice(request, pk):
 @permission_classes([IsAccountant])
 def invoice_stats(request):
     """Get invoice statistics"""
+    tenant = get_request_tenant(request)
+    if not tenant:
+        return Response(
+            {'error': 'Tenant context required'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
     start_date = request.query_params.get('start_date')
     end_date = request.query_params.get('end_date')
     
@@ -188,7 +225,7 @@ def invoice_stats(request):
             )
     
     invoices = Invoice.objects.filter(
-        tenant=request.user.tenant,
+        tenant=tenant,
         invoice_date__range=[start_date, end_date]
     )
     
@@ -225,13 +262,20 @@ def invoice_stats(request):
 @permission_classes([IsAccountant])
 def search_invoices(request):
     """Search invoices"""
+    tenant = get_request_tenant(request)
+    if not tenant:
+        return Response(
+            {'error': 'Tenant context required'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
     query = request.query_params.get('q', '')
     
     invoices = Invoice.objects.filter(
         Q(invoice_number__icontains=query) |
         Q(customer__name__icontains=query) |
         Q(notes__icontains=query),
-        tenant=request.user.tenant
+        tenant=tenant
     ).order_by('-invoice_date')
     
     serializer = InvoiceSerializer(invoices, many=True)
@@ -317,3 +361,792 @@ def record_payment(request, invoice_id):
         })
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ============================================
+# E-Invoice (LHDN) Views
+# ============================================
+
+class EInvoiceSettingsListView(generics.ListCreateAPIView):
+    """List and create e-invoice settings"""
+    serializer_class = EInvoiceSettingsSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        return EInvoiceSettings.objects.filter(
+            tenant=self.request.user.tenant
+        )
+    
+    def perform_create(self, serializer):
+        serializer.save(tenant=self.request.user.tenant)
+
+
+class EInvoiceSettingsDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete e-invoice settings"""
+    serializer_class = EInvoiceSettingsSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        return EInvoiceSettings.objects.filter(tenant=self.request.user.tenant)
+
+
+@api_view(['POST'])
+@permission_classes([IsAccountant])
+def test_e_invoice_connection(request, pk=None):
+    """Test connection to MyInvois API"""
+    # Get settings - either from URL pk or from tenant
+    if pk:
+        try:
+            einvoice_settings = EInvoiceSettings.objects.get(
+                id=pk,
+                tenant=request.user.tenant
+            )
+        except EInvoiceSettings.DoesNotExist:
+            return Response(
+                {'error': 'E-Invoice settings not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+    else:
+        try:
+            einvoice_settings = EInvoiceSettings.objects.get(
+                tenant=request.user.tenant,
+                is_enabled=True
+            )
+        except EInvoiceSettings.DoesNotExist:
+            return Response(
+                {'error': 'E-Invoicing is not configured. Please configure settings first.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    
+    try:
+        environment = einvoice_settings.settings.get('environment', 'sandbox')
+        client = MyInvoisClient(
+            api_key=einvoice_settings.api_key,
+            api_secret=einvoice_settings.api_secret,
+            environment=environment,
+            tenant_id=str(request.user.tenant.id)
+        )
+        
+        # Test connection by getting OAuth token
+        token_result = client.get_access_token()
+        
+        if token_result.get('success'):
+            return Response({
+                'success': True,
+                'message': 'Connection to MyInvois API successful',
+                'environment': environment,
+                'provider': einvoice_settings.provider,
+                'token_valid': True,
+                'expires_at': token_result.get('expires_at')
+            })
+        else:
+            return Response(
+                {
+                    'success': False,
+                    'error': token_result.get('error', 'Failed to authenticate with MyInvois API'),
+                    'environment': environment,
+                    'provider': einvoice_settings.provider
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+    except Exception as e:
+        logger.error(f"Error testing e-invoice connection: {e}", exc_info=True)
+        return Response(
+            {
+                'success': False,
+                'error': f'Error testing connection: {str(e)}'
+            },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['POST'])
+@permission_classes([IsAccountant])
+def submit_e_invoice(request, pk):
+    """Submit invoice to LHDN MyInvois"""
+    invoice = get_object_or_404(
+        Invoice,
+        id=pk,
+        tenant=request.user.tenant
+    )
+    
+    # Get e-invoice settings
+    try:
+        einvoice_settings = EInvoiceSettings.objects.get(
+            tenant=request.user.tenant,
+            is_enabled=True
+        )
+    except EInvoiceSettings.DoesNotExist:
+        return Response(
+            {'error': 'E-Invoicing is not configured. Please configure e-invoice settings first.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    if not einvoice_settings.api_key or not einvoice_settings.api_secret:
+        return Response(
+            {'error': 'MyInvois API credentials are not configured.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    # Check if already submitted
+    if invoice.e_invoice_status == 'accepted':
+        return Response(
+            {'error': 'Invoice has already been accepted by LHDN. Cannot resubmit.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try:
+        # Get company and customer
+        company = invoice.company
+        customer = invoice.customer
+        
+        # Generate UBL 2.1 format
+        ubl_generator = UBL21Generator()
+        ubl_data = ubl_generator.generate_json(invoice, company, customer)
+        
+        # Validate UBL data
+        is_valid, errors = ubl_generator.validate_ubl_data(ubl_data)
+        if not is_valid:
+            invoice.e_invoice_errors = errors
+            invoice.save()
+            return Response(
+                {
+                    'error': 'UBL validation failed',
+                    'errors': errors,
+                    'ubl_data': ubl_data
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Initialize MyInvois client
+        environment = einvoice_settings.settings.get('environment', 'sandbox')
+        client = MyInvoisClient(
+            api_key=einvoice_settings.api_key,
+            api_secret=einvoice_settings.api_secret,
+            environment=environment,
+            tenant_id=str(request.user.tenant.id)
+        )
+        
+        # Create submission log entry
+        submission = EInvoiceSubmission.objects.create(
+            tenant=request.user.tenant,
+            invoice=invoice,
+            submission_type='submit',
+            status='pending',
+            request_payload=ubl_data,
+            created_by=request.user
+        )
+        
+        # Submit to MyInvois
+        result = client.submit_invoice(ubl_data)
+        
+        # Update submission log
+        submission.status = 'success' if result.get('success') else 'failed'
+        submission.response_payload = result
+        submission.completed_at = timezone.now()
+        
+        if result.get('qrid'):
+            submission.qrid = result.get('qrid')
+        
+        if result.get('errors'):
+            submission.error_message = ', '.join(result.get('errors', []))
+            if result.get('errors'):
+                submission.error_code = result.get('errors', [])[0] if isinstance(result.get('errors', []), list) else str(result.get('errors', []))
+        
+        submission.save()
+        
+        # Update invoice with submission result
+        if result.get('success'):
+            invoice.e_invoice_status = 'submitted'
+            invoice.submitted_to_lhdn_at = timezone.now()
+            
+            if result.get('qrid'):
+                invoice.lhdn_reference_number = result.get('qrid')
+            
+            if result.get('validation_status') == 'accepted':
+                invoice.e_invoice_status = 'accepted'
+                invoice.lhdn_validated_at = timezone.now()
+            elif result.get('validation_status') == 'rejected':
+                invoice.e_invoice_status = 'rejected'
+                invoice.e_invoice_errors = result.get('errors', [])
+            
+            # Store generated UBL data
+            invoice.e_invoice_json = ubl_data
+            
+            invoice.save()
+            
+            return Response({
+                'message': 'Invoice submitted to MyInvois successfully',
+                'qrid': result.get('qrid'),
+                'status': result.get('status'),
+                'validation_status': result.get('validation_status'),
+                'errors': result.get('errors', []),
+                'warnings': result.get('warnings', []),
+                'submission_id': str(submission.id)
+            })
+        else:
+            invoice.e_invoice_status = 'rejected'
+            invoice.e_invoice_errors = result.get('errors', [])
+            invoice.save()
+            
+            return Response(
+                {
+                    'error': 'Failed to submit invoice to MyInvois',
+                    'errors': result.get('errors', [result.get('error')]),
+                    'submission_id': str(submission.id)
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+    except Exception as e:
+        logger.error(f"Error submitting e-invoice: {e}", exc_info=True)
+        
+        # Log failed submission
+        try:
+            submission = EInvoiceSubmission.objects.create(
+                tenant=request.user.tenant,
+                invoice=invoice,
+                submission_type='submit',
+                status='failed',
+                error_message=str(e),
+                completed_at=timezone.now(),
+                created_by=request.user
+            )
+        except:
+            pass  # Don't fail if logging fails
+        
+        invoice.e_invoice_status = 'rejected'
+        invoice.e_invoice_errors = [str(e)]
+        invoice.save()
+        
+        return Response(
+            {'error': f'Error submitting invoice: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([IsAccountant])
+def get_e_invoice_status(request, pk):
+    """Get e-invoice status from LHDN"""
+    invoice = get_object_or_404(
+        Invoice,
+        id=pk,
+        tenant=request.user.tenant
+    )
+    
+    if not invoice.lhdn_reference_number:
+        return Response(
+            {'error': 'Invoice has not been submitted to LHDN yet.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    # Get e-invoice settings
+    try:
+        einvoice_settings = EInvoiceSettings.objects.get(
+            tenant=request.user.tenant,
+            is_enabled=True
+        )
+    except EInvoiceSettings.DoesNotExist:
+        return Response(
+            {'error': 'E-Invoicing is not configured.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try:
+        environment = einvoice_settings.settings.get('environment', 'sandbox')
+        client = MyInvoisClient(
+            api_key=einvoice_settings.api_key,
+            api_secret=einvoice_settings.api_secret,
+            environment=environment,
+            tenant_id=str(request.user.tenant.id)
+        )
+        
+        # Create status check log entry
+        submission = EInvoiceSubmission.objects.create(
+            tenant=request.user.tenant,
+            invoice=invoice,
+            submission_type='status_check',
+            status='pending',
+            created_by=request.user
+        )
+        
+        result = client.get_invoice_status(invoice.lhdn_reference_number)
+        
+        # Update submission log
+        submission.status = 'success' if result.get('success') else 'failed'
+        submission.response_payload = result
+        submission.completed_at = timezone.now()
+        if result.get('errors'):
+            submission.error_message = ', '.join(result.get('errors', []))
+        submission.save()
+        
+        if result.get('success'):
+            # Update invoice status
+            if result.get('status') == 'accepted':
+                invoice.e_invoice_status = 'accepted'
+                invoice.lhdn_validated_at = timezone.now()
+            elif result.get('status') == 'rejected':
+                invoice.e_invoice_status = 'rejected'
+                invoice.e_invoice_errors = result.get('errors', [])
+            
+            invoice.save()
+            
+            return Response({
+                'qrid': invoice.lhdn_reference_number,
+                'status': result.get('status'),
+                'validation_status': result.get('validation_status'),
+                'updated_at': result.get('updated_at'),
+                'errors': result.get('errors', []),
+                'submission_id': str(submission.id)
+            })
+        else:
+            return Response(
+                {'error': result.get('error', 'Failed to get invoice status')},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+    except Exception as e:
+        logger.error(f"Error getting e-invoice status: {e}", exc_info=True)
+        
+        # Log failed status check
+        try:
+            EInvoiceSubmission.objects.create(
+                tenant=request.user.tenant,
+                invoice=invoice,
+                submission_type='status_check',
+                status='failed',
+                error_message=str(e),
+                completed_at=timezone.now(),
+                created_by=request.user
+            )
+        except:
+            pass
+        
+        return Response(
+            {'error': f'Error getting invoice status: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['POST'])
+@permission_classes([IsAccountant])
+def cancel_e_invoice(request, pk):
+    """Cancel an e-invoice in LHDN"""
+    invoice = get_object_or_404(
+        Invoice,
+        id=pk,
+        tenant=request.user.tenant
+    )
+    
+    if not invoice.lhdn_reference_number:
+        return Response(
+            {'error': 'Invoice has not been submitted to LHDN yet.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    cancellation_reason = request.data.get('cancellation_reason', '')
+    if not cancellation_reason:
+        return Response(
+            {'error': 'Cancellation reason is required.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    # Get e-invoice settings
+    try:
+        einvoice_settings = EInvoiceSettings.objects.get(
+            tenant=request.user.tenant,
+            is_enabled=True
+        )
+    except EInvoiceSettings.DoesNotExist:
+        return Response(
+            {'error': 'E-Invoicing is not configured.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try:
+        environment = einvoice_settings.settings.get('environment', 'sandbox')
+        client = MyInvoisClient(
+            api_key=einvoice_settings.api_key,
+            api_secret=einvoice_settings.api_secret,
+            environment=environment,
+            tenant_id=str(request.user.tenant.id)
+        )
+        
+        # Create cancellation log entry
+        submission = EInvoiceSubmission.objects.create(
+            tenant=request.user.tenant,
+            invoice=invoice,
+            submission_type='cancel',
+            status='pending',
+            request_payload={'cancellation_reason': cancellation_reason},
+            created_by=request.user
+        )
+        
+        result = client.cancel_invoice(invoice.lhdn_reference_number, cancellation_reason)
+        
+        # Update submission log
+        submission.status = 'success' if result.get('success') else 'failed'
+        submission.response_payload = result
+        submission.completed_at = timezone.now()
+        if result.get('error'):
+            submission.error_message = result.get('error')
+        submission.save()
+        
+        if result.get('success'):
+            invoice.e_invoice_status = 'cancelled'
+            invoice.save()
+            
+            return Response({
+                'message': 'Invoice cancelled in MyInvois successfully',
+                'qrid': invoice.lhdn_reference_number,
+                'status': result.get('status'),
+                'cancelled_at': result.get('cancelled_at'),
+                'submission_id': str(submission.id)
+            })
+        else:
+            return Response(
+                {'error': result.get('error', 'Failed to cancel invoice')},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+    except Exception as e:
+        logger.error(f"Error cancelling e-invoice: {e}", exc_info=True)
+        
+        # Log failed cancellation
+        try:
+            EInvoiceSubmission.objects.create(
+                tenant=request.user.tenant,
+                invoice=invoice,
+                submission_type='cancel',
+                status='failed',
+                error_message=str(e),
+                completed_at=timezone.now(),
+                created_by=request.user
+            )
+        except:
+            pass
+        
+        return Response(
+            {'error': f'Error cancelling invoice: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([IsAccountant])
+def generate_ubl_format(request, pk):
+    """Generate UBL 2.1 format for invoice (preview only, does not submit)"""
+    invoice = get_object_or_404(
+        Invoice,
+        id=pk,
+        tenant=request.user.tenant
+    )
+    
+    try:
+        company = invoice.company
+        customer = invoice.customer
+        
+        ubl_generator = UBL21Generator()
+        ubl_data = ubl_generator.generate_json(invoice, company, customer)
+        
+        # Validate
+        is_valid, errors = ubl_generator.validate_ubl_data(ubl_data)
+        
+        return Response({
+            'ubl_data': ubl_data,
+            'is_valid': is_valid,
+            'errors': errors
+        })
+        
+    except Exception as e:
+        logger.error(f"Error generating UBL format: {e}", exc_info=True)
+        return Response(
+            {'error': f'Error generating UBL format: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+# Submission History Views
+
+class EInvoiceSubmissionListView(generics.ListAPIView):
+    """List e-invoice submissions for an invoice"""
+    serializer_class = EInvoiceSubmissionSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        invoice_id = self.kwargs.get('invoice_id')
+        return EInvoiceSubmission.objects.filter(
+            invoice__id=invoice_id,
+            invoice__tenant=self.request.user.tenant
+        ).order_by('-submitted_at')
+
+
+@api_view(['GET'])
+@permission_classes([IsAccountant])
+def get_e_invoice_submissions(request, pk):
+    """Get all e-invoice submissions for an invoice"""
+    invoice = get_object_or_404(
+        Invoice,
+        id=pk,
+        tenant=request.user.tenant
+    )
+    
+    submissions = EInvoiceSubmission.objects.filter(
+        invoice=invoice,
+        tenant=request.user.tenant
+    ).order_by('-submitted_at')
+    
+    serializer = EInvoiceSubmissionSerializer(submissions, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAccountant])
+def get_e_invoice_submission_detail(request, submission_id):
+    """Get details of a specific e-invoice submission"""
+    submission = get_object_or_404(
+        EInvoiceSubmission,
+        id=submission_id,
+        tenant=request.user.tenant
+    )
+    
+    serializer = EInvoiceSubmissionSerializer(submission)
+    return Response(serializer.data)
+
+
+# Compliance Rules Views
+class InvoiceComplianceRuleListView(generics.ListCreateAPIView):
+    """List and create Invoice Compliance Rules"""
+    serializer_class = InvoiceComplianceRuleSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return InvoiceComplianceRule.objects.none()
+        return InvoiceComplianceRule.objects.filter(tenant=tenant, is_active=True).order_by('name')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant, created_by=self.request.user)
+
+
+class InvoiceComplianceRuleDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Invoice Compliance Rule"""
+    serializer_class = InvoiceComplianceRuleSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return InvoiceComplianceRule.objects.none()
+        return InvoiceComplianceRule.objects.filter(tenant=tenant)
+
+
+class ComplianceViolationListView(generics.ListCreateAPIView):
+    """List and create Compliance Violations"""
+    serializer_class = ComplianceViolationSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return ComplianceViolation.objects.none()
+        invoice_id = self.request.query_params.get('invoice')
+        queryset = ComplianceViolation.objects.filter(tenant=tenant)
+        if invoice_id:
+            queryset = queryset.filter(invoice_id=invoice_id)
+        return queryset.order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant)
+
+
+@api_view(['POST'])
+@permission_classes([IsAccountant])
+def resolve_compliance_violation(request, pk):
+    """Resolve a compliance violation"""
+    tenant = get_request_tenant(request)
+    if not tenant:
+        return Response(
+            {'error': 'Tenant context required'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    violation = get_object_or_404(
+        ComplianceViolation,
+        id=pk,
+        tenant=tenant
+    )
+    
+    violation.status = 'resolved'
+    violation.resolved_by = request.user
+    violation.resolved_at = timezone.now()
+    violation.save()
+    
+    return Response({
+        'message': 'Violation resolved successfully',
+        'violation': ComplianceViolationSerializer(violation).data
+    })
+
+
+# Digital Certificate Views
+class DigitalCertificateListView(generics.ListCreateAPIView):
+    """List and create Digital Certificates"""
+    serializer_class = DigitalCertificateSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return DigitalCertificate.objects.none()
+        return DigitalCertificate.objects.filter(tenant=tenant, is_active=True).order_by('-is_primary', 'name')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant, created_by=self.request.user)
+
+
+class DigitalCertificateDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Digital Certificate"""
+    serializer_class = DigitalCertificateSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return DigitalCertificate.objects.none()
+        return DigitalCertificate.objects.filter(tenant=tenant)
+
+
+class InvoiceSignatureListView(generics.ListCreateAPIView):
+    """List and create Invoice Signatures"""
+    serializer_class = InvoiceSignatureSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return InvoiceSignature.objects.none()
+        invoice_id = self.request.query_params.get('invoice')
+        queryset = InvoiceSignature.objects.filter(tenant=tenant)
+        if invoice_id:
+            queryset = queryset.filter(invoice_id=invoice_id)
+        return queryset.order_by('-signed_at')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant, signed_by=self.request.user)
+
+
+class InvoiceSignatureDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Invoice Signature"""
+    serializer_class = InvoiceSignatureSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return InvoiceSignature.objects.none()
+        return InvoiceSignature.objects.filter(tenant=tenant)
+
+
+# Tax Rate Views
+class TaxRateListView(generics.ListCreateAPIView):
+    """List and create Tax Rates"""
+    serializer_class = TaxRateSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return TaxRate.objects.none()
+        region = self.request.query_params.get('region')
+        queryset = TaxRate.objects.filter(tenant=tenant, is_active=True)
+        if region:
+            queryset = queryset.filter(region=region)
+        return queryset.order_by('-is_default', 'name')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant, created_by=self.request.user)
+
+
+class TaxRateDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Tax Rate"""
+    serializer_class = TaxRateSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return TaxRate.objects.none()
+        return TaxRate.objects.filter(tenant=tenant)
+
+
+class TaxCategoryListView(generics.ListCreateAPIView):
+    """List and create Tax Categories"""
+    serializer_class = TaxCategorySerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return TaxCategory.objects.none()
+        return TaxCategory.objects.filter(tenant=tenant, is_active=True).order_by('name')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant)
+
+
+class TaxCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Tax Category"""
+    serializer_class = TaxCategorySerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return TaxCategory.objects.none()
+        return TaxCategory.objects.filter(tenant=tenant)
+
+
+# Invoicing Settings Views
+class InvoicingSettingsView(generics.RetrieveUpdateAPIView):
+    """Retrieve and update Invoicing Settings"""
+    serializer_class = InvoicingSettingsSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_object(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        company = getattr(self.request.user, 'company', None)
+        settings, created = InvoicingSettings.objects.get_or_create(
+            tenant=tenant,
+            company=company
+        )
+        return settings

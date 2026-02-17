@@ -149,33 +149,35 @@ export function Web3Dashboard({ className = '' }: Web3DashboardProps) {
 
   if (loading) {
     return (
-      <Card className={className}>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-center">
-            <RefreshCw className="w-6 h-6 animate-spin" />
-          </div>
-        </CardContent>
-      </Card>
+      <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
+        <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+          <CardContent className="p-8">
+            <div className="flex items-center justify-center">
+              <RefreshCw className="w-6 h-6 animate-spin text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <div className={className}>
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Web3 Dashboard</h2>
+          <h1 className="text-3xl font-bold tracking-tight">Web3 Dashboard</h1>
           <p className="text-muted-foreground">
             Comprehensive overview of your Web3 activities
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={loadMetrics}>
+          <Button variant="outline" className="rounded-full" onClick={loadMetrics}>
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </Button>
           <PermissionGate permission="EXPORT_WEB3_DATA">
-            <Button variant="outline">
+            <Button variant="outline" className="rounded-full">
               <Download className="w-4 h-4 mr-2" />
               Export
             </Button>
@@ -184,64 +186,72 @@ export function Web3Dashboard({ className = '' }: Web3DashboardProps) {
       </div>
 
       {/* Main Content */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <TabsList className="rounded-full p-1 h-auto grid w-full grid-cols-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-6">
+        <TabsContent value="overview" className="space-y-4">
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Connected Wallets</CardTitle>
-                <Wallet className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Connected Wallets</CardTitle>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-2xl">
+                  <Wallet className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{metrics?.connectedWallets || 0}</div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground mt-2">
                   of {metrics?.totalWallets || 0} total wallets
                 </p>
               </CardContent>
             </Card>
             
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Transactions</CardTitle>
-                <Activity className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Transactions</CardTitle>
+                <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-2xl">
+                  <Activity className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{metrics?.totalTransactions.toLocaleString() || 0}</div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground mt-2">
                   All time
                 </p>
               </CardContent>
             </Card>
             
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Volume</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Volume</CardTitle>
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/20 rounded-2xl">
+                  <DollarSign className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{formatCurrency(metrics?.totalVolume || 0)}</div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground mt-2">
                   Across all networks
                 </p>
               </CardContent>
             </Card>
             
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Fees</CardTitle>
-                <Zap className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Fees</CardTitle>
+                <div className="p-3 bg-orange-100 dark:bg-orange-900/20 rounded-2xl">
+                  <Zap className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{formatCurrency(metrics?.totalFees || 0)}</div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground mt-2">
                   Gas fees paid
                 </p>
               </CardContent>

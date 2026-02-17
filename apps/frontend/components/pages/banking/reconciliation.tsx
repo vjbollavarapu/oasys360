@@ -27,11 +27,11 @@ export function BankReconciliationOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <CheckCircle className="h-4 w-4 mr-2" />
             Start Reconciliation
           </Button>
@@ -47,49 +47,57 @@ export function BankReconciliationOverview() {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Pending Reconciliation</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Pending Reconciliation</CardTitle>
+                <div className="p-3 bg-yellow-100 dark:bg-yellow-900/20 rounded-2xl">
+                  <Clock className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">3</div>
-                <p className="text-xs text-muted-foreground">Accounts need attention</p>
+                <div className="text-2xl font-bold text-yellow-600">3</div>
+                <p className="text-xs text-muted-foreground mt-2">Accounts need attention</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Reconciled This Month</CardTitle>
-                <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Reconciled This Month</CardTitle>
+                <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-2xl">
+                  <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">12</div>
-                <p className="text-xs text-muted-foreground">Successful reconciliations</p>
+                <p className="text-xs text-muted-foreground mt-2">Successful reconciliations</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Discrepancies</CardTitle>
-                <AlertCircle className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Discrepancies</CardTitle>
+                <div className="p-3 bg-red-100 dark:bg-red-900/20 rounded-2xl">
+                  <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">$1,247.89</div>
-                <p className="text-xs text-muted-foreground">Unresolved differences</p>
+                <div className="text-2xl font-bold text-red-600">$1,247.89</div>
+                <p className="text-xs text-muted-foreground mt-2">Unresolved differences</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Reconciliation Rate</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Reconciliation Rate</CardTitle>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-2xl">
+                  <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">94.2%</div>
-                <p className="text-xs text-muted-foreground">This month</p>
+                <p className="text-xs text-muted-foreground mt-2">This month</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Reconciliation Status</CardTitle>
               <CardDescription>
@@ -98,41 +106,41 @@ export function BankReconciliationOverview() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                    <div className="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                      <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
                       <p className="font-medium">Chase Bank - Checking</p>
                       <p className="text-sm text-muted-foreground">Last reconciled: Dec 15, 2024</p>
                     </div>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Reconciled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Reconciled</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <AlertCircle className="h-5 w-5 text-yellow-600" />
+                    <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center">
+                      <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                     </div>
                     <div>
                       <p className="font-medium">Wells Fargo - Savings</p>
                       <p className="text-sm text-muted-foreground">Discrepancy: $245.67</p>
                     </div>
                   </div>
-                  <Badge className="bg-yellow-100 text-yellow-800">Needs Review</Badge>
+                  <Badge className="rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">Needs Review</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                      <Clock className="h-5 w-5 text-red-600" />
+                    <div className="w-10 h-10 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
+                      <Clock className="h-5 w-5 text-red-600 dark:text-red-400" />
                     </div>
                     <div>
                       <p className="font-medium">Bank of America - Credit</p>
                       <p className="text-sm text-muted-foreground">Pending reconciliation</p>
                     </div>
                   </div>
-                  <Badge className="bg-red-100 text-red-800">Pending</Badge>
+                  <Badge className="rounded-full bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300">Pending</Badge>
                 </div>
               </div>
             </CardContent>
@@ -140,7 +148,7 @@ export function BankReconciliationOverview() {
         </TabsContent>
 
         <TabsContent value="reconcile" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Start Reconciliation</CardTitle>
               <CardDescription>
@@ -152,7 +160,7 @@ export function BankReconciliationOverview() {
                 <div>
                   <Label htmlFor="bank-account">Bank Account</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select account" />
                     </SelectTrigger>
                     <SelectContent>
@@ -164,20 +172,20 @@ export function BankReconciliationOverview() {
                 </div>
                 <div>
                   <Label htmlFor="statement-date">Statement Date</Label>
-                  <Input id="statement-date" type="date" />
+                  <Input id="statement-date" type="date" className="rounded-xl" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="bank-balance">Bank Statement Balance</Label>
-                  <Input id="bank-balance" type="number" step="0.01" placeholder="0.00" />
+                  <Input id="bank-balance" type="number" step="0.01" placeholder="0.00" className="rounded-xl" />
                 </div>
                 <div>
                   <Label htmlFor="book-balance">Book Balance</Label>
-                  <Input id="book-balance" type="number" step="0.01" placeholder="0.00" />
+                  <Input id="book-balance" type="number" step="0.01" placeholder="0.00" className="rounded-xl" />
                 </div>
               </div>
-              <Button className="w-full">
+              <Button className="w-full rounded-full">
                 <CheckCircle className="h-4 w-4 mr-2" />
                 Start Reconciliation
               </Button>
@@ -186,7 +194,7 @@ export function BankReconciliationOverview() {
         </TabsContent>
 
         <TabsContent value="history" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Reconciliation History</CardTitle>
               <CardDescription>
@@ -195,7 +203,7 @@ export function BankReconciliationOverview() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
                     <CheckCircle className="h-5 w-5 text-green-600" />
                     <div>
@@ -203,9 +211,9 @@ export function BankReconciliationOverview() {
                       <p className="text-sm text-muted-foreground">Dec 15, 2024 - $45,678.90</p>
                     </div>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Completed</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Completed</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
                     <CheckCircle className="h-5 w-5 text-green-600" />
                     <div>
@@ -213,7 +221,7 @@ export function BankReconciliationOverview() {
                       <p className="text-sm text-muted-foreground">Dec 10, 2024 - $78,889.99</p>
                     </div>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Completed</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Completed</Badge>
                 </div>
               </div>
             </CardContent>

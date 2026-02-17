@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from decimal import Decimal
-from .models import Customer, SalesOrder, SalesOrderLine, SalesQuote, SalesQuoteLine
+from .models import Customer, SalesOrder, SalesOrderLine, SalesQuote, SalesQuoteLine, SalesOpportunity, SalesCommission, SalesSettings
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class SalesOrderLineSerializer(serializers.ModelSerializer):
     class Meta:
         model = SalesOrderLine
         fields = [
-            'id', 'sales_order', 'item', 'description', 'quantity', 'unit_price',
+            'id', 'sales_order', 'description', 'quantity', 'unit_price',
             'tax_rate', 'discount_rate', 'total_amount', 'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
@@ -101,7 +101,7 @@ class SalesQuoteLineSerializer(serializers.ModelSerializer):
     class Meta:
         model = SalesQuoteLine
         fields = [
-            'id', 'sales_quote', 'item', 'description', 'quantity', 'unit_price',
+            'id', 'sales_quote', 'description', 'quantity', 'unit_price',
             'tax_rate', 'discount_rate', 'total_amount', 'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
@@ -175,3 +175,60 @@ class SalesOrderSummarySerializer(serializers.Serializer):
     status = serializers.CharField()
     total_amount = serializers.DecimalField(max_digits=15, decimal_places=2)
     currency = serializers.CharField()
+
+
+class SalesOpportunitySerializer(serializers.ModelSerializer):
+    """Serializer for Sales Opportunity"""
+    customer_name = serializers.CharField(source='customer.name', read_only=True)
+    sales_person_name = serializers.CharField(source='sales_person.get_full_name', read_only=True)
+    assigned_to_name = serializers.CharField(source='assigned_to.get_full_name', read_only=True)
+    weighted_value = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = SalesOpportunity
+        fields = [
+            'id', 'tenant', 'company', 'opportunity_number', 'customer', 'customer_name',
+            'title', 'description', 'stage', 'value', 'probability', 'weighted_value',
+            'currency', 'expected_close_date', 'actual_close_date', 'sales_person',
+            'sales_person_name', 'assigned_to', 'assigned_to_name', 'status',
+            'lost_reason', 'converted_to_quote', 'converted_to_order', 'notes',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
+    
+    def get_weighted_value(self, obj):
+        return float(obj.get_weighted_value())
+
+
+class SalesCommissionSerializer(serializers.ModelSerializer):
+    """Serializer for Sales Commission"""
+    sales_person_name = serializers.CharField(source='sales_person.get_full_name', read_only=True)
+    approved_by_name = serializers.CharField(source='approved_by.get_full_name', read_only=True)
+    
+    class Meta:
+        model = SalesCommission
+        fields = [
+            'id', 'tenant', 'company', 'sales_person', 'sales_person_name',
+            'period_start', 'period_end', 'commission_type', 'reference_type',
+            'reference_id', 'base_amount', 'commission_rate', 'commission_amount',
+            'currency', 'status', 'payment_date', 'approved_by', 'approved_by_name',
+            'approved_at', 'notes', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'approved_at']
+
+
+class SalesSettingsSerializer(serializers.ModelSerializer):
+    """Serializer for Sales Settings"""
+    
+    class Meta:
+        model = SalesSettings
+        fields = [
+            'id', 'tenant', 'company', 'default_currency', 'default_payment_terms',
+            'default_quote_validity_days', 'quote_number_prefix', 'quote_number_format',
+            'order_number_prefix', 'order_number_format', 'require_order_approval',
+            'enable_commission_tracking', 'default_commission_rate', 'commission_payment_terms',
+            'enable_pipeline_tracking', 'default_probability_by_stage',
+            'enable_sales_analytics', 'analytics_retention_days',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']

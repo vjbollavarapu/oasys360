@@ -694,7 +694,7 @@ const DEMO_USERS = <span class="cstat-no" title="statement not covered" >[</span
   {
     id: "platform-1",
     name: "Platform Admin",
-    email: "platform@oasys.com", 
+    email: "platform@oasys360.com", 
     password: "Platform123!",
     role: "platform_admin",
     organization: "OASYS Platform",
@@ -704,12 +704,12 @@ const DEMO_USERS = <span class="cstat-no" title="statement not covered" >[</span
   // Business Tenant Users
   {
     id: "1",
-    name: "TechFlow Admin",
-    email: "admin@techflow.com",
+    name: "oasys360 Admin",
+    email: "admin@oasys360.com",
     password: "Admin123!",
     role: "tenant_admin",
-    organization: "TechFlow Corp",
-    tenantId: "techflow",
+    organization: "oasys360 Corp",
+    tenantId: "oasys360",
     permissions: ["*"]
   },
   {
@@ -725,11 +725,11 @@ const DEMO_USERS = <span class="cstat-no" title="statement not covered" >[</span
   {
     id: "3",
     name: "CFO User", 
-    email: "cfo@techflow.com",
+    email: "cfo@oasys360.com",
     password: "CFO123!",
     role: "cfo",
-    organization: "TechFlow Corp",
-    tenantId: "techflow",
+    organization: "oasys360 Corp",
+    tenantId: "oasys360",
     permissions: ["accounting.*", "reports.*", "banking.*"]
   },
   // Firm Users
@@ -757,7 +757,7 @@ const DEMO_USERS = <span class="cstat-no" title="statement not covered" >[</span
   {
     id: "legacy-1",
     name: "Admin User",
-    email: "admin@oasys.com",
+    email: "admin@oasys360.com",
     password: "Admin123!",
     role: "admin",
     organization: "OASYS Corp",
@@ -790,7 +790,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
       } catch (error) {
 <span class="cstat-no" title="statement not covered" >        console.error('Auth check failed:', error)</span>
         // Fallback to demo mode for development
-        const demoUser = <span class="cstat-no" title="statement not covered" >DEMO_USERS.find(<span class="fstat-no" title="function not covered" >u =&gt; <span class="cstat-no" title="statement not covered" >u</span>.email === "admin@oasys.com")</span></span>
+        const demoUser = <span class="cstat-no" title="statement not covered" >DEMO_USERS.find(<span class="fstat-no" title="function not covered" >u =&gt; <span class="cstat-no" title="statement not covered" >u</span>.email === "admin@oasys360.com")</span></span>
 <span class="cstat-no" title="statement not covered" >        if (demoUser) {</span>
 <span class="cstat-no" title="statement not covered" >          setUser({</span>
             id: demoUser.id,

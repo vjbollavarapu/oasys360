@@ -102,8 +102,8 @@ export default function PlatformAdminPage() {
   const recentTenants: Tenant[] = [
     {
       id: "1",
-      name: "TechFlow Solutions",
-      domain: "techflow",
+      name: "oasys360 Solutions",
+      domain: "oasys360",
       type: "business",
       subscriptionPlan: {
         id: "ai_full_web3",
@@ -118,7 +118,7 @@ export default function PlatformAdminPage() {
       },
       status: "active",
       createdAt: "2024-01-15",
-      billingEmail: "billing@techflow.com",
+      billingEmail: "billing@oasys360.com",
       maxUsers: 25,
       currentUsers: 18,
       enabledModules: [],
@@ -365,7 +365,7 @@ export default function PlatformAdminPage() {
                       <div key={tenant.id} className="flex items-center justify-between p-3 rounded-lg bg-[#1B1D23] border border-[#4B0082]/20">
                         <div>
                           <p className="font-medium text-[#F3F4F6]">{tenant.name}</p>
-                          <p className="text-sm text-[#F3F4F6]/60">{tenant.domain}.oasys.com</p>
+                          <p className="text-sm text-[#F3F4F6]/60">{tenant.domain}.oasys360.com</p>
                         </div>
                         <Badge className={
                           tenant.status === 'active' 
@@ -469,7 +469,7 @@ export default function PlatformAdminPage() {
                         <TableCell className="text-[#F3F4F6]">
                           <div>
                             <p className="font-medium">{tenant.name}</p>
-                            <p className="text-sm text-[#F3F4F6]/60">{tenant.domain}.oasys.com</p>
+                            <p className="text-sm text-[#F3F4F6]/60">{tenant.domain}.oasys360.com</p>
                           </div>
                         </TableCell>
                         <TableCell>

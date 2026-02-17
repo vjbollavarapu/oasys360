@@ -1,0 +1,181 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: oasys360-ingress
+  namespace: oasys360
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    nginx.ingress.kubernetes.io/rate-limit-connections: "10"
+    nginx.ingress.kubernetes.io/rate-limit-requests: "100"
+    nginx.ingress.kubernetes.io/rate-limit-connections: "10"
+    nginx.ingress.kubernetes.io/rate-limit-requests: "100"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      # Multi-tenant routing
+      set $tenant_id "";
+      if ($host ~* ^([^.]+)\.oasys360\.com$) {
+          set $tenant_id $1;
+      }
+      
+      # Set tenant header
+      proxy_set_header X-Tenant-ID $tenant_id;
+      
+      # Rate limiting per tenant
+      limit_req zone=tenant_$tenant_id burst=20 nodelay;
+      
+      # Security headers
+      add_header X-Frame-Options "SAMEORIGIN" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header X-XSS-Protection "1; mode=block" always;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+      add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'self';" always;
+spec:
+  tls:
+  - hosts:
+    - "*.oasys360.com"
+    - "oasys360.com"
+    secretName: oasys360-tls
+  rules:
+  # Main application
+  - host: "app.oasys360.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: django-service
+            port:
+              number: 8000
+  # API endpoints
+  - host: "api.oasys360.com"
+    http:
+      paths:
+      - path: /api/v1/
+        pathType: Prefix
+        backend:
+          service:
+            name: fastapi-service
+            port:
+              number: 8000
+      - path: /admin/
+        pathType: Prefix
+        backend:
+          service:
+            name: django-service
+            port:
+              number: 8000
+  # Tenant-specific subdomains
+  - host: "*.oasys360.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: django-service
+            port:
+              number: 8000
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-rate-limit
+  namespace: oasys360
+data:
+  nginx.conf: |
+    # Rate limiting configuration
+    limit_req_zone $binary_remote_addr zone=global:10m rate=100r/m;
+    limit_req_zone $http_x_tenant_id zone=tenant:10m rate=50r/m;
+    
+    # Tenant-specific rate limiting
+    map $http_x_tenant_id $tenant_zone {
+        default tenant;
+        ~^(.+)$ tenant_$1;
+    }
+    
+    # Connection limiting
+    limit_conn_zone $binary_remote_addr zone=conn_limit_per_ip:10m;
+    limit_conn_zone $http_x_tenant_id zone=conn_limit_per_tenant:10m;
+    
+    # Upstream configuration
+    upstream django_backend {
+        server django-service:8000;
+        keepalive 32;
+    }
+    
+    upstream fastapi_backend {
+        server fastapi-service:8000;
+        keepalive 32;
+    }
+    
+    # Main server block
+    server {
+        listen 80;
+        server_name *.oasys360.com oasys360.com;
+        
+        # Rate limiting
+        limit_req zone=global burst=20 nodelay;
+        limit_conn conn_limit_per_ip 10;
+        
+        # Tenant-specific rate limiting
+        limit_req zone=$tenant_zone burst=10 nodelay;
+        limit_conn conn_limit_per_tenant 5;
+        
+        # Security headers
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+        
+        # Multi-tenant routing
+        location / {
+            # Extract tenant ID from subdomain
+            set $tenant_id "";
+            if ($host ~* ^([^.]+)\.oasys360\.com$) {
+                set $tenant_id $1;
+            }
+            
+            # Set tenant header
+            proxy_set_header X-Tenant-ID $tenant_id;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Host $host;
+            
+            # Route to Django backend
+            proxy_pass http://django_backend;
+            proxy_http_version 1.1;
+            proxy_set_header Connection "";
+            proxy_cache_bypass $http_upgrade;
+        }
+        
+        # API endpoints
+        location /api/v1/ {
+            proxy_set_header X-Tenant-ID $tenant_id;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Host $host;
+            
+            # Route to FastAPI backend
+            proxy_pass http://fastapi_backend;
+            proxy_http_version 1.1;
+            proxy_set_header Connection "";
+            proxy_cache_bypass $http_upgrade;
+        }
+        
+        # Health check endpoint
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+    }

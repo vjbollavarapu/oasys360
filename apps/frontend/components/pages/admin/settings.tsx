@@ -26,7 +26,7 @@ export function SystemSettingsOverview() {
   })
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">System Settings</h1>
@@ -34,14 +34,14 @@ export function SystemSettingsOverview() {
             Configure system-wide settings and preferences
           </p>
         </div>
-        <Button>
+        <Button className="rounded-full">
           <Settings className="h-4 w-4 mr-2" />
           Save Changes
         </Button>
       </div>
 
       <Tabs defaultValue="general" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="rounded-full p-1 h-auto grid w-full grid-cols-5">
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="email">Email</TabsTrigger>
@@ -51,7 +51,7 @@ export function SystemSettingsOverview() {
 
         <TabsContent value="general" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
-            <Card>
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
               <CardHeader>
                 <CardTitle>General Settings</CardTitle>
                 <CardDescription>
@@ -65,7 +65,7 @@ export function SystemSettingsOverview() {
                     <select 
                       value={systemSettings.timezone}
                       onChange={(e) => setSystemSettings({...systemSettings, timezone: e.target.value})}
-                      className="w-full mt-1 p-2 border rounded text-sm"
+                      className="w-full mt-1 p-2 border rounded-xl text-sm"
                     >
                       <option value="UTC">UTC</option>
                       <option value="EST">Eastern Time</option>
@@ -78,7 +78,7 @@ export function SystemSettingsOverview() {
                     <select 
                       value={systemSettings.dateFormat}
                       onChange={(e) => setSystemSettings({...systemSettings, dateFormat: e.target.value})}
-                      className="w-full mt-1 p-2 border rounded text-sm"
+                      className="w-full mt-1 p-2 border rounded-xl text-sm"
                     >
                       <option value="YYYY-MM-DD">YYYY-MM-DD</option>
                       <option value="MM/DD/YYYY">MM/DD/YYYY</option>
@@ -90,7 +90,7 @@ export function SystemSettingsOverview() {
                     <select 
                       value={systemSettings.currency}
                       onChange={(e) => setSystemSettings({...systemSettings, currency: e.target.value})}
-                      className="w-full mt-1 p-2 border rounded text-sm"
+                      className="w-full mt-1 p-2 border rounded-xl text-sm"
                     >
                       <option value="USD">USD ($)</option>
                       <option value="EUR">EUR (€)</option>
@@ -103,7 +103,7 @@ export function SystemSettingsOverview() {
                     <select 
                       value={systemSettings.language}
                       onChange={(e) => setSystemSettings({...systemSettings, language: e.target.value})}
-                      className="w-full mt-1 p-2 border rounded text-sm"
+                      className="w-full mt-1 p-2 border rounded-xl text-sm"
                     >
                       <option value="en">English</option>
                       <option value="es">Spanish</option>
@@ -115,7 +115,7 @@ export function SystemSettingsOverview() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
               <CardHeader>
                 <CardTitle>System Information</CardTitle>
                 <CardDescription>
@@ -147,7 +147,7 @@ export function SystemSettingsOverview() {
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Notification Settings</CardTitle>
               <CardDescription>
@@ -187,7 +187,7 @@ export function SystemSettingsOverview() {
         </TabsContent>
 
         <TabsContent value="email" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Email Configuration</CardTitle>
               <CardDescription>
@@ -204,7 +204,7 @@ export function SystemSettingsOverview() {
         </TabsContent>
 
         <TabsContent value="maintenance" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Maintenance Mode</CardTitle>
               <CardDescription>
@@ -225,7 +225,7 @@ export function SystemSettingsOverview() {
                   />
                 </div>
                 {systemSettings.maintenanceMode && (
-                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900/30 rounded-2xl">
                     <p className="text-sm text-yellow-800">
                       ⚠️ Maintenance mode is enabled. Users will see a maintenance page.
                     </p>
@@ -237,7 +237,7 @@ export function SystemSettingsOverview() {
         </TabsContent>
 
         <TabsContent value="advanced" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Advanced Settings</CardTitle>
               <CardDescription>

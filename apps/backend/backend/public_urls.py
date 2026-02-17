@@ -1,6 +1,6 @@
 
 # Import tenant creation view - using a simpler approach
-# from raynai.tenant_management.api_views import CreateTenantAPIView
+# from oasys.tenant_management.api_views import CreateTenantAPIView
 
 # Import for tenant creation
 from django.db import transaction

@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -15,7 +16,7 @@ import {
 
 export function ExportOptionsOverview() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Report Exports</h1>
@@ -24,11 +25,11 @@ export function ExportOptionsOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Download className="h-4 w-4 mr-2" />
             Export Report
           </Button>
@@ -36,7 +37,7 @@ export function ExportOptionsOverview() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="rounded-full p-1 h-auto grid w-full grid-cols-3">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="exports">Exports</TabsTrigger>
           <TabsTrigger value="formats">Formats</TabsTrigger>
@@ -44,40 +45,48 @@ export function ExportOptionsOverview() {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Exports</CardTitle>
-                <Download className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Exports</CardTitle>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-2xl">
+                  <Download className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">1,247</div>
-                <p className="text-xs text-muted-foreground">This month</p>
+                <p className="text-xs text-muted-foreground mt-2">This month</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Completed</CardTitle>
-                <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Completed</CardTitle>
+                <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-2xl">
+                  <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">1,235</div>
-                <p className="text-xs text-muted-foreground">Successful exports</p>
+                <p className="text-xs text-muted-foreground mt-2">Successful exports</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">In Progress</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">In Progress</CardTitle>
+                <div className="p-3 bg-orange-100 dark:bg-orange-900/20 rounded-2xl">
+                  <Clock className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">12</div>
-                <p className="text-xs text-muted-foreground">Currently processing</p>
+                <p className="text-xs text-muted-foreground mt-2">Currently processing</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">File Size</CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">File Size</CardTitle>
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/20 rounded-2xl">
+                  <FileText className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">2.4 GB</div>

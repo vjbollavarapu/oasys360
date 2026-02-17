@@ -8,13 +8,20 @@ from django.utils import timezone
 from decimal import Decimal
 from datetime import datetime, date, timedelta
 
-from .models import Supplier, PurchaseOrder, PurchaseOrderLine, PurchaseReceipt, PurchaseReceiptLine, PurchasePayment
+from .models import (
+    Supplier, PurchaseOrder, PurchaseOrderLine, PurchaseReceipt, PurchaseReceiptLine, PurchasePayment,
+    VendorWalletAddress, VendorVerificationLog, PaymentBlock, PurchaseApprovalRequest, PurchaseContract, PurchaseSettings
+)
 from .serializers import (
     SupplierSerializer, PurchaseOrderSerializer, PurchaseOrderLineSerializer,
     PurchaseOrderWithLinesSerializer, PurchaseReceiptSerializer, PurchaseReceiptLineSerializer,
     PurchaseReceiptWithLinesSerializer, PurchasePaymentSerializer, SupplierSummarySerializer,
-    PurchaseStatsSerializer, PurchaseOrderSummarySerializer
+    PurchaseStatsSerializer, PurchaseOrderSummarySerializer,
+    VendorWalletAddressSerializer, VendorVerificationLogSerializer, PaymentBlockSerializer,
+    PurchaseApprovalRequestSerializer, PurchaseContractSerializer, PurchaseSettingsSerializer
 )
+from backend.tenant_utils import get_request_tenant
+from .vendor_verification_service import VendorVerificationService
 from authentication.permissions import IsAccountant, IsTenantMember
 
 
@@ -437,3 +444,452 @@ def record_purchase_payment(request, supplier_id):
         })
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ============================================================================
+# Vendor Identity Verification Views
+# ============================================================================
+
+@api_view(['POST'])
+@permission_classes([IsAccountant])
+def verify_vendor_wallet(request, supplier_id):
+    """Verify a wallet address for a supplier"""
+    supplier = get_object_or_404(Supplier, id=supplier_id, tenant=request.user.tenant)
+    
+    wallet_address = request.data.get('wallet_address')
+    network = request.data.get('network')
+    verification_type = request.data.get('verification_type', 'manual')
+    
+    if not wallet_address or not network:
+        return Response(
+            {'error': 'wallet_address and network are required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    result = VendorVerificationService.verify_wallet_address(
+        tenant=request.user.tenant,
+        supplier=supplier,
+        wallet_address=wallet_address,
+        network=network,
+        verification_type=verification_type,
+        user=request.user
+    )
+    
+    return Response(result)
+
+
+@api_view(['POST'])
+@permission_classes([IsAccountant])
+def check_payment_before_processing(request):
+    """Check if payment should be blocked before processing"""
+    supplier_id = request.data.get('supplier_id')
+    wallet_address = request.data.get('wallet_address')
+    network = request.data.get('network')
+    amount = request.data.get('amount')
+    currency = request.data.get('currency', 'USD')
+    
+    if not all([supplier_id, wallet_address, network, amount]):
+        return Response(
+            {'error': 'supplier_id, wallet_address, network, and amount are required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    supplier = get_object_or_404(Supplier, id=supplier_id, tenant=request.user.tenant)
+    purchase_order_id = request.data.get('purchase_order_id')
+    invoice_id = request.data.get('invoice_id')
+    
+    purchase_order = None
+    if purchase_order_id:
+        purchase_order = get_object_or_404(
+            PurchaseOrder,
+            id=purchase_order_id,
+            tenant=request.user.tenant
+        )
+    
+    invoice = None
+    if invoice_id:
+        from invoicing.models import Invoice
+        invoice = get_object_or_404(
+            Invoice,
+            id=invoice_id,
+            tenant=request.user.tenant
+        )
+    
+    result = VendorVerificationService.check_payment_before_processing(
+        tenant=request.user.tenant,
+        supplier=supplier,
+        wallet_address=wallet_address,
+        network=network,
+        amount=Decimal(str(amount)),
+        currency=currency,
+        purchase_order=purchase_order,
+        invoice=invoice,
+        user=request.user
+    )
+    
+    return Response(result)
+
+
+class VendorWalletAddressListView(generics.ListCreateAPIView):
+    """List and create vendor wallet addresses"""
+    serializer_class = VendorWalletAddressSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        queryset = VendorWalletAddress.objects.filter(tenant=self.request.user.tenant)
+        
+        supplier_id = self.request.query_params.get('supplier_id')
+        if supplier_id:
+            queryset = queryset.filter(supplier_id=supplier_id)
+        
+        return queryset.order_by('-is_primary', '-created_at')
+    
+    def perform_create(self, serializer):
+        serializer.save(tenant=self.request.user.tenant)
+
+
+class VendorWalletAddressDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete vendor wallet address"""
+    serializer_class = VendorWalletAddressSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        return VendorWalletAddress.objects.filter(tenant=self.request.user.tenant)
+
+
+@api_view(['POST'])
+@permission_classes([IsAccountant])
+def register_vendor_wallet(request, supplier_id):
+    """Register a wallet address for a vendor"""
+    supplier = get_object_or_404(Supplier, id=supplier_id, tenant=request.user.tenant)
+    
+    wallet_address = request.data.get('wallet_address')
+    network = request.data.get('network')
+    is_primary = request.data.get('is_primary', False)
+    
+    if not wallet_address or not network:
+        return Response(
+            {'error': 'wallet_address and network are required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    wallet = VendorVerificationService.register_vendor_wallet(
+        tenant=request.user.tenant,
+        supplier=supplier,
+        wallet_address=wallet_address,
+        network=network,
+        is_primary=is_primary,
+        user=request.user
+    )
+    
+    serializer = VendorWalletAddressSerializer(wallet)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAccountant])
+def verify_vendor_wallet_manual(request, wallet_id):
+    """Manually verify a vendor wallet address"""
+    wallet = VendorVerificationService.verify_vendor_wallet(
+        tenant=request.user.tenant,
+        wallet_id=wallet_id,
+        user=request.user
+    )
+    
+    serializer = VendorWalletAddressSerializer(wallet)
+    return Response(serializer.data)
+
+
+class VendorVerificationLogListView(generics.ListAPIView):
+    """List vendor verification logs"""
+    serializer_class = VendorVerificationLogSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        queryset = VendorVerificationLog.objects.filter(tenant=self.request.user.tenant)
+        
+        supplier_id = self.request.query_params.get('supplier_id')
+        if supplier_id:
+            queryset = queryset.filter(supplier_id=supplier_id)
+        
+        status_filter = self.request.query_params.get('status')
+        if status_filter:
+            queryset = queryset.filter(verification_status=status_filter)
+        
+        return queryset.order_by('-created_at')
+
+
+class PaymentBlockListView(generics.ListAPIView):
+    """List payment blocks"""
+    serializer_class = PaymentBlockSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        queryset = PaymentBlock.objects.filter(tenant=self.request.user.tenant)
+        
+        status_filter = self.request.query_params.get('status')
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+        
+        supplier_id = self.request.query_params.get('supplier_id')
+        if supplier_id:
+            queryset = queryset.filter(supplier_id=supplier_id)
+        
+        return queryset.order_by('-created_at')
+
+
+class PaymentBlockDetailView(generics.RetrieveUpdateAPIView):
+    """Retrieve and update payment block"""
+    serializer_class = PaymentBlockSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        return PaymentBlock.objects.filter(tenant=self.request.user.tenant)
+    
+    def perform_update(self, serializer):
+        if serializer.validated_data.get('status') in ['approved', 'resolved']:
+            serializer.save(resolved_by=self.request.user, resolved_at=timezone.now())
+        else:
+            serializer.save()
+
+
+@api_view(['POST'])
+@permission_classes([IsAccountant])
+def resolve_payment_block(request, block_id):
+    """Resolve a payment block"""
+    block = get_object_or_404(PaymentBlock, id=block_id, tenant=request.user.tenant)
+    
+    new_status = request.data.get('status')
+    resolution_notes = request.data.get('resolution_notes', '')
+    
+    if new_status not in ['approved', 'resolved']:
+        return Response(
+            {'error': 'Status must be approved or resolved'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    block.status = new_status
+    block.resolution_notes = resolution_notes
+    block.resolved_by = request.user
+    block.resolved_at = timezone.now()
+    block.save()
+    
+    serializer = PaymentBlockSerializer(block)
+    return Response(serializer.data)
+
+
+# Purchase Overview Stats
+@api_view(['GET'])
+@permission_classes([IsAccountant])
+def purchase_overview_stats(request):
+    """Get purchase overview statistics"""
+    tenant = get_request_tenant(request)
+    if not tenant:
+        return Response(
+            {'error': 'Tenant context required'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    orders = PurchaseOrder.objects.filter(tenant=tenant)
+    receipts = PurchaseReceipt.objects.filter(tenant=tenant)
+    suppliers = Supplier.objects.filter(tenant=tenant, is_active=True)
+    
+    # Calculate statistics
+    total_orders = orders.count()
+    pending_orders = orders.filter(status__in=['draft', 'sent']).count()
+    approved_orders = orders.filter(status='confirmed').count()
+    received_orders = orders.filter(status__in=['partially_received', 'received']).count()
+    
+    total_spent = sum(order.total_amount for order in orders.filter(status='received'))
+    pending_approvals = PurchaseApprovalRequest.objects.filter(tenant=tenant, status='pending').count()
+    
+    return Response({
+        'total_orders': total_orders,
+        'pending_orders': pending_orders,
+        'approved_orders': approved_orders,
+        'received_orders': received_orders,
+        'total_spent': float(total_spent),
+        'total_suppliers': suppliers.count(),
+        'pending_approvals': pending_approvals
+    })
+
+
+# Purchase Analytics
+@api_view(['GET'])
+@permission_classes([IsAccountant])
+def purchase_analytics(request):
+    """Get purchase analytics data"""
+    tenant = get_request_tenant(request)
+    if not tenant:
+        return Response(
+            {'error': 'Tenant context required'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    start_date = request.query_params.get('start_date')
+    end_date = request.query_params.get('end_date')
+    
+    if not start_date or not end_date:
+        today = date.today()
+        start_date = today.replace(day=1)
+        end_date = today
+    
+    orders = PurchaseOrder.objects.filter(
+        tenant=tenant,
+        order_date__range=[start_date, end_date]
+    )
+    
+    # Spend by supplier
+    spend_by_supplier = {}
+    for order in orders.filter(status='received'):
+        supplier_name = order.supplier.name
+        spend_by_supplier[supplier_name] = spend_by_supplier.get(supplier_name, 0) + float(order.total_amount)
+    
+    # Spend by month
+    spend_by_month = {}
+    for order in orders.filter(status='received'):
+        month_key = order.order_date.strftime('%Y-%m')
+        spend_by_month[month_key] = spend_by_month.get(month_key, 0) + float(order.total_amount)
+    
+    # Top suppliers
+    top_suppliers = sorted(spend_by_supplier.items(), key=lambda x: x[1], reverse=True)[:10]
+    
+    total_spend = sum(order.total_amount for order in orders.filter(status='received'))
+    avg_order_value = total_spend / orders.filter(status='received').count() if orders.filter(status='received').count() > 0 else 0
+    
+    return Response({
+        'total_spend': float(total_spend),
+        'total_orders': orders.count(),
+        'avg_order_value': float(avg_order_value),
+        'spend_by_supplier': dict(top_suppliers),
+        'spend_by_month': spend_by_month,
+        'period_start': start_date,
+        'period_end': end_date
+    })
+
+
+# Purchase Approval Views
+class PurchaseApprovalRequestListView(generics.ListCreateAPIView):
+    """List and create Purchase Approval Requests"""
+    serializer_class = PurchaseApprovalRequestSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return PurchaseApprovalRequest.objects.none()
+        status_filter = self.request.query_params.get('status')
+        queryset = PurchaseApprovalRequest.objects.filter(tenant=tenant)
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+        return queryset.order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant, requested_by=self.request.user)
+
+
+class PurchaseApprovalRequestDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Purchase Approval Request"""
+    serializer_class = PurchaseApprovalRequestSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return PurchaseApprovalRequest.objects.none()
+        return PurchaseApprovalRequest.objects.filter(tenant=tenant)
+
+
+@api_view(['POST'])
+@permission_classes([IsAccountant])
+def approve_purchase_request(request, pk):
+    """Approve a purchase approval request"""
+    tenant = get_request_tenant(request)
+    if not tenant:
+        return Response(
+            {'error': 'Tenant context required'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    approval_request = get_object_or_404(
+        PurchaseApprovalRequest,
+        id=pk,
+        tenant=tenant,
+        status='pending'
+    )
+    
+    approval_request.status = 'approved'
+    approval_request.approved_by = request.user
+    approval_request.approved_at = timezone.now()
+    approval_request.save()
+    
+    # Also approve the related purchase order if needed
+    if approval_request.approval_type == 'purchase_order' and approval_request.purchase_order.status == 'draft':
+        approval_request.purchase_order.status = 'confirmed'
+        approval_request.purchase_order.approved_by = request.user
+        approval_request.purchase_order.approved_at = timezone.now()
+        approval_request.purchase_order.save()
+    
+    return Response({
+        'message': 'Approval request approved successfully',
+        'approval_request': PurchaseApprovalRequestSerializer(approval_request).data
+    })
+
+
+# Purchase Contract Views
+class PurchaseContractListView(generics.ListCreateAPIView):
+    """List and create Purchase Contracts"""
+    serializer_class = PurchaseContractSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return PurchaseContract.objects.none()
+        status_filter = self.request.query_params.get('status')
+        queryset = PurchaseContract.objects.filter(tenant=tenant)
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+        return queryset.order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant, created_by=self.request.user)
+
+
+class PurchaseContractDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Purchase Contract"""
+    serializer_class = PurchaseContractSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return PurchaseContract.objects.none()
+        return PurchaseContract.objects.filter(tenant=tenant)
+
+
+# Purchase Settings Views
+class PurchaseSettingsView(generics.RetrieveUpdateAPIView):
+    """Retrieve and update Purchase Settings"""
+    serializer_class = PurchaseSettingsSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_object(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        company = getattr(self.request.user, 'company', None)
+        settings, created = PurchaseSettings.objects.get_or_create(
+            tenant=tenant,
+            company=company
+        )
+        return settings

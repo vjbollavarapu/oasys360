@@ -1,0 +1,231 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-deployment
+  namespace: oasys360
+  labels:
+    app: django
+    component: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: django
+  template:
+    metadata:
+      labels:
+        app: django
+        component: backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8001"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: django
+        image: oasys360/django:latest
+        ports:
+        - containerPort: 8000
+          name: http
+        - containerPort: 8001
+          name: metrics
+        command:
+        - /bin/bash
+        - -c
+        - |
+          echo "Starting Django application..."
+          
+          # Wait for database to be ready
+          python manage.py wait_for_db --timeout=60
+          
+          # Collect static files
+          python manage.py collectstatic --noinput
+          
+          # Start Gunicorn with multiple workers
+          exec gunicorn \
+            --bind 0.0.0.0:8000 \
+            --workers 4 \
+            --worker-class gevent \
+            --worker-connections 1000 \
+            --max-requests 1000 \
+            --max-requests-jitter 100 \
+            --timeout 300 \
+            --keep-alive 5 \
+            --access-logfile - \
+            --error-logfile - \
+            --log-level info \
+            --preload \
+            backend.wsgi:application
+        env:
+        - name: DJANGO_SETTINGS_MODULE
+          valueFrom:
+            configMapKeyRef:
+              name: oasys360-config
+              key: DJANGO_SETTINGS_MODULE
+        - name: DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: oasys360-config
+              key: DATABASE_HOST
+        - name: DATABASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: oasys360-config
+              key: DATABASE_PORT
+        - name: DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: oasys360-config
+              key: DATABASE_NAME
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: DATABASE_USER
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: DATABASE_PASSWORD
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: SECRET_KEY
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: oasys360-config
+              key: REDIS_HOST
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: oasys360-config
+              key: REDIS_PORT
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: REDIS_PASSWORD
+        - name: JWT_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: JWT_SECRET_KEY
+        - name: ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: ENCRYPTION_KEY
+        - name: STRIPE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: STRIPE_SECRET_KEY
+        - name: SENDGRID_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: SENDGRID_API_KEY
+        - name: DATADOG_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: DATADOG_API_KEY
+        - name: NEW_RELIC_LICENSE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: NEW_RELIC_LICENSE_KEY
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /health/
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        volumeMounts:
+        - name: django-storage
+          mountPath: /app/media
+        - name: django-logs
+          mountPath: /app/logs
+      volumes:
+      - name: django-storage
+        persistentVolumeClaim:
+          claimName: django-media-pvc
+      - name: django-logs
+        emptyDir: {}
+      initContainers:
+      - name: wait-for-db
+        image: postgres:15-alpine
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for database to be ready..."
+          until pg_isready -h postgres-service -p 5432 -U postgres; do
+            echo "Database is not ready yet. Waiting..."
+            sleep 2
+          done
+          echo "Database is ready!"
+        env:
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: DATABASE_PASSWORD
+      - name: wait-for-redis
+        image: redis:7-alpine
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for Redis to be ready..."
+          until redis-cli -h redis-service -p 6379 -a $REDIS_PASSWORD ping; do
+            echo "Redis is not ready yet. Waiting..."
+            sleep 2
+          done
+          echo "Redis is ready!"
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: REDIS_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-service
+  namespace: oasys360
+  labels:
+    app: django
+spec:
+  selector:
+    app: django
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  - port: 8001
+    targetPort: 8001
+    protocol: TCP
+    name: metrics
+  type: ClusterIP

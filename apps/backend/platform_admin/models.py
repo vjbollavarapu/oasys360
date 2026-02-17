@@ -294,3 +294,53 @@ class APIKey(models.Model):
         """Check if API key has expired"""
         from django.utils import timezone
         return self.expires_at and self.expires_at < timezone.now()
+
+
+class AdminSettings(models.Model):
+    """
+    Admin Settings model for tenant-specific admin configurations
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE, related_name='admin_settings')
+    
+    # General Settings
+    timezone = models.CharField(max_length=100, default='UTC')
+    date_format = models.CharField(max_length=20, default='YYYY-MM-DD')
+    currency = models.CharField(max_length=3, default='USD')
+    language = models.CharField(max_length=10, default='en')
+    
+    # Notification Settings
+    email_notifications = models.BooleanField(default=True)
+    enable_maintenance_mode = models.BooleanField(default=False)
+    maintenance_message = models.TextField(blank=True)
+    
+    # Security Settings
+    enable_two_factor = models.BooleanField(default=False)
+    password_policy = models.JSONField(default=dict, blank=True)
+    session_timeout_minutes = models.IntegerField(default=60)
+    max_login_attempts = models.IntegerField(default=5)
+    
+    # Backup Settings
+    auto_backup_enabled = models.BooleanField(default=True)
+    backup_frequency = models.CharField(max_length=20, choices=[
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('monthly', 'Monthly'),
+    ], default='daily')
+    backup_retention_days = models.IntegerField(default=30)
+    
+    # Audit Settings
+    enable_audit_logging = models.BooleanField(default=True)
+    audit_retention_days = models.IntegerField(default=365)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'admin_settings'
+        verbose_name = 'Admin Settings'
+        verbose_name_plural = 'Admin Settings'
+        unique_together = ['tenant']
+
+    def __str__(self):
+        return f"Admin Settings - {self.tenant.name}"

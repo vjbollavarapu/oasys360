@@ -27,11 +27,11 @@ export function BankingSettingsOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <RefreshCw className="h-4 w-4 mr-2" />
             Test Connection
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Save Settings
           </Button>
@@ -47,7 +47,7 @@ export function BankingSettingsOverview() {
         </TabsList>
 
         <TabsContent value="general" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>General Settings</CardTitle>
               <CardDescription>
@@ -59,7 +59,7 @@ export function BankingSettingsOverview() {
                 <div>
                   <Label htmlFor="default-currency">Default Currency</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
                     <SelectContent>
@@ -73,7 +73,7 @@ export function BankingSettingsOverview() {
                 <div>
                   <Label htmlFor="date-format">Date Format</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select format" />
                     </SelectTrigger>
                     <SelectContent>
@@ -88,7 +88,7 @@ export function BankingSettingsOverview() {
                 <div>
                   <Label htmlFor="timezone">Timezone</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select timezone" />
                     </SelectTrigger>
                     <SelectContent>
@@ -102,7 +102,7 @@ export function BankingSettingsOverview() {
                 <div>
                   <Label htmlFor="language">Language</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select language" />
                     </SelectTrigger>
                     <SelectContent>
@@ -119,7 +119,7 @@ export function BankingSettingsOverview() {
         </TabsContent>
 
         <TabsContent value="sync" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Sync Settings</CardTitle>
               <CardDescription>
@@ -131,7 +131,7 @@ export function BankingSettingsOverview() {
                 <div>
                   <Label htmlFor="sync-frequency">Sync Frequency</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select frequency" />
                     </SelectTrigger>
                     <SelectContent>
@@ -145,7 +145,7 @@ export function BankingSettingsOverview() {
                 <div>
                   <Label htmlFor="auto-categorize">Auto Categorize</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                     <SelectContent>
@@ -159,7 +159,7 @@ export function BankingSettingsOverview() {
                 <div>
                   <Label htmlFor="sync-history">Sync History</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select period" />
                     </SelectTrigger>
                     <SelectContent>
@@ -172,7 +172,7 @@ export function BankingSettingsOverview() {
                 </div>
                 <div>
                   <Label htmlFor="retry-attempts">Retry Attempts</Label>
-                  <Input id="retry-attempts" type="number" defaultValue="3" />
+                  <Input id="retry-attempts" type="number" defaultValue="3" className="rounded-xl" />
                 </div>
               </div>
             </CardContent>
@@ -180,7 +180,7 @@ export function BankingSettingsOverview() {
         </TabsContent>
 
         <TabsContent value="security" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Security Settings</CardTitle>
               <CardDescription>
@@ -189,26 +189,26 @@ export function BankingSettingsOverview() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">Two-Factor Authentication</p>
                     <p className="text-sm text-muted-foreground">Require 2FA for banking access</p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Enabled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Enabled</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">Data Encryption</p>
                     <p className="text-sm text-muted-foreground">Encrypt sensitive banking data</p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Enabled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Enabled</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">Session Timeout</p>
                     <p className="text-sm text-muted-foreground">30 minutes of inactivity</p>
                   </div>
-                  <Badge className="bg-blue-100 text-blue-800">Configured</Badge>
+                  <Badge className="rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">Configured</Badge>
                 </div>
               </div>
             </CardContent>
@@ -216,7 +216,7 @@ export function BankingSettingsOverview() {
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Notification Settings</CardTitle>
               <CardDescription>
@@ -225,26 +225,26 @@ export function BankingSettingsOverview() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">Sync Failures</p>
                     <p className="text-sm text-muted-foreground">Notify when sync fails</p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Enabled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Enabled</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">Large Transactions</p>
                     <p className="text-sm text-muted-foreground">Notify for transactions over $10,000</p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Enabled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Enabled</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">Reconciliation Alerts</p>
                     <p className="text-sm text-muted-foreground">Notify when reconciliation is needed</p>
                   </div>
-                  <Badge className="bg-yellow-100 text-yellow-800">Weekly</Badge>
+                  <Badge className="rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">Weekly</Badge>
                 </div>
               </div>
             </CardContent>

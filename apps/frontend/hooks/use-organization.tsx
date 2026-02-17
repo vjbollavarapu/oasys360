@@ -175,7 +175,7 @@ const mockOrganizations: Organization[] = [
         isLocked: true,
         isSoftClosed: false,
         createdDate: '2023-01-01',
-        lockedBy: 'admin@oasys.com',
+        lockedBy: 'admin@oasys360.com',
         lockedDate: '2024-01-15',
         fiscalYearId: 'fy-2023',
         periodNumber: 1,
@@ -183,15 +183,15 @@ const mockOrganizations: Organization[] = [
         isYearEnd: true,
         closingEntries: [],
         auditStatus: 'completed',
-        auditedBy: 'admin@oasys.com',
+        auditedBy: 'admin@oasys360.com',
         auditedDate: '2024-01-15',
         transactionCount: 1547,
         totalDebits: 2547893.45,
         totalCredits: 2547893.45,
         lastModified: '2024-01-15T10:30:00Z',
-        modifiedBy: 'admin@oasys.com',
+        modifiedBy: 'admin@oasys360.com',
         approvalStatus: 'approved',
-        approvedBy: 'cfo@oasys.com',
+        approvedBy: 'cfo@oasys360.com',
         approvalDate: '2024-01-20',
         exceptions: []
       },
@@ -210,13 +210,13 @@ const mockOrganizations: Organization[] = [
         isYearEnd: false,
         closingEntries: [],
         auditStatus: 'in-progress',
-        auditedBy: 'admin@oasys.com',
+        auditedBy: 'admin@oasys360.com',
         auditedDate: '2024-01-01',
         transactionCount: 2891,
         totalDebits: 4892345.67,
         totalCredits: 4892345.67,
         lastModified: '2024-12-01T14:22:00Z',
-        modifiedBy: 'admin@oasys.com',
+        modifiedBy: 'admin@oasys360.com',
         approvalStatus: 'pending',
         exceptions: [
           {
@@ -224,7 +224,7 @@ const mockOrganizations: Organization[] = [
             description: 'Unreconciled bank transaction for $1,250',
             severity: 'medium',
             status: 'investigating',
-            createdBy: 'admin@oasys.com',
+            createdBy: 'admin@oasys360.com',
             createdDate: '2024-11-15T09:00:00Z'
           }
         ]
@@ -244,13 +244,13 @@ const mockOrganizations: Organization[] = [
         isYearEnd: false,
         closingEntries: [],
         auditStatus: 'not-started',
-        auditedBy: 'admin@oasys.com',
+        auditedBy: 'admin@oasys360.com',
         auditedDate: '2024-11-01',
         transactionCount: 0,
         totalDebits: 0,
         totalCredits: 0,
         lastModified: '2024-11-01T08:00:00Z',
-        modifiedBy: 'admin@oasys.com',
+        modifiedBy: 'admin@oasys360.com',
         approvalStatus: 'pending',
         exceptions: []
       }
@@ -369,13 +369,13 @@ const mockOrganizations: Organization[] = [
         isYearEnd: false,
         closingEntries: [],
         auditStatus: 'in-progress',
-        auditedBy: 'admin@oasys.com',
+        auditedBy: 'admin@oasys360.com',
         auditedDate: '2024-01-01',
         transactionCount: 756,
         totalDebits: 987654.32,
         totalCredits: 987654.32,
         lastModified: '2024-11-30T17:15:00Z',
-        modifiedBy: 'admin@oasys.com',
+        modifiedBy: 'admin@oasys360.com',
         approvalStatus: 'pending',
         exceptions: [
           {
@@ -383,7 +383,7 @@ const mockOrganizations: Organization[] = [
             description: 'Missing depreciation entry for Q4',
             severity: 'high',
             status: 'open',
-            createdBy: 'admin@oasys.com',
+            createdBy: 'admin@oasys360.com',
             createdDate: '2024-11-28T10:00:00Z'
           }
         ]
@@ -667,7 +667,7 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const value: OrganizationContextType = {
+  const value: OrganizationContextType & { organization: Organization | null } = {
     organizations,
     currentOrganization,
     currentFiscalPeriod,
@@ -686,7 +686,8 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
     rolloverToNextYear,
     validateYearEndClose,
     archiveFiscalYear,
-    isLoading
+    isLoading,
+    organization: currentOrganization // Alias for backward compatibility
   }
 
   return (
@@ -699,7 +700,36 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
 export function useOrganization() {
   const context = useContext(OrganizationContext)
   if (context === undefined) {
+    // During SSR or when context is not available, return safe defaults
+    if (typeof window === 'undefined') {
+      return {
+        organizations: [],
+        currentOrganization: null,
+        currentFiscalPeriod: null,
+        currentFiscalYear: null,
+        setCurrentOrganization: () => {},
+        setCurrentFiscalPeriod: () => {},
+        isDateWithinFiscalPeriod: () => false,
+        canAddTransaction: () => ({ allowed: false, reason: 'Not available' }),
+        lockFiscalPeriod: async () => false,
+        unlockFiscalPeriod: async () => false,
+        createFiscalYear: async () => ({ id: '', name: '', startDate: '', endDate: '', organizationId: '', status: 'open' as const, periods: [], closingStatus: 'not-started' as const }),
+        closeFiscalYear: async () => false,
+        generateOpeningBalances: async () => [],
+        createYearEndAdjustments: async () => false,
+        generateClosingEntries: async () => [],
+        rolloverToNextYear: async () => ({ id: '', name: '', startDate: '', endDate: '', organizationId: '', status: 'open' as const, periods: [], closingStatus: 'not-started' as const }),
+        validateYearEndClose: async () => ({ valid: false, errors: [] }),
+        archiveFiscalYear: async () => false,
+        isLoading: true,
+        organization: null, // Alias for currentOrganization
+      }
+    }
     throw new Error('useOrganization must be used within an OrganizationProvider')
   }
-  return context
+  // Add organization alias for backward compatibility
+  return {
+    ...context,
+    organization: context.currentOrganization,
+  }
 } 

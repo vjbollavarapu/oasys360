@@ -91,7 +91,7 @@ class ReportTemplate(models.Model):
                 tenant=self.tenant,
                 report_type=self.report_type,
                 is_default=True
-            ).update(is_default=False)
+            ).exclude(id=self.id if self.id else None).update(is_default=False)
         super().save(*args, **kwargs)
 
 
@@ -156,6 +156,7 @@ class ReportExecution(models.Model):
     Report Execution model for tracking report generation history
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE, related_name='report_executions')
     scheduled_report = models.ForeignKey(ScheduledReport, on_delete=models.CASCADE, related_name='executions', null=True, blank=True)
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='executions', null=True, blank=True)
     status = models.CharField(max_length=20, choices=[
@@ -246,3 +247,183 @@ class Widget(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.widget_type})"
+
+
+class TaxReport(models.Model):
+    """
+    Tax Report model for managing tax-related reports
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE, related_name='tax_reports')
+    company = models.ForeignKey('tenants.Company', on_delete=models.CASCADE, related_name='tax_reports')
+    report_name = models.CharField(max_length=255)
+    tax_period_start = models.DateField()
+    tax_period_end = models.DateField()
+    tax_type = models.CharField(max_length=50, choices=[
+        ('income_tax', 'Income Tax'),
+        ('sales_tax', 'Sales Tax'),
+        ('vat', 'VAT'),
+        ('gst', 'GST'),
+        ('withholding_tax', 'Withholding Tax'),
+        ('property_tax', 'Property Tax'),
+        ('other', 'Other'),
+    ])
+    tax_jurisdiction = models.CharField(max_length=100, blank=True)
+    total_taxable_income = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    total_deductions = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    total_tax_liability = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    total_tax_paid = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    data = models.JSONField(default=dict, blank=True)
+    file_path = models.CharField(max_length=500, blank=True)
+    status = models.CharField(max_length=20, default='draft', choices=[
+        ('draft', 'Draft'),
+        ('generating', 'Generating'),
+        ('completed', 'Completed'),
+        ('filed', 'Filed'),
+        ('failed', 'Failed'),
+    ])
+    generated_at = models.DateTimeField(null=True, blank=True)
+    filed_at = models.DateTimeField(null=True, blank=True)
+    created_by = models.ForeignKey('authentication.User', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'tax_reports'
+        verbose_name = 'Tax Report'
+        verbose_name_plural = 'Tax Reports'
+        ordering = ['-tax_period_end', '-created_at']
+
+    def __str__(self):
+        return f"{self.report_name} - {self.tax_period_start} to {self.tax_period_end}"
+
+
+class ComplianceReport(models.Model):
+    """
+    Compliance Report model for managing compliance-related reports
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE, related_name='compliance_reports')
+    company = models.ForeignKey('tenants.Company', on_delete=models.CASCADE, related_name='compliance_reports')
+    report_name = models.CharField(max_length=255)
+    compliance_type = models.CharField(max_length=50, choices=[
+        ('audit_trail', 'Audit Trail'),
+        ('user_activity', 'User Activity'),
+        ('data_access', 'Data Access Log'),
+        ('gdpr', 'GDPR Compliance'),
+        ('sox', 'SOX Compliance'),
+        ('pci_dss', 'PCI DSS'),
+        ('hipaa', 'HIPAA'),
+        ('other', 'Other'),
+    ])
+    period_start = models.DateField(null=True, blank=True)
+    period_end = models.DateField(null=True, blank=True)
+    description = models.TextField(blank=True)
+    data = models.JSONField(default=dict, blank=True)
+    file_path = models.CharField(max_length=500, blank=True)
+    status = models.CharField(max_length=20, default='draft', choices=[
+        ('draft', 'Draft'),
+        ('generating', 'Generating'),
+        ('completed', 'Completed'),
+        ('reviewed', 'Reviewed'),
+        ('failed', 'Failed'),
+    ])
+    generated_at = models.DateTimeField(null=True, blank=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    reviewed_by = models.ForeignKey('authentication.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='reviewed_compliance_reports')
+    created_by = models.ForeignKey('authentication.User', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'compliance_reports'
+        verbose_name = 'Compliance Report'
+        verbose_name_plural = 'Compliance Reports'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.report_name} ({self.get_compliance_type_display()})"
+
+
+class ReportExport(models.Model):
+    """
+    Report Export model for managing report exports
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE, related_name='report_exports')
+    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='exports', null=True, blank=True)
+    tax_report = models.ForeignKey(TaxReport, on_delete=models.CASCADE, related_name='exports', null=True, blank=True)
+    compliance_report = models.ForeignKey(ComplianceReport, on_delete=models.CASCADE, related_name='exports', null=True, blank=True)
+    export_format = models.CharField(max_length=20, choices=[
+        ('pdf', 'PDF'),
+        ('excel', 'Excel'),
+        ('csv', 'CSV'),
+        ('json', 'JSON'),
+        ('xml', 'XML'),
+    ])
+    file_path = models.CharField(max_length=500)
+    file_size = models.BigIntegerField(null=True, blank=True)
+    status = models.CharField(max_length=20, default='pending', choices=[
+        ('pending', 'Pending'),
+        ('processing', 'Processing'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+    ])
+    error_message = models.TextField(blank=True)
+    created_by = models.ForeignKey('authentication.User', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'report_exports'
+        verbose_name = 'Report Export'
+        verbose_name_plural = 'Report Exports'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Export {self.export_format} - {self.created_at}"
+
+
+class ReportingSettings(models.Model):
+    """
+    Reporting Settings model for tenant/company-specific reporting configurations
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE, related_name='reporting_settings')
+    company = models.ForeignKey('tenants.Company', on_delete=models.CASCADE, related_name='reporting_settings', null=True, blank=True)
+    
+    # Default Settings
+    default_currency = models.CharField(max_length=3, default='USD')
+    default_date_format = models.CharField(max_length=20, default='YYYY-MM-DD')
+    default_export_format = models.CharField(max_length=20, default='pdf', choices=[
+        ('pdf', 'PDF'),
+        ('excel', 'Excel'),
+        ('csv', 'CSV'),
+        ('json', 'JSON'),
+    ])
+    
+    # Report Generation Settings
+    auto_generate_reports = models.BooleanField(default=False)
+    report_retention_days = models.IntegerField(default=365)
+    enable_report_caching = models.BooleanField(default=True)
+    cache_expiry_hours = models.IntegerField(default=24)
+    
+    # Email Settings
+    enable_email_notifications = models.BooleanField(default=True)
+    default_recipients = models.JSONField(default=list, blank=True)
+    
+    # Export Settings
+    max_export_file_size_mb = models.IntegerField(default=100)
+    allowed_export_formats = models.JSONField(default=list, blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'reporting_settings'
+        verbose_name = 'Reporting Settings'
+        verbose_name_plural = 'Reporting Settings'
+        unique_together = ['tenant', 'company']
+
+    def __str__(self):
+        return f"Reporting Settings - {self.tenant.name}"

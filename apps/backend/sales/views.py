@@ -8,14 +8,19 @@ from django.utils import timezone
 from decimal import Decimal
 from datetime import datetime, date, timedelta
 
-from .models import Customer, SalesOrder, SalesOrderLine, SalesQuote, SalesQuoteLine
+from .models import (
+    Customer, SalesOrder, SalesOrderLine, SalesQuote, SalesQuoteLine,
+    SalesOpportunity, SalesCommission, SalesSettings
+)
 from .serializers import (
     CustomerSerializer, SalesOrderSerializer, SalesOrderLineSerializer,
     SalesOrderWithLinesSerializer, SalesQuoteSerializer, SalesQuoteLineSerializer,
     SalesQuoteWithLinesSerializer, CustomerSummarySerializer, SalesStatsSerializer,
-    SalesOrderSummarySerializer
+    SalesOrderSummarySerializer, SalesOpportunitySerializer, SalesCommissionSerializer,
+    SalesSettingsSerializer
 )
 from authentication.permissions import IsAccountant, IsTenantMember
+from backend.tenant_utils import get_request_tenant
 
 
 class CustomerListView(generics.ListCreateAPIView):
@@ -24,13 +29,20 @@ class CustomerListView(generics.ListCreateAPIView):
     permission_classes = [IsAccountant]
     
     def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return Customer.objects.none()
         return Customer.objects.filter(
-            tenant=self.request.user.tenant,
+            tenant=tenant,
             is_active=True
         ).order_by('name')
     
     def perform_create(self, serializer):
-        serializer.save(tenant=self.request.user.tenant)
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant)
 
 
 class CustomerDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -39,7 +51,10 @@ class CustomerDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAccountant]
     
     def get_queryset(self):
-        return Customer.objects.filter(tenant=self.request.user.tenant)
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return Customer.objects.none()
+        return Customer.objects.filter(tenant=tenant)
 
 
 class SalesOrderListView(generics.ListCreateAPIView):
@@ -396,3 +411,248 @@ def customer_summary(request):
     
     serializer = CustomerSummarySerializer(summary_data, many=True)
     return Response(serializer.data)
+
+
+# Sales Analytics
+@api_view(['GET'])
+@permission_classes([IsAccountant])
+def sales_analytics(request):
+    """Get sales analytics data"""
+    tenant = get_request_tenant(request)
+    if not tenant:
+        return Response(
+            {'error': 'Tenant context required'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    start_date = request.query_params.get('start_date')
+    end_date = request.query_params.get('end_date')
+    
+    if not start_date or not end_date:
+        today = date.today()
+        start_date = today.replace(day=1)
+        end_date = today
+    
+    # Get orders and quotes for period
+    orders = SalesOrder.objects.filter(
+        tenant=tenant,
+        order_date__range=[start_date, end_date]
+    )
+    quotes = SalesQuote.objects.filter(
+        tenant=tenant,
+        quote_date__range=[start_date, end_date]
+    )
+    
+    # Calculate metrics
+    total_revenue = sum(order.total_amount for order in orders if order.status != 'cancelled')
+    total_quotes = quotes.count()
+    total_orders = orders.count()
+    conversion_rate = (total_orders / total_quotes * 100) if total_quotes > 0 else 0
+    
+    # Revenue by customer
+    revenue_by_customer = {}
+    for order in orders:
+        customer_name = order.customer.name
+        revenue_by_customer[customer_name] = revenue_by_customer.get(customer_name, 0) + float(order.total_amount)
+    
+    # Revenue by month
+    revenue_by_month = {}
+    for order in orders:
+        month_key = order.order_date.strftime('%Y-%m')
+        revenue_by_month[month_key] = revenue_by_month.get(month_key, 0) + float(order.total_amount)
+    
+    return Response({
+        'total_revenue': total_revenue,
+        'total_orders': total_orders,
+        'total_quotes': total_quotes,
+        'conversion_rate': conversion_rate,
+        'revenue_by_customer': revenue_by_customer,
+        'revenue_by_month': revenue_by_month,
+        'period_start': start_date,
+        'period_end': end_date
+    })
+
+
+# Sales Opportunity/Pipeline Views
+class SalesOpportunityListView(generics.ListCreateAPIView):
+    """List and create Sales Opportunities"""
+    serializer_class = SalesOpportunitySerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return SalesOpportunity.objects.none()
+        stage = self.request.query_params.get('stage')
+        status_filter = self.request.query_params.get('status')
+        queryset = SalesOpportunity.objects.filter(tenant=tenant)
+        if stage:
+            queryset = queryset.filter(stage=stage)
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+        return queryset.order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant, sales_person=self.request.user)
+
+
+class SalesOpportunityDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Sales Opportunity"""
+    serializer_class = SalesOpportunitySerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return SalesOpportunity.objects.none()
+        return SalesOpportunity.objects.filter(tenant=tenant)
+
+
+@api_view(['GET'])
+@permission_classes([IsAccountant])
+def sales_pipeline_summary(request):
+    """Get sales pipeline summary by stage"""
+    tenant = get_request_tenant(request)
+    if not tenant:
+        return Response(
+            {'error': 'Tenant context required'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    opportunities = SalesOpportunity.objects.filter(
+        tenant=tenant,
+        status='open'
+    )
+    
+    pipeline_summary = {}
+    total_value = 0
+    total_weighted_value = 0
+    
+    for opp in opportunities:
+        stage = opp.get_stage_display()
+        if stage not in pipeline_summary:
+            pipeline_summary[stage] = {
+                'count': 0,
+                'total_value': 0,
+                'weighted_value': 0
+            }
+        pipeline_summary[stage]['count'] += 1
+        pipeline_summary[stage]['total_value'] += float(opp.value)
+        pipeline_summary[stage]['weighted_value'] += float(opp.get_weighted_value())
+        total_value += float(opp.value)
+        total_weighted_value += float(opp.get_weighted_value())
+    
+    return Response({
+        'pipeline_by_stage': pipeline_summary,
+        'total_opportunities': opportunities.count(),
+        'total_value': total_value,
+        'total_weighted_value': total_weighted_value
+    })
+
+
+# Sales Commission Views
+class SalesCommissionListView(generics.ListCreateAPIView):
+    """List and create Sales Commissions"""
+    serializer_class = SalesCommissionSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return SalesCommission.objects.none()
+        sales_person_id = self.request.query_params.get('sales_person')
+        queryset = SalesCommission.objects.filter(tenant=tenant)
+        if sales_person_id:
+            queryset = queryset.filter(sales_person_id=sales_person_id)
+        return queryset.order_by('-period_end', '-created_at')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant)
+
+
+class SalesCommissionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Sales Commission"""
+    serializer_class = SalesCommissionSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return SalesCommission.objects.none()
+        return SalesCommission.objects.filter(tenant=tenant)
+
+
+@api_view(['POST'])
+@permission_classes([IsAccountant])
+def calculate_commission(request):
+    """Calculate commission for a sales person"""
+    tenant = get_request_tenant(request)
+    if not tenant:
+        return Response(
+            {'error': 'Tenant context required'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    sales_person_id = request.data.get('sales_person_id')
+    period_start = request.data.get('period_start')
+    period_end = request.data.get('period_end')
+    commission_type = request.data.get('commission_type', 'sales_order')
+    
+    if not sales_person_id or not period_start or not period_end:
+        return Response(
+            {'error': 'sales_person_id, period_start, and period_end are required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    # Get settings for default commission rate
+    settings = SalesSettings.objects.filter(tenant=tenant).first()
+    commission_rate = settings.default_commission_rate if settings else Decimal('10.00')
+    
+    # Calculate base amount based on commission type
+    base_amount = Decimal('0.00')
+    if commission_type == 'sales_order':
+        orders = SalesOrder.objects.filter(
+            tenant=tenant,
+            created_by_id=sales_person_id,
+            order_date__range=[period_start, period_end],
+            status__in=['confirmed', 'processing', 'shipped', 'delivered']
+        )
+        base_amount = sum(order.total_amount for order in orders)
+    
+    commission_amount = base_amount * (commission_rate / 100)
+    
+    return Response({
+        'sales_person_id': sales_person_id,
+        'period_start': period_start,
+        'period_end': period_end,
+        'base_amount': float(base_amount),
+        'commission_rate': float(commission_rate),
+        'commission_amount': float(commission_amount)
+    })
+
+
+# Sales Settings Views
+class SalesSettingsView(generics.RetrieveUpdateAPIView):
+    """Retrieve and update Sales Settings"""
+    serializer_class = SalesSettingsSerializer
+    permission_classes = [IsAccountant]
+    
+    def get_object(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        company = getattr(self.request.user, 'company', None)
+        settings, created = SalesSettings.objects.get_or_create(
+            tenant=tenant,
+            company=company
+        )
+        return settings

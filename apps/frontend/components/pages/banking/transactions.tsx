@@ -27,11 +27,11 @@ export function BankTransactionsOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Download className="h-4 w-4 mr-2" />
             Export
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Eye className="h-4 w-4 mr-2" />
             View All
           </Button>
@@ -47,49 +47,57 @@ export function BankTransactionsOverview() {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Transactions</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Transactions</CardTitle>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-2xl">
+                  <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">1,247</div>
-                <p className="text-xs text-muted-foreground">This month</p>
+                <p className="text-xs text-muted-foreground mt-2">This month</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Amount</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Amount</CardTitle>
+                <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-2xl">
+                  <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">$45,678.90</div>
-                <p className="text-xs text-muted-foreground">Net flow</p>
+                <p className="text-xs text-muted-foreground mt-2">Net flow</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Pending</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Pending</CardTitle>
+                <div className="p-3 bg-yellow-100 dark:bg-yellow-900/20 rounded-2xl">
+                  <Clock className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">12</div>
-                <p className="text-xs text-muted-foreground">Awaiting clearance</p>
+                <div className="text-2xl font-bold text-yellow-600">12</div>
+                <p className="text-xs text-muted-foreground mt-2">Awaiting clearance</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Categorized</CardTitle>
-                <Eye className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Categorized</CardTitle>
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/20 rounded-2xl">
+                  <Eye className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">1,235</div>
-                <p className="text-xs text-muted-foreground">Auto-categorized</p>
+                <p className="text-xs text-muted-foreground mt-2">Auto-categorized</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Recent Transactions</CardTitle>
               <CardDescription>
@@ -98,10 +106,10 @@ export function BankTransactionsOverview() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <DollarSign className="h-5 w-5 text-green-600" />
+                    <div className="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                      <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
                       <p className="font-medium">Salary Deposit</p>
@@ -110,13 +118,13 @@ export function BankTransactionsOverview() {
                   </div>
                   <div className="text-right">
                     <p className="font-medium text-green-600">+$5,000.00</p>
-                    <Badge className="bg-green-100 text-green-800">Income</Badge>
+                    <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Income</Badge>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                      <DollarSign className="h-5 w-5 text-red-600" />
+                    <div className="w-10 h-10 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
+                      <DollarSign className="h-5 w-5 text-red-600 dark:text-red-400" />
                     </div>
                     <div>
                       <p className="font-medium">Grocery Store</p>
@@ -125,13 +133,13 @@ export function BankTransactionsOverview() {
                   </div>
                   <div className="text-right">
                     <p className="font-medium text-red-600">-$125.67</p>
-                    <Badge className="bg-blue-100 text-blue-800">Food</Badge>
+                    <Badge className="rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">Food</Badge>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <Clock className="h-5 w-5 text-yellow-600" />
+                    <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center">
+                      <Clock className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                     </div>
                     <div>
                       <p className="font-medium">Online Purchase</p>
@@ -140,7 +148,7 @@ export function BankTransactionsOverview() {
                   </div>
                   <div className="text-right">
                     <p className="font-medium text-red-600">-$89.99</p>
-                    <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
+                    <Badge className="rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">Pending</Badge>
                   </div>
                 </div>
               </div>
@@ -149,7 +157,7 @@ export function BankTransactionsOverview() {
         </TabsContent>
 
         <TabsContent value="transactions" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>All Transactions</CardTitle>
               <CardDescription>
@@ -157,7 +165,7 @@ export function BankTransactionsOverview() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground">
+              <div className="text-center text-muted-foreground py-12">
                 <DollarSign className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Transaction list interface will appear here</p>
               </div>
@@ -166,7 +174,7 @@ export function BankTransactionsOverview() {
         </TabsContent>
 
         <TabsContent value="filters" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Transaction Filters</CardTitle>
               <CardDescription>
@@ -178,7 +186,7 @@ export function BankTransactionsOverview() {
                 <div>
                   <Label htmlFor="date-range">Date Range</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select range" />
                     </SelectTrigger>
                     <SelectContent>
@@ -193,7 +201,7 @@ export function BankTransactionsOverview() {
                 <div>
                   <Label htmlFor="amount-range">Amount Range</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select range" />
                     </SelectTrigger>
                     <SelectContent>
@@ -209,7 +217,7 @@ export function BankTransactionsOverview() {
                 <div>
                   <Label htmlFor="category">Category</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -224,7 +232,7 @@ export function BankTransactionsOverview() {
                 <div>
                   <Label htmlFor="status">Status</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -235,7 +243,7 @@ export function BankTransactionsOverview() {
                   </Select>
                 </div>
               </div>
-              <Button className="w-full">
+              <Button className="w-full rounded-full">
                 <Filter className="h-4 w-4 mr-2" />
                 Apply Filters
               </Button>

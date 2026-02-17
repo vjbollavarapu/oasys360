@@ -68,13 +68,23 @@ export function FiscalYearSettings() {
   const [isEditOrgDialogOpen, setIsEditOrgDialogOpen] = useState(false)
   const [selectedOrgForEdit, setSelectedOrgForEdit] = useState<string>('')
 
-  // Mock currencies data
+  // Mock currencies data - includes all SEA currencies
   const [currencies, setCurrencies] = useState<Currency[]>([
     { code: 'USD', name: 'US Dollar', symbol: '$', exchangeRate: 1.0, isBaseCurrency: true, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
     { code: 'EUR', name: 'Euro', symbol: '€', exchangeRate: 0.85, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
     { code: 'GBP', name: 'British Pound', symbol: '£', exchangeRate: 0.73, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
     { code: 'JPY', name: 'Japanese Yen', symbol: '¥', exchangeRate: 110.0, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
-    { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$', exchangeRate: 1.35, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' }
+    // Southeast Asian (SEA) currencies
+    { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$', exchangeRate: 1.35, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
+    { code: 'MYR', name: 'Malaysian Ringgit', symbol: 'RM', exchangeRate: 4.20, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
+    { code: 'THB', name: 'Thai Baht', symbol: '฿', exchangeRate: 33.50, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
+    { code: 'IDR', name: 'Indonesian Rupiah', symbol: 'Rp', exchangeRate: 15000.0, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
+    { code: 'PHP', name: 'Philippine Peso', symbol: '₱', exchangeRate: 55.0, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
+    { code: 'VND', name: 'Vietnamese Dong', symbol: '₫', exchangeRate: 24000.0, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
+    { code: 'MMK', name: 'Myanmar Kyat', symbol: 'K', exchangeRate: 2100.0, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
+    { code: 'KHR', name: 'Cambodian Riel', symbol: '៛', exchangeRate: 4100.0, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
+    { code: 'LAK', name: 'Lao Kip', symbol: '₭', exchangeRate: 18000.0, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
+    { code: 'BND', name: 'Brunei Dollar', symbol: 'B$', exchangeRate: 1.35, isBaseCurrency: false, isActive: true, lastUpdated: '2024-12-01T10:00:00Z' },
   ])
 
   // Form states

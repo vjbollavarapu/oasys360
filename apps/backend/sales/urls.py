@@ -27,4 +27,20 @@ urlpatterns = [
     
     # Sales Statistics
     path('stats/', views.sales_stats, name='sales_stats'),
+    
+    # Sales Analytics
+    path('analytics/', views.sales_analytics, name='sales_analytics'),
+    
+    # Sales Opportunities/Pipeline
+    path('opportunities/', views.SalesOpportunityListView.as_view(), name='opportunities_list'),
+    path('opportunities/<uuid:pk>/', views.SalesOpportunityDetailView.as_view(), name='opportunities_detail'),
+    path('pipeline/summary/', views.sales_pipeline_summary, name='pipeline_summary'),
+    
+    # Sales Commissions
+    path('commissions/', views.SalesCommissionListView.as_view(), name='commissions_list'),
+    path('commissions/<uuid:pk>/', views.SalesCommissionDetailView.as_view(), name='commissions_detail'),
+    path('commissions/calculate/', views.calculate_commission, name='calculate_commission'),
+    
+    # Sales Settings
+    path('settings/', views.SalesSettingsView.as_view(), name='sales_settings'),
 ]

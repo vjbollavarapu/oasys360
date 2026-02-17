@@ -286,10 +286,12 @@ export function ReportsOverview() {
     switch (widget.type) {
       case "balance-summary":
         return (
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5" />
+                <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-xl">
+                  <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
                 {widget.title}
               </CardTitle>
             </CardHeader>
@@ -693,19 +695,19 @@ export function ReportsOverview() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Reports & Analytics</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Reports & Analytics</h1>
           <p className="text-muted-foreground">Dynamic reporting with AI-powered insights and role-based dashboards</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Share className="h-4 w-4 mr-2" />
             Share Dashboard
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Plus className="h-4 w-4 mr-2" />
             Create Report
           </Button>
@@ -713,10 +715,12 @@ export function ReportsOverview() {
       </div>
 
       {/* Role Selector */}
-      <Card>
+      <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <UserCheck className="h-5 w-5" />
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-xl">
+              <UserCheck className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            </div>
             Role-Based Dashboard
           </CardTitle>
           <CardDescription>Switch between different role perspectives</CardDescription>
@@ -728,7 +732,7 @@ export function ReportsOverview() {
                 key={role}
                 variant={selectedRole === role ? "default" : "outline"}
                 onClick={() => setSelectedRole(role)}
-                className="flex items-center gap-2"
+                className="rounded-full flex items-center gap-2"
               >
                 <config.icon className={`h-4 w-4 ${selectedRole === role ? "" : config.color}`} />
                 {config.title.replace(" Dashboard", "")}
@@ -740,7 +744,7 @@ export function ReportsOverview() {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="dashboard" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="rounded-full p-1 h-auto grid w-full grid-cols-4">
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="reports">Report Builder</TabsTrigger>
           <TabsTrigger value="templates">Templates</TabsTrigger>
@@ -765,10 +769,12 @@ export function ReportsOverview() {
 
         {/* Report Builder */}
         <TabsContent value="reports" className="space-y-6">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Filter className="h-5 w-5" />
+                <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-xl">
+                  <Filter className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
                 Dynamic Report Builder
               </CardTitle>
               <CardDescription>Create custom reports with advanced filtering</CardDescription>

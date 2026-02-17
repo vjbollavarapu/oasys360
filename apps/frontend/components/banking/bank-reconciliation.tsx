@@ -154,13 +154,17 @@ export function BankReconciliation({ className = '' }: BankReconciliationProps) 
       // Load reconciliations
       const reconciliationsResponse = await bankingService.getReconciliations();
       if (reconciliationsResponse.success && reconciliationsResponse.data) {
-        setReconciliations(reconciliationsResponse.data);
+        // Handle paginated response
+        const reconciliationsData = reconciliationsResponse.data.results || reconciliationsResponse.data || [];
+        setReconciliations(Array.isArray(reconciliationsData) ? reconciliationsData : []);
       }
       
       // Load accounts
       const accountsResponse = await bankingService.getBankConnections();
       if (accountsResponse.success && accountsResponse.data) {
-        setAccounts(accountsResponse.data);
+        // Handle paginated response
+        const accountsData = accountsResponse.data.results || accountsResponse.data || [];
+        setAccounts(Array.isArray(accountsData) ? accountsData : []);
       }
     });
     setLoading(false);

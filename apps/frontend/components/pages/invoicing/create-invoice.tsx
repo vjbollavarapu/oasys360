@@ -220,15 +220,15 @@ export function CreateInvoiceForm() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" disabled={isLoading}>
+          <Button variant="outline" disabled={isLoading} className="rounded-full">
             <Eye className="h-4 w-4 mr-2" />
             Preview
           </Button>
-          <Button variant="outline" disabled={isLoading}>
+          <Button variant="outline" disabled={isLoading} className="rounded-full">
             <Save className="h-4 w-4 mr-2" />
             Save Draft
           </Button>
-          <Button onClick={handleSend} disabled={isLoading}>
+          <Button onClick={handleSend} disabled={isLoading} className="rounded-full">
             <Send className="h-4 w-4 mr-2" />
             Send Invoice
           </Button>
@@ -302,7 +302,7 @@ export function CreateInvoiceForm() {
             </Card>
 
             {/* Customer Information */}
-            <Card>
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
               <CardHeader>
                 <CardTitle>Customer Information</CardTitle>
                 <CardDescription>
@@ -354,7 +354,7 @@ export function CreateInvoiceForm() {
           </div>
 
           {/* Additional Information */}
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Additional Information</CardTitle>
               <CardDescription>
@@ -387,7 +387,7 @@ export function CreateInvoiceForm() {
         </TabsContent>
 
         <TabsContent value="items" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Line Items</CardTitle>
               <CardDescription>
@@ -569,7 +569,7 @@ export function CreateInvoiceForm() {
         </TabsContent>
 
         <TabsContent value="preview" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Invoice Preview</CardTitle>
               <CardDescription>
@@ -577,7 +577,7 @@ export function CreateInvoiceForm() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="border rounded-lg p-6 space-y-6">
+              <div className="border rounded-2xl p-6 space-y-6">
                 {/* Header */}
                 <div className="flex justify-between items-start">
                   <div>

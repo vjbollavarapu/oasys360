@@ -13,6 +13,10 @@ import {
 } from "lucide-react"
 
 export function InventoryMovementsOverview() {
+  return <StockMovementsOverview />;
+}
+
+export function StockMovementsOverview() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -23,11 +27,11 @@ export function InventoryMovementsOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Plus className="h-4 w-4 mr-2" />
             Add Movement
           </Button>
@@ -43,49 +47,57 @@ export function InventoryMovementsOverview() {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Today's Movements</CardTitle>
-                <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Today's Movements</CardTitle>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-2xl">
+                  <ArrowUpDown className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">45</div>
-                <p className="text-xs text-muted-foreground">Stock movements</p>
+                <p className="text-xs text-muted-foreground mt-2">Stock movements</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Inbound</CardTitle>
-                <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Inbound</CardTitle>
+                <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-2xl">
+                  <ArrowUpDown className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">23</div>
-                <p className="text-xs text-muted-foreground">Receipts</p>
+                <p className="text-xs text-muted-foreground mt-2">Receipts</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Outbound</CardTitle>
-                <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Outbound</CardTitle>
+                <div className="p-3 bg-red-100 dark:bg-red-900/20 rounded-2xl">
+                  <ArrowUpDown className="h-5 w-5 text-red-600 dark:text-red-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">22</div>
-                <p className="text-xs text-muted-foreground">Issues</p>
+                <p className="text-xs text-muted-foreground mt-2">Issues</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Pending</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Pending</CardTitle>
+                <div className="p-3 bg-yellow-100 dark:bg-yellow-900/20 rounded-2xl">
+                  <Clock className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">5</div>
-                <p className="text-xs text-muted-foreground">Awaiting approval</p>
+                <div className="text-2xl font-bold text-yellow-600">5</div>
+                <p className="text-xs text-muted-foreground mt-2">Awaiting approval</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Recent Movements</CardTitle>
               <CardDescription>
@@ -94,10 +106,10 @@ export function InventoryMovementsOverview() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <ArrowUpDown className="h-5 w-5 text-green-600" />
+                    <div className="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                      <ArrowUpDown className="h-5 w-5 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
                       <p className="font-medium">Receipt - Dell XPS 13</p>
@@ -106,13 +118,13 @@ export function InventoryMovementsOverview() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">2 hours ago</p>
-                    <Badge className="bg-green-100 text-green-800">Completed</Badge>
+                    <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Completed</Badge>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                      <ArrowUpDown className="h-5 w-5 text-red-600" />
+                    <div className="w-10 h-10 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
+                      <ArrowUpDown className="h-5 w-5 text-red-600 dark:text-red-400" />
                     </div>
                     <div>
                       <p className="font-medium">Issue - Office Chair</p>
@@ -121,13 +133,13 @@ export function InventoryMovementsOverview() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">4 hours ago</p>
-                    <Badge className="bg-red-100 text-red-800">Completed</Badge>
+                    <Badge className="rounded-full bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300">Completed</Badge>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <Clock className="h-5 w-5 text-yellow-600" />
+                    <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center">
+                      <Clock className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                     </div>
                     <div>
                       <p className="font-medium">Transfer - Warehouse A to B</p>
@@ -136,7 +148,7 @@ export function InventoryMovementsOverview() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">Pending</p>
-                    <Badge className="bg-yellow-100 text-yellow-800">Awaiting</Badge>
+                    <Badge className="rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">Awaiting</Badge>
                   </div>
                 </div>
               </div>
@@ -145,7 +157,7 @@ export function InventoryMovementsOverview() {
         </TabsContent>
 
         <TabsContent value="movements" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Movement Management</CardTitle>
               <CardDescription>
@@ -153,7 +165,7 @@ export function InventoryMovementsOverview() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground">
+              <div className="text-center text-muted-foreground py-12">
                 <ArrowUpDown className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Movement management interface will appear here</p>
               </div>
@@ -162,7 +174,7 @@ export function InventoryMovementsOverview() {
         </TabsContent>
 
         <TabsContent value="history" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Movement History</CardTitle>
               <CardDescription>
@@ -170,7 +182,7 @@ export function InventoryMovementsOverview() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground">
+              <div className="text-center text-muted-foreground py-12">
                 <ArrowUpDown className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Movement history interface will appear here</p>
               </div>

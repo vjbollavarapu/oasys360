@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Item, ItemCategory, InventoryMovement, Warehouse, WarehouseStock
+from .models import Item, ItemCategory, InventoryMovement, Warehouse, WarehouseStock, InventoryValuation, InventorySettings
 
 
 class ItemCategorySerializer(serializers.ModelSerializer):
@@ -30,7 +30,8 @@ class ItemSerializer(serializers.ModelSerializer):
     """Serializer for Item"""
     category_name = serializers.CharField(source='category.name', read_only=True)
     company_name = serializers.CharField(source='company.name', read_only=True)
-    supplier_name = serializers.CharField(source='supplier.name', read_only=True)
+    # supplier_name removed - supplier field is commented out in Item model to avoid circular dependency
+    # supplier_name = serializers.CharField(source='supplier.name', read_only=True)
     total_value = serializers.SerializerMethodField()
     is_low_stock = serializers.SerializerMethodField()
     needs_reorder = serializers.SerializerMethodField()
@@ -41,7 +42,7 @@ class ItemSerializer(serializers.ModelSerializer):
             'id', 'sku', 'name', 'description', 'category', 'category_name',
             'item_type', 'unit', 'cost_price', 'selling_price', 
             'min_stock_level', 'max_stock_level', 'current_stock',
-            'reorder_point', 'supplier', 'supplier_name', 'gl_account',
+            'reorder_point', 'gl_account',
             'is_active', 'is_tracked', 'barcode', 'weight', 'dimensions',
             'image', 'company', 'company_name', 'created_at', 'updated_at',
             'total_value', 'is_low_stock', 'needs_reorder'
@@ -158,4 +159,39 @@ class InventorySummarySerializer(serializers.Serializer):
     low_stock_items = serializers.IntegerField()
     reorder_items = serializers.IntegerField()
     total_inventory_value = serializers.DecimalField(max_digits=15, decimal_places=2)
+
+
+class InventoryValuationSerializer(serializers.ModelSerializer):
+    """Serializer for Inventory Valuation"""
+    calculated_by_name = serializers.CharField(source='calculated_by.get_full_name', read_only=True)
+    
+    class Meta:
+        model = InventoryValuation
+        fields = [
+            'id', 'tenant', 'company', 'valuation_method', 'valuation_date',
+            'total_inventory_value', 'total_items', 'currency', 'notes',
+            'calculated_by', 'calculated_by_name', 'calculated_at',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'calculated_at']
+
+
+class InventorySettingsSerializer(serializers.ModelSerializer):
+    """Serializer for Inventory Settings"""
+    default_warehouse_name = serializers.CharField(source='default_warehouse.name', read_only=True)
+    
+    class Meta:
+        model = InventorySettings
+        fields = [
+            'id', 'tenant', 'company', 'default_valuation_method',
+            'enable_automatic_valuation', 'valuation_currency',
+            'allow_negative_stock', 'enable_low_stock_alerts',
+            'low_stock_threshold_percentage', 'auto_calculate_reorder_points',
+            'enable_barcode_scanning', 'barcode_prefix', 'require_barcode',
+            'enable_multi_warehouse', 'default_warehouse', 'default_warehouse_name',
+            'notify_on_low_stock', 'notify_on_reorder_point',
+            'notify_on_negative_stock', 'default_export_format',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
 

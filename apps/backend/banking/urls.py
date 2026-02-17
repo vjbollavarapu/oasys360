@@ -28,4 +28,22 @@ urlpatterns = [
     
     # Banking Statistics
     path('stats/', views.bank_stats, name='bank_stats'),
+    
+    # Bank Integration - Test Connection
+    path('integrations/<uuid:pk>/test/', views.test_bank_integration, name='test_bank_integration'),
+    
+    # Plaid Connections
+    path('plaid/connections/', views.PlaidConnectionListView.as_view(), name='plaid_connections_list'),
+    path('plaid/connections/<uuid:pk>/', views.PlaidConnectionDetailView.as_view(), name='plaid_connections_detail'),
+    path('plaid/connections/<uuid:pk>/sync/', views.sync_plaid_connection, name='sync_plaid_connection'),
+    path('plaid/link-token/', views.create_plaid_link_token, name='create_plaid_link_token'),
+    
+    # Import/Export Jobs
+    path('import-export/jobs/', views.ImportExportJobListView.as_view(), name='import_export_jobs_list'),
+    path('import-export/jobs/<uuid:pk>/', views.ImportExportJobDetailView.as_view(), name='import_export_jobs_detail'),
+    path('import-export/jobs/<uuid:pk>/process/', views.process_import_job, name='process_import_job'),
+    path('import-export/export/', views.generate_export_job, name='generate_export_job'),
+    
+    # Banking Settings
+    path('settings/', views.BankingSettingsView.as_view(), name='banking_settings'),
 ]

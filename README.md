@@ -62,6 +62,13 @@ Comprehensive documentation is available in the [`docs/`](./docs/) directory:
 - **[⚙️ Backend Guide](./docs/backend/)** - Backend development
 - **[🖥️ Frontend Guide](./docs/frontend/)** - Frontend development
 
+### 🔧 **Backend Documentation Highlights**
+- **[Enhanced Base Models](./docs/backend/guides/ENHANCED_BASE_MODELS_GUIDE.md)** - Tenant-aware base models
+- **[Row-based Multi-tenancy](./docs/backend/migration/SCHEMA_TO_ROW_MIGRATION_SUMMARY.md)** - Migration from schema-based to row-based
+- **[Kubernetes Deployment](./docs/backend/k8s/README.md)** - Production K8s deployment
+- **[Testing Guide](./docs/backend/tests/TESTING_GUIDE.md)** - Comprehensive testing
+- **[Security Guide](./docs/backend/guides/MULTI_TENANT_SECURITY_GUIDE.md)** - Multi-tenant security
+
 ## 🏗️ Architecture
 
 ### Technology Stack

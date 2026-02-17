@@ -86,6 +86,17 @@ const nextConfig = {
   },
   // Security headers
   async headers() {
+    // Allow localhost:8000 for API calls
+    // For row-based multi-tenancy, we use a single backend URL (http://localhost:8000)
+    // Tenant identification is handled via JWT token/session, not subdomain
+    const isDevelopment = process.env.NODE_ENV === 'development'
+    // In development, allow all http:// connections for localhost
+    // CSP doesn't support wildcards like *.localhost, so we allow all http:// in dev
+    // Note: http: allows all HTTP connections
+    const connectSrc = isDevelopment
+      ? "'self' http: https: ws: wss:"
+      : "'self' https:"
+
     return [
       {
         source: '/(.*)',
@@ -94,10 +105,11 @@ const nextConfig = {
             key: 'X-DNS-Prefetch-Control',
             value: 'on'
           },
-          {
+          // Only set HSTS in production
+          ...(isDevelopment ? [] : [{
             key: 'Strict-Transport-Security',
             value: 'max-age=63072000; includeSubDomains; preload'
-          },
+          }]),
           {
             key: 'X-XSS-Protection',
             value: '1; mode=block'
@@ -116,7 +128,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:;"
+            value: `default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src ${connectSrc};`
           }
         ],
       },

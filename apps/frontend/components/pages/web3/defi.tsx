@@ -16,7 +16,7 @@ import {
 
 export function DeFiPositionsOverview() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">DeFi Dashboard</h1>
@@ -25,11 +25,11 @@ export function DeFiPositionsOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <TrendingUp className="h-4 w-4 mr-2" />
             Add Position
           </Button>
@@ -37,7 +37,7 @@ export function DeFiPositionsOverview() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="rounded-full p-1 h-auto grid w-full grid-cols-3">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="protocols">Protocols</TabsTrigger>
           <TabsTrigger value="yield">Yield</TabsTrigger>

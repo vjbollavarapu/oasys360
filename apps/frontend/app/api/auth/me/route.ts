@@ -7,7 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 const users = [
   {
     id: '1',
-    email: 'admin@oasys.com',
+    email: 'admin@oasys360.com',
     name: 'Admin User',
     role: 'admin',
     organization: 'OASYS Corp',
@@ -19,7 +19,7 @@ const users = [
   },
   {
     id: '2',
-    email: 'user@oasys.com',
+    email: 'user@oasys360.com',
     name: 'Regular User',
     role: 'user',
     organization: 'OASYS Corp',

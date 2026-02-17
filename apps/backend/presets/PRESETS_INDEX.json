@@ -1,0 +1,110 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2024-12-25",
+  "description": "Index of all available country presets",
+  "countries": [
+    {
+      "country_code": "SG",
+      "country_name": "Singapore",
+      "chart_of_accounts": "chart_of_accounts/SG.json",
+      "tax_rates": "tax_rates/SG.json",
+      "country_settings": "country_settings/SG.json",
+      "currency": "SGD"
+    },
+    {
+      "country_code": "MY",
+      "country_name": "Malaysia",
+      "chart_of_accounts": "chart_of_accounts/MY.json",
+      "tax_rates": "tax_rates/MY.json",
+      "country_settings": "country_settings/MY.json",
+      "currency": "MYR"
+    },
+    {
+      "country_code": "TH",
+      "country_name": "Thailand",
+      "chart_of_accounts": "chart_of_accounts/TH.json",
+      "tax_rates": "tax_rates/TH.json",
+      "country_settings": "country_settings/TH.json",
+      "currency": "THB"
+    },
+    {
+      "country_code": "ID",
+      "country_name": "Indonesia",
+      "chart_of_accounts": "chart_of_accounts/ID.json",
+      "tax_rates": "tax_rates/ID.json",
+      "country_settings": "country_settings/ID.json",
+      "currency": "IDR"
+    },
+    {
+      "country_code": "PH",
+      "country_name": "Philippines",
+      "chart_of_accounts": "chart_of_accounts/PH.json",
+      "tax_rates": "tax_rates/PH.json",
+      "country_settings": "country_settings/PH.json",
+      "currency": "PHP"
+    },
+    {
+      "country_code": "VN",
+      "country_name": "Vietnam",
+      "chart_of_accounts": "chart_of_accounts/VN.json",
+      "tax_rates": "tax_rates/VN.json",
+      "country_settings": "country_settings/VN.json",
+      "currency": "VND"
+    },
+    {
+      "country_code": "US",
+      "country_name": "United States",
+      "chart_of_accounts": "chart_of_accounts/US.json",
+      "tax_rates": "tax_rates/US.json",
+      "country_settings": "country_settings/US.json",
+      "currency": "USD"
+    },
+    {
+      "country_code": "GB",
+      "country_name": "United Kingdom",
+      "chart_of_accounts": "chart_of_accounts/GB.json",
+      "tax_rates": "tax_rates/GB.json",
+      "country_settings": "country_settings/GB.json",
+      "currency": "GBP"
+    },
+    {
+      "country_code": "AU",
+      "country_name": "Australia",
+      "chart_of_accounts": "chart_of_accounts/AU.json",
+      "tax_rates": "tax_rates/AU.json",
+      "country_settings": "country_settings/AU.json",
+      "currency": "AUD"
+    },
+    {
+      "country_code": "CA",
+      "country_name": "Canada",
+      "chart_of_accounts": "chart_of_accounts/CA.json",
+      "tax_rates": "tax_rates/CA.json",
+      "country_settings": "country_settings/CA.json",
+      "currency": "CAD"
+    }
+  ],
+  "regions": {
+    "SEA": {
+      "name": "Southeast Asia",
+      "countries": ["SG", "MY", "TH", "ID", "PH", "VN", "MM", "KH", "LA", "BN"],
+      "currencies": "currencies/SEA.json"
+    },
+    "APAC": {
+      "name": "Asia Pacific",
+      "countries": ["SG", "MY", "TH", "ID", "PH", "VN", "MM", "KH", "LA", "BN", "AU", "NZ", "JP", "CN", "IN"],
+      "currencies": "currencies/APAC.json"
+    },
+    "NA": {
+      "name": "North America",
+      "countries": ["US", "CA", "MX"],
+      "currencies": "currencies/NA.json"
+    },
+    "EU": {
+      "name": "European Union",
+      "countries": ["GB", "DE", "FR", "IT", "ES", "NL", "BE", "AT", "SE", "DK"],
+      "currencies": "currencies/EU.json"
+    }
+  }
+}
+

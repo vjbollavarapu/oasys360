@@ -262,9 +262,9 @@ function getMockFirmClients(firmId: string) {
     {
       id: 'client-1',
       firmId: firmId,
-      name: 'TechFlow Solutions',
-      company: 'TechFlow Solutions Inc.',
-      email: 'contact@techflow.com',
+      name: 'oasys360 Solutions',
+      company: 'oasys360 Solutions Inc.',
+      email: 'contact@oasys360.com',
       subscriptionPlan: {
         id: 'ai_full_web3',
         name: 'AI + Full Web3',
@@ -289,8 +289,8 @@ function getMockClientData(firmId: string, clientId: string) {
   return {
     client: {
       id: clientId,
-      name: 'TechFlow Solutions',
-      company: 'TechFlow Solutions Inc.'
+      name: 'oasys360 Solutions',
+      company: 'oasys360 Solutions Inc.'
     },
     financials: {
       revenue: '$125,000',

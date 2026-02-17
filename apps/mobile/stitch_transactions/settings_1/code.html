@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings - OASYS360</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+            extend: {
+                colors: {
+                "primary": "#135bec",
+                "background-light": "#f6f6f8",
+                "background-dark": "#101622",
+                },
+                fontFamily: {
+                "display": ["Manrope"]
+                },
+                borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-slate-900 dark:text-white selection:bg-primary/30">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-24">
+<!-- Sticky Header -->
+<header class="sticky top-0 z-20 flex w-full items-center justify-between bg-background-light/95 px-4 py-3 backdrop-blur-md dark:bg-background-dark/95 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-2">
+<button class="flex size-10 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+</div>
+<h1 class="text-lg font-bold leading-tight tracking-tight">Settings</h1>
+<div class="flex size-10 items-center justify-center">
+<button class="flex size-10 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</button>
+</div>
+</header>
+<!-- Profile Section -->
+<div class="px-4 py-6">
+<div class="flex w-full flex-col gap-4 rounded-xl bg-white p-5 shadow-sm dark:bg-[#1c2433] border border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-16 w-16 border-2 border-white dark:border-slate-700 shadow-md" data-alt="Professional headshot of a financial controller in a suit" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBz9sYA6eQjqJNB3drX6p7B8eyHV_oTGhcLzAWYvWd0NsBdjV_Zgfp20sV8GUzzYhmlEXhjEUN3_Q7vidlzvHLbO9actXBhHzywyub9Lci8zaorDxWvKRqZGGdHxhc2912HvRkQvefWUfj8Vxb6-0GbkBfk1mfLsyH9D0tLcNGG_M914RxFe-w1RDL-kBk5fyTzjbRx63VNC_ZM9HnZzknaXS-dNQwjf0Gslbs_Qo9TH4WB5GznP2Rrly2zdWW0gGVHY8v7jdZl1m4");'>
+</div>
+<div class="absolute bottom-0 right-0 h-4 w-4 rounded-full bg-green-500 border-2 border-white dark:border-[#1c2433]"></div>
+</div>
+<div class="flex flex-col justify-center flex-1">
+<h2 class="text-xl font-bold leading-tight text-slate-900 dark:text-white">Alex Sterling</h2>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Financial Controller</p>
+</div>
+<button class="rounded-full bg-slate-100 p-2 text-primary hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Section: General -->
+<div class="flex flex-col gap-1 px-4">
+<h3 class="px-2 pb-2 pt-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">General</h3>
+<div class="flex flex-col overflow-hidden rounded-xl bg-white shadow-sm dark:bg-[#1c2433] border border-slate-100 dark:border-slate-800">
+<!-- Item: Language -->
+<button class="group flex w-full items-center justify-between gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-100 dark:border-slate-800 last:border-0">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
+<span class="material-symbols-outlined text-[20px]">language</span>
+</div>
+<div class="flex flex-col items-start text-left">
+<p class="text-base font-medium text-slate-900 dark:text-white">Language</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">English (US)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
+</button>
+<!-- Item: Currency -->
+<button class="group flex w-full items-center justify-between gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-100 dark:border-slate-800 last:border-0">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400">
+<span class="material-symbols-outlined text-[20px]">currency_exchange</span>
+</div>
+<div class="flex flex-col items-start text-left">
+<p class="text-base font-medium text-slate-900 dark:text-white">Currency Preference</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">USD ($)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
+</button>
+<!-- Item: Time Zone -->
+<button class="group flex w-full items-center justify-between gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+</div>
+<div class="flex flex-col items-start text-left">
+<p class="text-base font-medium text-slate-900 dark:text-white">Time Zone</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">EST (UTC-05:00)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="h-6"></div>
+<!-- Section: Security & Access -->
+<div class="flex flex-col gap-1 px-4">
+<h3 class="px-2 pb-2 pt-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Security &amp; Access</h3>
+<div class="flex flex-col overflow-hidden rounded-xl bg-white shadow-sm dark:bg-[#1c2433] border border-slate-100 dark:border-slate-800">
+<!-- Item: Biometric -->
+<div class="flex w-full items-center justify-between gap-4 p-4 border-b border-slate-100 dark:border-slate-800 last:border-0">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400">
+<span class="material-symbols-outlined text-[20px]">face</span>
+</div>
+<div class="flex flex-col items-start text-left">
+<p class="text-base font-medium text-slate-900 dark:text-white">Biometric Login</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Use FaceID to sign in</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/20 dark:peer-focus:ring-primary/40 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Item: 2FA -->
+<button class="group flex w-full items-center justify-between gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-100 dark:border-slate-800 last:border-0">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+</div>
+<div class="flex flex-col items-start text-left">
+<p class="text-base font-medium text-slate-900 dark:text-white">Two-Factor Auth</p>
+<p class="text-sm text-green-600 dark:text-green-400 font-medium">Enabled</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
+</button>
+<!-- Item: Password -->
+<button class="group flex w-full items-center justify-between gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+</div>
+<div class="flex flex-col items-start text-left">
+<p class="text-base font-medium text-slate-900 dark:text-white">Change Password</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Last changed 30 days ago</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="h-6"></div>
+<!-- Section: Notifications -->
+<div class="flex flex-col gap-1 px-4">
+<h3 class="px-2 pb-2 pt-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Notifications</h3>
+<div class="flex flex-col overflow-hidden rounded-xl bg-white shadow-sm dark:bg-[#1c2433] border border-slate-100 dark:border-slate-800">
+<!-- Item: Push -->
+<div class="flex w-full items-center justify-between gap-4 p-4 border-b border-slate-100 dark:border-slate-800 last:border-0">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400">
+<span class="material-symbols-outlined text-[20px]">notifications_active</span>
+</div>
+<div class="flex flex-col items-start text-left">
+<p class="text-base font-medium text-slate-900 dark:text-white">Push Notifications</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Alerts on mobile</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/20 dark:peer-focus:ring-primary/40 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Item: Email -->
+<div class="flex w-full items-center justify-between gap-4 p-4">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-600 dark:bg-teal-900/20 dark:text-teal-400">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+</div>
+<div class="flex flex-col items-start text-left">
+<p class="text-base font-medium text-slate-900 dark:text-white">Email Reports</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Weekly summaries</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/20 dark:peer-focus:ring-primary/40 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+<div class="h-8"></div>
+<!-- Footer Actions -->
+<div class="flex flex-col gap-6 px-4 pb-8">
+<button class="flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white dark:bg-[#1c2433] dark:border-slate-800 p-4 text-base font-bold text-red-600 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+                Log Out
+            </button>
+<div class="flex flex-col items-center gap-2 text-center">
+<p class="text-sm font-medium text-slate-400 dark:text-slate-500">OASYS360 v2.4.0</p>
+<div class="flex gap-4">
+<a class="text-xs text-primary hover:underline" href="#">Terms of Service</a>
+<span class="text-slate-400">•</span>
+<a class="text-xs text-primary hover:underline" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation -->
+<div class="fixed bottom-0 left-0 right-0 z-50 flex h-20 w-full items-start justify-around border-t border-slate-200 bg-white/95 px-2 pt-3 backdrop-blur-md dark:border-slate-800 dark:bg-background-dark/95">
+<button class="group flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-primary dark:text-slate-500 dark:hover:text-primary">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+<span class="text-[10px] font-medium">Dashboard</span>
+</button>
+<button class="group flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-primary dark:text-slate-500 dark:hover:text-primary">
+<span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
+<span class="text-[10px] font-medium">Accounts</span>
+</button>
+<button class="group -mt-8 flex size-14 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/40 hover:bg-primary/90 transition-transform hover:scale-105">
+<span class="material-symbols-outlined text-[28px]">add</span>
+</button>
+<button class="group flex flex-col items-center gap-1 p-2 text-slate-400 hover:text-primary dark:text-slate-500 dark:hover:text-primary">
+<span class="material-symbols-outlined text-[24px]">pie_chart</span>
+<span class="text-[10px] font-medium">Reports</span>
+</button>
+<button class="group flex flex-col items-center gap-1 p-2 text-primary dark:text-primary">
+<span class="material-symbols-outlined text-[24px] fill-current">settings</span>
+<span class="text-[10px] font-bold">Settings</span>
+</button>
+</div>
+</div>
+</body></html>

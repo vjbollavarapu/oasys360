@@ -951,9 +951,9 @@ info:
   description: Comprehensive API for OASYS financial management platform
 
 servers:
-  - url: https://api.oasys.com/v1
+  - url: https://api.oasys360.com/v1
     description: Production server
-  - url: https://staging-api.oasys.com/v1
+  - url: https://staging-api.oasys360.com/v1
     description: Staging server
 
 paths:

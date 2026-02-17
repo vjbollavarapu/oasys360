@@ -1,0 +1,212 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-deployment
+  namespace: oasys360
+  labels:
+    app: fastapi
+    component: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fastapi
+  template:
+    metadata:
+      labels:
+        app: fastapi
+        component: api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8001"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: fastapi
+        image: oasys360/fastapi:latest
+        ports:
+        - containerPort: 8000
+          name: http
+        - containerPort: 8001
+          name: metrics
+        command:
+        - /bin/bash
+        - -c
+        - |
+          echo "Starting FastAPI application..."
+          
+          # Wait for database to be ready
+          python -c "
+          import time
+          import psycopg2
+          import os
+          
+          max_retries = 30
+          retry_count = 0
+          
+          while retry_count < max_retries:
+              try:
+                  conn = psycopg2.connect(
+                      host=os.getenv('DATABASE_HOST'),
+                      port=os.getenv('DATABASE_PORT'),
+                      database=os.getenv('DATABASE_NAME'),
+                      user=os.getenv('DATABASE_USER'),
+                      password=os.getenv('DATABASE_PASSWORD')
+                  )
+                  conn.close()
+                  print('Database is ready!')
+                  break
+              except Exception as e:
+                  print(f'Database not ready: {e}')
+                  retry_count += 1
+                  time.sleep(2)
+          "
+          
+          # Start FastAPI with Uvicorn
+          exec uvicorn main:app \
+            --host 0.0.0.0 \
+            --port 8000 \
+            --workers 4 \
+            --worker-class uvicorn.workers.UvicornWorker \
+            --access-log \
+            --log-level info \
+            --timeout-keep-alive 30 \
+            --timeout-graceful-shutdown 30
+        env:
+        - name: DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: oasys360-config
+              key: DATABASE_HOST
+        - name: DATABASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: oasys360-config
+              key: DATABASE_PORT
+        - name: DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: oasys360-config
+              key: DATABASE_NAME
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: DATABASE_USER
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: DATABASE_PASSWORD
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: oasys360-config
+              key: REDIS_HOST
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: oasys360-config
+              key: REDIS_PORT
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: REDIS_PASSWORD
+        - name: JWT_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: JWT_SECRET_KEY
+        - name: ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: ENCRYPTION_KEY
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        volumeMounts:
+        - name: fastapi-logs
+          mountPath: /app/logs
+      volumes:
+      - name: fastapi-logs
+        emptyDir: {}
+      initContainers:
+      - name: wait-for-db
+        image: postgres:15-alpine
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for database to be ready..."
+          until pg_isready -h postgres-service -p 5432 -U postgres; do
+            echo "Database is not ready yet. Waiting..."
+            sleep 2
+          done
+          echo "Database is ready!"
+        env:
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: DATABASE_PASSWORD
+      - name: wait-for-redis
+        image: redis:7-alpine
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for Redis to be ready..."
+          until redis-cli -h redis-service -p 6379 -a $REDIS_PASSWORD ping; do
+            echo "Redis is not ready yet. Waiting..."
+            sleep 2
+          done
+          echo "Redis is ready!"
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: oasys360-secrets
+              key: REDIS_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service
+  namespace: oasys360
+  labels:
+    app: fastapi
+spec:
+  selector:
+    app: fastapi
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  - port: 8001
+    targetPort: 8001
+    protocol: TCP
+    name: metrics
+  type: ClusterIP

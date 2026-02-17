@@ -95,7 +95,7 @@ export function BillingManagementDark() {
         tenants: [
           {
             id: 'tenant-1',
-            name: 'TechFlow Solutions',
+            name: 'oasys360 Solutions',
             type: 'business',
             subscriptionPlan: 'AI + Full Web3',
             billingCycle: 'monthly',
@@ -168,7 +168,7 @@ export function BillingManagementDark() {
         payments: [
           {
             id: 'pay-1',
-            tenantName: 'TechFlow Solutions',
+            tenantName: 'oasys360 Solutions',
             amount: 449,
             date: '2024-01-22',
             status: 'completed',

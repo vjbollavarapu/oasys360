@@ -1,96 +1,71 @@
-"use client"
+/**
+ * Root Dashboard Page
+ * Main overview dashboard showing metrics from all modules
+ * Redirects to login if not authenticated
+ */
 
-import HeroSection from "@/components/marketing/hero-section"
-import { FeaturesSection } from "@/components/marketing/features-section"
-import { AboutSection } from "@/components/marketing/about-section"
-import { FoundersSection } from "@/components/marketing/founders-section"
-import { PricingSection } from "@/components/marketing/pricing-section"
-import { DemoSection } from "@/components/marketing/demo-section"
-import { ContactSection } from "@/components/marketing/contact-section"
-import { SignupSection } from "@/components/marketing/signup-section"
-import { Footer } from "@/components/marketing/footer"
+"use client";
 
-export default function LandingPage() {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "OASYS",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Web",
-    "description": "AI-powered business finance platform with blockchain security and real-time insights",
-    "url": "https://oasys.com",
-    "author": {
-      "@type": "Organization",
-      "name": "OASYS",
-      "url": "https://oasys.com"
-    },
-    "offers": {
-      "@type": "Offer",
-      "price": "99",
-      "priceCurrency": "USD",
-      "availability": "https://schema.org/InStock",
-      "description": "Beta program with early adopter pricing"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "15000",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
-    "featureList": [
-      "AI-powered document processing",
-      "Automated transaction categorization", 
-      "Blockchain security integration",
-      "Digital identity verification",
-      "Smart contract automation",
-      "Real-time financial insights",
-      "Predictive analytics",
-      "Compliance automation"
-    ],
-    "screenshot": "https://oasys.com/screenshot.jpg",
-    "softwareVersion": "Beta 1.0",
-    "releaseNotes": "Initial beta release with AI and blockchain features"
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { DashboardLayout } from '@/components/dashboard-layout';
+import { RootDashboard } from '@/components/dashboard/root-dashboard';
+import { OnboardingGuard } from '@/components/onboarding/onboarding-guard';
+import { useAuth } from '@/hooks/use-auth';
+
+export default function HomePage() {
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    // If not loading and no user, redirect to login
+    if (mounted && !isLoading && !user) {
+      router.push('/auth/login');
+      return;
+    }
+    
+    // Check onboarding status if user is authenticated
+    if (mounted && !isLoading && user) {
+      checkOnboardingStatus();
+    }
+  }, [user, isLoading, mounted, router]);
+
+  const checkOnboardingStatus = async () => {
+    // Skip check - OnboardingGuard will handle it
+    // This prevents duplicate API calls
+    return;
+  };
+
+  // Show loading state or nothing while checking auth
+  if (!mounted || isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
+  // If no user, return null (redirect will happen)
+  if (!user) {
+    return null;
+  }
+
+  // Show dashboard for authenticated users (protected by onboarding guard)
   return (
-    <>
-      {/* JSON-LD Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData)
-        }}
-      />
-      
-      <div className="min-h-screen">
-        {/* Hero Section with Navigation */}
-        <HeroSection />
-        
-        {/* Features Section - AI Capabilities */}
-        <FeaturesSection />
-        
-        {/* About Section - AI Features */}
-        <AboutSection />
-        
-        {/* Founders Section - Meet the Team */}
-        <FoundersSection />
-        
-        {/* Pricing Section - AI-Focused Plans */}
-        <PricingSection />
-        
-        {/* Demo Section - AI Showcase */}
-        <DemoSection />
-        
-        {/* Contact Section - Get in Touch */}
-        <ContactSection />
-        
-        {/* Signup Section - Professional CTA */}
-        <SignupSection />
-        
-        {/* Footer - Corporate Branding */}
-        <Footer />
-      </div>
-    </>
-  )
+    <OnboardingGuard>
+      <DashboardLayout>
+        <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
+          <RootDashboard />
+        </div>
+      </DashboardLayout>
+    </OnboardingGuard>
+  );
 }

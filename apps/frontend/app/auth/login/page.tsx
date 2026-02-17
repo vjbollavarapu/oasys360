@@ -9,12 +9,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
-import { Eye, EyeOff, Zap, ArrowLeft, Mail, Shield, Smartphone, AlertCircle, User } from "lucide-react"
+import { Eye, EyeOff, Zap, Mail, Shield, Smartphone, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { signIn, getSession } from "next-auth/react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
+// Removed NextAuth - using backend API directly
+// Using direct API calls to avoid SSR issues with AuthProvider
 import { useErrorHandler } from "@/hooks/use-error-handler"
 
 export default function LoginPage() {
@@ -32,37 +31,89 @@ export default function LoginPage() {
     twoFactorCode: "",
   })
 
-  // Test user accounts for easy testing
-  const testUsers = [
-    { id: "demo", email: "demo@company.com", password: "Demo123!", role: "Staff", description: "Demo User - Basic Access", tenant: "Demo Corp" },
-    { id: "techflow-admin", email: "admin@techflow.com", password: "Admin123!", role: "Tenant Admin", description: "Business Admin - Full Web3", tenant: "TechFlow Solutions" },
-    { id: "cfo", email: "cfo@techflow.com", password: "CFO123!", role: "CFO", description: "Chief Financial Officer", tenant: "TechFlow Solutions" },
-    { id: "firm-admin", email: "admin@globalaccounting.com", password: "Firm123!", role: "Firm Admin", description: "Accounting Firm - Enterprise", tenant: "Global Accounting Firm" },
-    { id: "firm-staff", email: "accountant@globalaccounting.com", password: "Account123!", role: "Firm Staff", description: "Firm Accountant", tenant: "Global Accounting Firm" },
-    { id: "platform-admin", email: "platform@oasys.com", password: "Platform123!", role: "Platform Admin", description: "Platform Administrator", tenant: "OASYS Platform" },
-    { id: "legacy", email: "admin@oasys.com", password: "Admin123!", role: "Legacy Admin", description: "Legacy Administrator", tenant: "Legacy System" }
-  ]
+  // Check auth only on client side to avoid SSR issues
+  const [authInitialized, setAuthInitialized] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  // Redirect if already logged in
+  // Initialize auth check on client side only
   useEffect(() => {
-    const checkSession = async () => {
-      const session = await getSession()
-      if (session) {
-        router.push("/accounting")
-      }
+    setAuthInitialized(true)
+    // Check if user is already logged in via localStorage
+    const token = typeof window !== 'undefined' ? localStorage.getItem('oasys_access_token') : null
+    if (token) {
+      setIsAuthenticated(true)
+      router.push("/accounting")
     }
-    checkSession()
   }, [router])
 
-  const handleUserSelect = (userId: string) => {
-    const selectedUser = testUsers.find(user => user.id === userId)
-    if (selectedUser) {
-      setFormData(prev => ({
-        ...prev,
-        email: selectedUser.email,
-        password: selectedUser.password
+  // Handle login function - create it here to avoid useAuth hook during SSR
+  const handleLogin = async (email: string, password: string) => {
+    // Get API base URL (fixed for row-based multi-tenancy)
+    const { getApiBaseUrl } = await import('@/lib/get-api-url')
+    const API_BASE_URL = getApiBaseUrl()
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/login/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ email, password }),
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      // Check if email verification is required
+      // The error structure: non_field_errors: [{email_verification_required: true, message: "...", email: "..."}]
+      let verificationData = null
+      
+      if (data.non_field_errors && Array.isArray(data.non_field_errors) && data.non_field_errors.length > 0) {
+        // Check if first error is an object with email_verification_required
+        const firstError = data.non_field_errors[0]
+        if (typeof firstError === 'object' && firstError !== null && firstError.email_verification_required) {
+          verificationData = firstError
+        }
+      }
+      
+      if (verificationData) {
+        // Redirect to verification page
+        const userEmail = verificationData.email || email
+        const message = verificationData.message || 'Please verify your email address before logging in. Check your inbox for the verification link.'
+        router.push(`/auth/verify-email?email=${encodeURIComponent(userEmail)}&message=${encodeURIComponent(message)}`)
+        throw new Error('EMAIL_VERIFICATION_REQUIRED')
+      }
+      
+      // Handle validation errors (field-specific) or general errors
+      const errorMessage = data.detail || data.error || 
+        (data.email && data.email[0]) || 
+        (data.password && data.password[0]) ||
+        (data.non_field_errors && Array.isArray(data.non_field_errors) && typeof data.non_field_errors[0] === 'string' ? data.non_field_errors[0] : null) ||
+        'Login failed'
+      throw new Error(errorMessage)
+    }
+
+    // Store tokens - backend returns tokens in data.tokens.access and data.tokens.refresh
+    const accessToken = data.tokens?.access || data.access
+    const refreshToken = data.tokens?.refresh || data.refresh
+    
+    if (accessToken) {
+      localStorage.setItem('oasys_access_token', accessToken)
+    }
+    if (refreshToken) {
+      localStorage.setItem('oasys_refresh_token', refreshToken)
+    }
+
+    // Store user data for RBAC
+    if (data.user) {
+      localStorage.setItem('oasys_user_data', JSON.stringify({
+        role: data.user.role,
+        tenant: data.tenant,
+        id: data.user.id,
+        email: data.user.email,
       }))
     }
+
+    return data
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -99,19 +150,74 @@ export default function LoginPage() {
         return
       }
 
-      // Attempt authentication with NextAuth.js
-      const result = await signIn('credentials', {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
-      })
+      // Attempt authentication with backend API
+      try {
+        const loginData = await handleLogin(formData.email, formData.password)
+        
+        // Check onboarding status - REQUIRED before allowing dashboard access
+        // Get API base URL (fixed for row-based multi-tenancy)
+        const { getApiBaseUrl } = await import('@/lib/get-api-url')
+        const API_BASE_URL = getApiBaseUrl()
+        const token = localStorage.getItem('oasys_access_token')
+        
+        if (!token) {
+          console.error('No access token found after login')
+          setLoginError('Authentication failed. Please try again.')
+          return
+        }
 
-      if (result?.error) {
-        setLoginError("Invalid credentials. Please check your email and password.")
+        try {
+          const onboardingResponse = await fetch(`${API_BASE_URL}/api/v1/tenants/onboarding/status/`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          })
+          
+          if (onboardingResponse.status === 401) {
+            // Token invalid - redirect to login
+            localStorage.removeItem('oasys_access_token')
+            localStorage.removeItem('oasys_refresh_token')
+            localStorage.removeItem('oasys_user_data')
+            setLoginError('Session expired. Please login again.')
+            return
+          }
+
+          if (!onboardingResponse.ok) {
+            console.error('Failed to check onboarding status:', onboardingResponse.status, onboardingResponse.statusText)
+            // If we can't check status, assume incomplete and redirect to onboarding
+            router.push("/onboarding")
+            return
+          }
+
+          const onboardingData = await onboardingResponse.json()
+          console.log('Onboarding status check:', onboardingData)
+          
+          // Redirect to onboarding if incomplete
+          if (onboardingData.onboarding_status !== 'COMPLETED' || !onboardingData.can_access_dashboard) {
+            console.log('Onboarding incomplete, redirecting to onboarding wizard')
+            router.push("/onboarding")
+            return
+          }
+          
+          // Success - onboarding complete, redirect to dashboard
+          console.log('Onboarding complete, redirecting to dashboard')
+          router.push("/accounting")
+        } catch (onboardingError) {
+          console.error('Failed to check onboarding status:', onboardingError)
+          // If check fails, assume incomplete and redirect to onboarding (safer than allowing access)
+          router.push("/onboarding")
+        }
+      } catch (error) {
+        // Check if this is an email verification error
+        if (error instanceof Error && error.message === 'EMAIL_VERIFICATION_REQUIRED') {
+          // Already redirected to verification page in handleLogin
+          return
+        }
+        
+        const errorMessage = error instanceof Error ? error.message : "Invalid credentials. Please check your email and password."
+        setLoginError(errorMessage)
         setShow2FA(false)
-      } else if (result?.ok) {
-        // Success - redirect to dashboard
-        router.push("/accounting")
       }
     } catch (error) {
       console.error("Login error:", error)
@@ -147,7 +253,7 @@ export default function LoginPage() {
             <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center">
               <Zap className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold">OASYS</span>
+            <span className="text-2xl font-bold text-gray-900">OASYS</span>
           </div>
 
           <div className="space-y-2">
@@ -157,7 +263,7 @@ export default function LoginPage() {
         </div>
 
         {/* Login Form */}
-        <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark">
+        <Card className="rounded-4xl shadow-lg bg-white border-0">
           <CardHeader className="space-y-1">
             <CardTitle className="flex items-center gap-2">
               {show2FA ? (
@@ -177,9 +283,9 @@ export default function LoginPage() {
             </CardDescription>
 
             {show2FA && (
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-2xl text-sm flex items-center gap-2">
+              <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-2xl text-sm flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                <span><strong>Testing:</strong> Use code <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">123456</code> for all test accounts</span>
+                <span><strong>Testing:</strong> Use code <code className="bg-blue-100 px-1 rounded">123456</code> for all test accounts</span>
               </div>
             )}
 
@@ -194,46 +300,6 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {!show2FA ? (
                 <>
-                  {/* Test User Selection Dropdown */}
-                  <div className="space-y-3">
-                    <Label htmlFor="testUser" className="flex items-center gap-2">
-                      <User className="w-4 h-4" />
-                      Quick Test Login
-                    </Label>
-                    <Select onValueChange={handleUserSelect}>
-                      <SelectTrigger className="rounded-xl">
-                        <SelectValue placeholder="Select a test user account..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {testUsers.map((user) => (
-                          <SelectItem key={user.id} value={user.id}>
-                            <div className="flex flex-col">
-                              <span className="font-medium">{user.role}</span>
-                              <span className="text-xs text-muted-foreground">{user.description}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {formData.email && (
-                      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                              {testUsers.find(u => u.email === formData.email)?.role || 'User'}
-                            </p>
-                            <p className="text-xs text-blue-700 dark:text-blue-300">
-                              {formData.email}
-                            </p>
-                          </div>
-                          <Badge variant="secondary" className="text-xs">
-                            Test Account
-                          </Badge>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
                   {/* Email */}
                   <div className="space-y-3">
                     <Label htmlFor="email" className="flex items-center gap-2">
@@ -243,7 +309,7 @@ export default function LoginPage() {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="demo@company.com"
+                      placeholder="you@example.com"
                       value={formData.email}
                       onChange={(e) => handleInputChange("email", e.target.value)}
                       className="rounded-xl"

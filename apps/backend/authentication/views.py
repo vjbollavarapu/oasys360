@@ -13,15 +13,21 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, OpenApiResponse
+import os
 
-from .models import User, UserProfile
+from .models import User, UserProfile, SocialAccount, AccountConversion
 from .serializers import (
     UserSerializer, UserProfileSerializer, LoginSerializer, RegisterSerializer,
+    CorporateRegisterSerializer, SocialRegisterSerializer,
     PasswordChangeSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer,
     TenantInvitationSerializer
 )
+from .social_serializers import (
+    SocialAccountSerializer, AccountConversionSerializer,
+    EmailVerificationSerializer, ResendVerificationSerializer
+)
 from tenants.models import Tenant, TenantInvitation
-from .utils import detect_user_type, assign_user_to_group
+from .utils import detect_user_type, assign_user_to_group, is_corporate_email
 from .navigation import TenantNavigation
 
 
@@ -48,8 +54,12 @@ class LoginView(APIView):
             user.last_login = timezone.now()
             user.save()
             
-            # Generate JWT tokens
-            refresh = RefreshToken.for_user(user)
+            # Generate JWT tokens using custom serializer (includes tenant_id in token)
+            from .tokens import CustomTokenObtainPairSerializer
+            token_serializer = CustomTokenObtainPairSerializer()
+            token_serializer.user = user
+            refresh_token_obj = token_serializer.get_token(user)
+            access_token_obj = refresh_token_obj.access_token
             
             # Get tenant information
             tenant = getattr(user, 'tenant', None)
@@ -70,11 +80,12 @@ class LoginView(APIView):
                 'tenant': {
                     'id': str(tenant.id) if tenant else None,
                     'name': tenant.name if tenant else None,
-                    'domain': domain
+                    'domain': domain,
+                    'onboarding_status': tenant.onboarding_status if tenant else None,
                 } if tenant else None,
                 'tokens': {
-                    'access': str(refresh.access_token),
-                    'refresh': str(refresh),
+                    'access': str(access_token_obj),
+                    'refresh': str(refresh_token_obj),
                 },
                 'navigation': navigation_data
             })
@@ -82,33 +93,168 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
-    """User logout view"""
+    """User logout view with JWT token blacklisting"""
     permission_classes = [permissions.IsAuthenticated]
     
     def post(self, request):
-        logout(request)
-        return Response({'message': 'Successfully logged out'})
+        try:
+            # Get the refresh token from request data
+            refresh_token = request.data.get('refresh_token')
+            
+            if refresh_token:
+                # Blacklist the refresh token
+                from rest_framework_simplejwt.tokens import RefreshToken
+                try:
+                    token = RefreshToken(refresh_token)
+                    token.blacklist()
+                except Exception as e:
+                    # Token might already be blacklisted or invalid
+                    pass
+            
+            # Also logout the user session
+            logout(request)
+            
+            return Response({
+                'message': 'Successfully logged out',
+                'success': True
+            })
+            
+        except Exception as e:
+            return Response({
+                'message': 'Logout failed',
+                'error': str(e),
+                'success': False
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RegisterView(APIView):
-    """User registration view"""
+    """User registration view - Corporate email sign-up (primary)"""
     permission_classes = [permissions.AllowAny]
     
     def post(self, request):
-        serializer = RegisterSerializer(data=request.data)
+        serializer = CorporateRegisterSerializer(data=request.data, context={'user': request.user})
         if serializer.is_valid():
             user = serializer.save()
             
             # Generate JWT tokens
             refresh = RefreshToken.for_user(user)
             
+            # Get user type info
+            user_info = detect_user_type(user, user.tenant)
+            
+            # Build redirect URL for tenant subdomain
+            redirect_url = None
+            tenant_slug = None
+            base_domain = os.getenv('BASE_DOMAIN', 'oasys360.com')
+            
+            if user.tenant:
+                tenant_slug = user.tenant.slug
+                is_localhost = 'localhost' in request.get_host() or settings.DEBUG
+                
+                if is_localhost:
+                    # Development: tenant.localhost:3000
+                    redirect_url = f"http://{tenant_slug}.localhost:3000/onboarding"
+                else:
+                    # Production: tenant.oasys360.com
+                    redirect_url = f"https://{tenant_slug}.{base_domain}/onboarding"
+            
+            # Send verification email with subdomain login link
+            try:
+                if user.tenant and tenant_slug:
+                    # Build verification URL with subdomain login link
+                    is_localhost = 'localhost' in request.get_host() or settings.DEBUG
+                    
+                    if is_localhost:
+                        login_url = f"http://{tenant_slug}.localhost:3000/auth/login"
+                    else:
+                        login_url = f"https://{tenant_slug}.{base_domain}/auth/login"
+                else:
+                    # Fallback if no tenant
+                    login_url = f"{settings.FRONTEND_URL or 'http://localhost:3000'}/auth/login"
+                
+                verification_url = f"{settings.FRONTEND_URL or 'http://localhost:3000'}/auth/verify-email?token={user.email_verification_token}&email={user.email}"
+                
+                email_subject = "Verify Your Email - OASYS360"
+                email_body = f"""
+Hello {user.first_name or user.username},
+
+Thank you for signing up for OASYS360!
+
+Please verify your email address by clicking the link below:
+{verification_url}
+
+After verification, you can log in to your account using this link:
+{login_url}
+
+Your login credentials:
+- Email: {user.email}
+- Password: (the password you created during signup)
+
+If you did not create this account, please ignore this email.
+
+Best regards,
+The OASYS360 Team
+"""
+                
+                send_mail(
+                    email_subject,
+                    email_body,
+                    settings.DEFAULT_FROM_EMAIL or 'noreply@oasys360.com',
+                    [user.email],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                # Log error but don't fail registration
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f"Failed to send verification email to {user.email}: {e}")
+            
             return Response({
+                'success': True,
                 'user': UserSerializer(user).data,
+                'user_info': user_info,
                 'tokens': {
                     'access': str(refresh.access_token),
                     'refresh': str(refresh),
                 },
-                'message': 'User registered successfully'
+                'tenant': {
+                    'id': str(user.tenant.id) if user.tenant else None,
+                    'name': user.tenant.name if user.tenant else None,
+                    'slug': tenant_slug,
+                } if user.tenant else None,
+                'redirect_url': redirect_url,
+                'message': 'User registered successfully. Please verify your email.',
+                'requires_verification': not user.email_verified
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SocialRegisterView(APIView):
+    """Social authentication registration view"""
+    permission_classes = [permissions.AllowAny]
+    
+    def post(self, request):
+        serializer = SocialRegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            
+            # Generate JWT tokens
+            refresh = RefreshToken.for_user(user)
+            
+            # Get user type info
+            user_info = detect_user_type(user, user.tenant)
+            
+            return Response({
+                'success': True,
+                'user': UserSerializer(user).data,
+                'user_info': user_info,
+                'tokens': {
+                    'access': str(refresh.access_token),
+                    'refresh': str(refresh),
+                },
+                'message': 'Account created successfully. Upgrade to corporate account for full features.',
+                'requires_upgrade': user.account_tier == 'trial',
+                'can_upgrade': user.account_tier == 'trial'
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -273,13 +419,44 @@ class AcceptInvitationView(APIView):
             return Response({'error': 'Invalid or expired invitation'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserListView(generics.ListAPIView):
-    """List users for tenant admin"""
+class UserListView(generics.ListCreateAPIView):
+    """List and create users for tenant admin"""
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
-        return User.objects.filter(tenant=self.request.user.tenant)
+        # Add ordering to fix pagination warning
+        return User.objects.filter(tenant=self.request.user.tenant).order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        """Create user with tenant context"""
+        tenant = self.request.user.tenant
+        if not tenant:
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError({'error': 'User must be associated with a tenant'})
+        
+        # Set tenant and default values
+        serializer.save(
+            tenant=tenant,
+            account_type='corporate',
+            email_verified=False,  # Require email verification for new users
+        )
+    
+    def create(self, request, *args, **kwargs):
+        """Override create to add better error logging and handle validation errors"""
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            # Log validation errors for debugging
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"User creation validation failed: {serializer.errors}")
+            logger.error(f"Request data: {request.data}")
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError(serializer.errors)
+        
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -332,5 +509,8 @@ def navigation_data(request):
 @permission_classes([permissions.IsAuthenticated])
 def current_user(request):
     """Get current user information"""
+    if not request.user.is_authenticated:
+        return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
+    
     serializer = UserSerializer(request.user)
     return Response(serializer.data)

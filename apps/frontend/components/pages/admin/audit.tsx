@@ -45,7 +45,7 @@ export function AuditLogsOverview() {
       {
         id: "1",
         timestamp: "2024-01-15T10:30:00Z",
-        user: "admin@oasys.com",
+        user: "admin@oasys360.com",
         action: "LOGIN",
         resource: "Authentication",
         details: "Successful login from 192.168.1.100",
@@ -72,7 +72,7 @@ export function AuditLogsOverview() {
         user: "unknown",
         action: "LOGIN_ATTEMPT",
         resource: "Authentication",
-        details: "Failed login attempt for admin@oasys.com",
+        details: "Failed login attempt for admin@oasys360.com",
         ipAddress: "203.0.113.1",
         userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
         status: "failure",
@@ -81,7 +81,7 @@ export function AuditLogsOverview() {
       {
         id: "4",
         timestamp: "2024-01-15T10:15:00Z",
-        user: "admin@oasys.com",
+        user: "admin@oasys360.com",
         action: "DELETE",
         resource: "User",
         details: "Deleted user account for john.doe@company.com",
@@ -107,20 +107,20 @@ export function AuditLogsOverview() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "success": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-      case "failure": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-      case "warning": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+      case "success": return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
+      case "failure": return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300"
+      case "warning": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300"
+      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300"
     }
   }
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "critical": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-      case "high": return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"
-      case "medium": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-      case "low": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+      case "critical": return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300"
+      case "high": return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300"
+      case "medium": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300"
+      case "low": return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
+      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300"
     }
   }
 
@@ -129,7 +129,7 @@ export function AuditLogsOverview() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -139,11 +139,11 @@ export function AuditLogsOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Download className="h-4 w-4 mr-2" />
             Export Logs
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Shield className="h-4 w-4 mr-2" />
             Security Settings
           </Button>
@@ -152,7 +152,7 @@ export function AuditLogsOverview() {
 
       {/* Main Content */}
       <Tabs defaultValue="all" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="rounded-full p-1 h-auto grid w-full grid-cols-4">
           <TabsTrigger value="all">All Logs</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="data">Data Changes</TabsTrigger>
@@ -161,7 +161,7 @@ export function AuditLogsOverview() {
 
         <TabsContent value="all" className="space-y-4">
           {/* Filters */}
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardContent className="p-4">
               <div className="flex items-center space-x-4">
                 <div className="flex-1">
@@ -178,7 +178,7 @@ export function AuditLogsOverview() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="p-2 border rounded text-sm"
+                  className="p-2 border rounded-xl text-sm"
                 >
                   <option value="all">All Status</option>
                   <option value="success">Success</option>
@@ -188,7 +188,7 @@ export function AuditLogsOverview() {
                 <select
                   value={severityFilter}
                   onChange={(e) => setSeverityFilter(e.target.value)}
-                  className="p-2 border rounded text-sm"
+                  className="p-2 border rounded-xl text-sm"
                 >
                   <option value="all">All Severity</option>
                   <option value="critical">Critical</option>
@@ -203,7 +203,7 @@ export function AuditLogsOverview() {
           {/* Logs List */}
           <div className="space-y-4">
             {filteredLogs.map((log) => (
-              <Card key={log.id} className="hover:shadow-md transition-shadow">
+              <Card key={log.id} className="rounded-2xl shadow-soft dark:shadow-soft-dark border hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -236,7 +236,7 @@ export function AuditLogsOverview() {
                     </div>
                     
                     <div className="flex items-center space-x-2">
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" className="rounded-full">
                         <Eye className="h-4 w-4" />
                       </Button>
                     </div>

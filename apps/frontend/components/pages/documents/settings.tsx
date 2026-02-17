@@ -18,7 +18,7 @@ import {
 
 export function DocumentSettingsOverview() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Document Settings</h1>
@@ -27,11 +27,11 @@ export function DocumentSettingsOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <FileText className="h-4 w-4 mr-2" />
             Test Processing
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Save Settings
           </Button>
@@ -39,7 +39,7 @@ export function DocumentSettingsOverview() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="rounded-full p-1 h-auto grid w-full grid-cols-4">
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="processing">Processing</TabsTrigger>
           <TabsTrigger value="storage">Storage</TabsTrigger>
@@ -47,7 +47,7 @@ export function DocumentSettingsOverview() {
         </TabsList>
 
         <TabsContent value="general" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>General Settings</CardTitle>
               <CardDescription>

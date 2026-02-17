@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   publisher: "OASYS",
   generator: 'Next.js',
   manifest: '/manifest.json',
-  metadataBase: new URL('https://oasys.com'),
+  metadataBase: new URL('https://oasys360.com'),
   robots: {
     index: true,
     follow: true,
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     siteName: 'OASYS',
     title: 'OASYS - AI-Powered Business Finance Platform | Beta Launch',
     description: 'Transform your financial operations with AI-powered automation, blockchain security, and real-time insights. Join our beta program for early access.',
-    url: 'https://oasys.com',
+    url: 'https://oasys360.com',
     images: [
       {
         url: '/og-image.jpg',
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     images: ['/twitter-image.jpg'],
   },
   alternates: {
-    canonical: 'https://oasys.com',
+    canonical: 'https://oasys360.com',
   },
   verification: {
     google: 'your-google-verification-code',

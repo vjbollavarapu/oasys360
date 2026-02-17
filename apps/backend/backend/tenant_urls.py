@@ -29,6 +29,9 @@ tenant_api_patterns = [
     path('purchase/', include('purchase.urls')),
     path('reporting/', include('reporting.urls')),
     path('sales/', include('sales.urls')),
+    path('tax_optimization/', include('tax_optimization.urls')),
+    path('treasury/', include('treasury.urls')),
+    path('fx_conversion/', include('fx_conversion.urls')),
     path('web3_integration/', include('web3_integration.urls')),
 ]
 

@@ -1,0 +1,44 @@
+{
+  "country_code": "MY",
+  "country_name": "Malaysia",
+  "description": "SST (Sales and Service Tax) rates for Malaysia",
+  "tax_rates": [
+    {
+      "name": "SST Sales Tax",
+      "code": "SST_SALES",
+      "rate": 10.00,
+      "tax_type": "sales",
+      "region": "Malaysia",
+      "category": "Goods",
+      "is_default": true,
+      "is_active": true,
+      "description": "Sales Tax on taxable goods (10% or 5% depending on category)",
+      "effective_from": "2018-09-01"
+    },
+    {
+      "name": "SST Service Tax",
+      "code": "SST_SERVICE",
+      "rate": 6.00,
+      "tax_type": "service",
+      "region": "Malaysia",
+      "category": "Services",
+      "is_default": false,
+      "is_active": true,
+      "description": "Service Tax on taxable services",
+      "effective_from": "2018-09-01"
+    },
+    {
+      "name": "SST Exempt",
+      "code": "SST_EXEMPT",
+      "rate": 0.00,
+      "tax_type": "sales",
+      "region": "Malaysia",
+      "category": "Exempt",
+      "is_default": false,
+      "is_active": true,
+      "description": "Exempt from SST",
+      "effective_from": "2018-09-01"
+    }
+  ]
+}
+

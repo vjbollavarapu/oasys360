@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import Link from "next/link"
+import NextLink from "next/link"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
 import { SearchComponent } from "@/components/ui/search"
 import { NotificationsComponent } from "@/components/ui/notifications"
 import { useAuth } from "@/hooks/use-auth"
 import { useOrganization } from "@/hooks/use-organization"
+import { useNavigation } from "@/hooks/use-navigation"
 import { cn } from "@/lib/utils"
 import {
   LayoutDashboard,
@@ -98,7 +99,7 @@ import {
   Save,
   Share,
   Copy,
-  Link as LinkIcon,
+  Link as LucideLinkIcon,
   Mail,
   Phone,
   MapPin,
@@ -178,212 +179,15 @@ import {
 
 interface NavigationItem {
   title: string
-  href: string
+  href?: string  // Make href optional to match runtime behavior
   icon: React.ComponentType<{ className?: string }>
   badge?: string
   children?: NavigationItem[]
   description?: string
 }
 
-const navigationItems: NavigationItem[] = [
-  {
-    title: "Dashboard",
-    href: "/",
-    icon: LayoutDashboard,
-    description: "Overview and analytics"
-  },
-  {
-    title: "Accounting",
-    href: "/accounting",
-    icon: Calculator,
-    description: "Financial management",
-    children: [
-      { title: "Overview", href: "/accounting", icon: BarChart3 },
-      { title: "Chart of Accounts", href: "/accounting/gl-accounts", icon: FileSpreadsheet },
-      { title: "Journal Entries", href: "/accounting/journal-entries", icon: FileText },
-      { title: "Bank Reconciliation", href: "/accounting/bank-reconciliation", icon: RefreshCw },
-      { title: "Fiscal Year", href: "/accounting/fiscal-year", icon: Calendar },
-      { title: "Petty Cash", href: "/accounting/petty-cash", icon: PiggyBank },
-      { title: "Credit/Debit Notes", href: "/accounting/credit-debit-notes", icon: Receipt },
-      { title: "Settings", href: "/accounting/settings", icon: Settings },
-    ]
-  },
-  {
-    title: "Invoicing",
-    href: "/invoicing",
-    icon: FileText,
-    description: "Invoice management & compliance",
-    children: [
-      { title: "Overview", href: "/invoicing", icon: BarChart3 },
-      { title: "Create Invoice", href: "/invoicing/create", icon: Plus },
-      { title: "Invoice Templates", href: "/invoicing/templates", icon: FileText },
-      { title: "E-Invoicing", href: "/invoicing/e-invoicing", icon: Globe },
-      { title: "Compliance Rules", href: "/invoicing/compliance", icon: Shield },
-      { title: "Digital Signatures", href: "/invoicing/signatures", icon: Key },
-      { title: "Tax Management", href: "/invoicing/tax", icon: Percent },
-      { title: "Settings", href: "/invoicing/settings", icon: Settings },
-    ]
-  },
-  {
-    title: "Banking",
-    href: "/banking",
-    icon: Building2,
-    description: "Bank integration & transactions",
-    children: [
-      { title: "Overview", href: "/banking", icon: BarChart3 },
-      { title: "Bank Accounts", href: "/banking/accounts", icon: CreditCard },
-      { title: "Transactions", href: "/banking/transactions", icon: Activity },
-      { title: "Reconciliation", href: "/banking/reconciliation", icon: RefreshCw },
-      { title: "Bank Integration", href: "/banking/integration", icon: Link },
-      { title: "Plaid Connect", href: "/banking/plaid", icon: Zap },
-      { title: "Import/Export", href: "/banking/import-export", icon: Upload },
-      { title: "Settings", href: "/banking/settings", icon: Settings },
-    ]
-  },
-  {
-    title: "Inventory",
-    href: "/inventory",
-    icon: Package,
-    description: "Stock management & tracking",
-    children: [
-      { title: "Overview", href: "/inventory", icon: BarChart3 },
-      { title: "Items", href: "/inventory/items", icon: Package },
-      { title: "Stock Movements", href: "/inventory/movements", icon: Truck },
-      { title: "Categories", href: "/inventory/categories", icon: Tag },
-      { title: "Valuation", href: "/inventory/valuation", icon: DollarSign },
-      { title: "Reorder Points", href: "/inventory/reorder", icon: AlertTriangle },
-      { title: "Barcode Scanning", href: "/inventory/barcode", icon: Camera },
-      { title: "Settings", href: "/inventory/settings", icon: Settings },
-    ]
-  },
-  {
-    title: "Sales",
-    href: "/sales",
-    icon: ShoppingCart,
-    description: "Sales management & CRM",
-    children: [
-      { title: "Overview", href: "/sales", icon: BarChart3 },
-      { title: "Customers", href: "/sales/customers", icon: Users },
-      { title: "Sales Orders", href: "/sales/orders", icon: ShoppingBag },
-      { title: "Quotes", href: "/sales/quotes", icon: FileText },
-      { title: "Sales Analytics", href: "/sales/analytics", icon: TrendingUp },
-      { title: "Commission Tracking", href: "/sales/commission", icon: Award },
-      { title: "Sales Pipeline", href: "/sales/pipeline", icon: Target },
-      { title: "Settings", href: "/sales/settings", icon: Settings },
-    ]
-  },
-  {
-    title: "Purchase",
-    href: "/purchase",
-    icon: ShoppingBag,
-    description: "Procurement & vendor management",
-    children: [
-      { title: "Overview", href: "/purchase", icon: BarChart3 },
-      { title: "Vendors", href: "/purchase/vendors", icon: Building2 },
-      { title: "Purchase Orders", href: "/purchase/orders", icon: FileText },
-      { title: "Receiving", href: "/purchase/receiving", icon: Truck },
-      { title: "Approvals", href: "/purchase/approvals", icon: CheckCircle },
-      { title: "Vendor Analytics", href: "/purchase/analytics", icon: TrendingUp },
-      { title: "Contract Management", href: "/purchase/contracts", icon: FileText },
-      { title: "Settings", href: "/purchase/settings", icon: Settings },
-    ]
-  },
-  {
-    title: "Web3",
-    href: "/web3",
-    icon: Coins,
-    description: "Blockchain & crypto integration",
-    children: [
-      { title: "Overview", href: "/web3", icon: BarChart3 },
-      { title: "Crypto Wallets", href: "/web3/wallets", icon: Wallet },
-      { title: "Transactions", href: "/web3/transactions", icon: Activity },
-      { title: "DeFi Positions", href: "/web3/defi", icon: TrendingUp },
-      { title: "Token Management", href: "/web3/tokens", icon: Coins },
-      { title: "Blockchain Networks", href: "/web3/networks", icon: Network },
-      { title: "Smart Contracts", href: "/web3/contracts", icon: FileText },
-      { title: "Settings", href: "/web3/settings", icon: Settings },
-    ]
-  },
-  {
-    title: "AI Processing",
-    href: "/ai-processing",
-    icon: Zap,
-    description: "AI-powered automation",
-    children: [
-      { title: "Overview", href: "/ai-processing", icon: BarChart3 },
-      { title: "Document Processing", href: "/ai-processing/documents", icon: FileText },
-      { title: "Transaction Categorization", href: "/ai-processing/categorization", icon: Tag },
-      { title: "Fraud Detection", href: "/ai-processing/fraud", icon: Shield },
-      { title: "Financial Forecasting", href: "/ai-processing/forecasting", icon: TrendingUp },
-      { title: "AI Models", href: "/ai-processing/models", icon: Cpu },
-      { title: "Processing Jobs", href: "/ai-processing/jobs", icon: Activity },
-      { title: "Settings", href: "/ai-processing/settings", icon: Settings },
-    ]
-  },
-  {
-    title: "Reports",
-    href: "/reports",
-    icon: BarChart3,
-    description: "Analytics & reporting",
-    children: [
-      { title: "Overview", href: "/reports", icon: BarChart3 },
-      { title: "Financial Reports", href: "/reports/financial", icon: DollarSign },
-      { title: "Tax Reports", href: "/reports/tax", icon: Percent },
-      { title: "Compliance Reports", href: "/reports/compliance", icon: Shield },
-      { title: "Custom Reports", href: "/reports/custom", icon: FileSpreadsheet },
-      { title: "Scheduled Reports", href: "/reports/scheduled", icon: Clock },
-      { title: "Export Options", href: "/reports/export", icon: Download },
-      { title: "Settings", href: "/reports/settings", icon: Settings },
-    ]
-  },
-  {
-    title: "Documents",
-    href: "/documents",
-    icon: FileText,
-    description: "Document management",
-    children: [
-      { title: "Overview", href: "/documents", icon: BarChart3 },
-      { title: "All Documents", href: "/documents/all", icon: FileText },
-      { title: "Upload Documents", href: "/documents/upload", icon: Upload },
-      { title: "Document Templates", href: "/documents/templates", icon: FileText },
-      { title: "OCR Processing", href: "/documents/ocr", icon: Eye },
-      { title: "Document Workflow", href: "/documents/workflow", icon: Activity },
-      { title: "Storage Management", href: "/documents/storage", icon: Database },
-      { title: "Settings", href: "/documents/settings", icon: Settings },
-    ]
-  },
-  {
-    title: "Mobile",
-    href: "/mobile",
-    icon: Smartphone,
-    description: "Mobile app features",
-    children: [
-      { title: "Dashboard", href: "/mobile/dashboard", icon: LayoutDashboard },
-      { title: "Expenses", href: "/mobile/expenses", icon: Receipt },
-      { title: "Invoices", href: "/mobile/invoices", icon: FileText },
-      { title: "Approvals", href: "/mobile/approvals", icon: CheckCircle },
-      { title: "Notifications", href: "/mobile/notifications", icon: Bell },
-      { title: "Offline Mode", href: "/mobile/offline", icon: WifiOff },
-      { title: "Mobile Settings", href: "/mobile/settings", icon: Settings },
-    ]
-  },
-  {
-    title: "Admin",
-    href: "/admin",
-    icon: Settings,
-    description: "Platform administration",
-    children: [
-      { title: "Platform Admin", href: "/platform-admin", icon: Shield },
-      { title: "Super Admin", href: "/super-admin", icon: Crown },
-      { title: "User Management", href: "/admin/users", icon: Users },
-      { title: "Tenant Management", href: "/admin/tenants", icon: Building2 },
-      { title: "System Settings", href: "/admin/settings", icon: Settings },
-      { title: "Security", href: "/admin/security", icon: Lock },
-      { title: "Audit Logs", href: "/admin/audit", icon: FileText },
-      { title: "Backup & Restore", href: "/admin/backup", icon: Database },
-    ]
-  },
-]
+// Navigation items are now dynamically loaded based on user role and portal
+// See: hooks/use-navigation.tsx and lib/navigation/config.ts
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -391,7 +195,47 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
   const { user, logout } = useAuth()
-  const { organization } = useOrganization()
+  const { organization, currentOrganization } = useOrganization()
+  const { navigationItems, isLoading: navigationLoading } = useNavigation()
+
+  // Auto-expand parent menu items when their children are active
+  useEffect(() => {
+    if (!navigationItems.length || navigationLoading) return
+
+    const activeParents: string[] = []
+    
+    navigationItems.forEach((item) => {
+      if (item.children && item.children.length > 0) {
+        // Check if any child matches the current pathname (prioritize exact child matches)
+        const hasActiveChild = item.children.some((child) => {
+          if (!child.href) return false
+          if (child.href === "/") {
+            return pathname === "/"
+          }
+          // Check for exact match or pathname starts with child href
+          return pathname === child.href || pathname.startsWith(child.href + "/")
+        })
+        
+        // Also check if the parent's own href matches (for cases where parent is clickable)
+        // But only if no child matches (to avoid expanding when on a child route)
+        const isParentActive = !hasActiveChild && item.href && (
+          item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)
+        )
+        
+        if (hasActiveChild || isParentActive) {
+          activeParents.push(item.title)
+        }
+      }
+    })
+
+    // Update expanded items to include active parents (preserve manually expanded items)
+    if (activeParents.length > 0) {
+      setExpandedItems(prev => {
+        const newExpanded = [...new Set([...prev, ...activeParents])]
+        return newExpanded
+      })
+    }
+  }, [pathname, navigationItems, navigationLoading])
 
   const toggleExpanded = (title: string) => {
     setExpandedItems(prev => 
@@ -401,11 +245,53 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     )
   }
 
-  const isActive = (href: string) => {
+  // Check if a navigation item is active
+  // For parent items with children: only active if pathname exactly matches (not a child route)
+  // For child items: active if pathname matches the child href
+  const isActive = (href: string | undefined, hasChildren: boolean = false, children?: NavigationItem[]) => {
+    if (!href) return false
+    
+    // Special case for root path
     if (href === "/") {
       return pathname === "/"
     }
-    return pathname.startsWith(href)
+    
+    // If this item has children, check if any child is active first
+    if (hasChildren && children && children.length > 0) {
+      const hasActiveChild = children.some((child) => {
+        if (!child.href) return false
+        if (child.href === "/") {
+          return pathname === "/"
+        }
+        // Check for exact match or pathname starts with child href + "/"
+        return pathname === child.href || pathname.startsWith(child.href + "/")
+      })
+      
+      // If a child is active, don't highlight the parent
+      if (hasActiveChild) {
+        return false
+      }
+      
+      // If no child is active, check if parent href exactly matches pathname
+      return pathname === href
+    }
+    
+    // For items without children, check exact match first, then starts with
+    if (pathname === href) {
+      return true
+    }
+    
+    // Use startsWith for items without children
+    return pathname.startsWith(href + "/") || pathname.startsWith(href)
+  }
+  
+  // Helper to check if a child item is active
+  const isChildActive = (childHref: string | undefined) => {
+    if (!childHref) return false
+    if (childHref === "/") {
+      return pathname === "/"
+    }
+    return pathname === childHref || pathname.startsWith(childHref + "/")
   }
 
   const isExpanded = (title: string) => expandedItems.includes(title)
@@ -428,12 +314,12 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-border">
-            <Link href="/" className="flex items-center space-x-2">
+            <NextLink href="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-sm">O</span>
               </div>
               <span className="font-bold text-lg">OASYS</span>
-            </Link>
+            </NextLink>
             <Button
               variant="ghost"
               size="sm"
@@ -445,13 +331,15 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Organization Info */}
-          {organization && (
+          {(organization || currentOrganization) && (
             <div className="p-4 border-b border-border">
               <div className="flex items-center space-x-2">
                 <Building2 className="h-4 w-4 text-muted-foreground" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{organization.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{organization.plan}</p>
+                  <p className="text-sm font-medium truncate">{(organization || currentOrganization)?.name || 'Organization'}</p>
+                  {(organization || currentOrganization)?.plan && (
+                    <p className="text-xs text-muted-foreground truncate">{(organization || currentOrganization)?.plan}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -459,7 +347,16 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto p-4 space-y-2">
-            {navigationItems.map((item) => (
+            {navigationLoading ? (
+              <div className="flex items-center justify-center p-4">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+              </div>
+            ) : navigationItems.length === 0 ? (
+              <div className="text-center p-4 text-muted-foreground text-sm">
+                No navigation items available
+              </div>
+            ) : (
+              navigationItems.map((item) => (
               <div key={item.title}>
                 {item.children ? (
                   <div>
@@ -467,7 +364,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                       onClick={() => toggleExpanded(item.title)}
                       className={cn(
                         "w-full flex items-center justify-between p-2 rounded-lg text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-                        isActive(item.href) && "bg-accent text-accent-foreground"
+                        isActive(item.href, true, item.children) && "bg-accent text-accent-foreground"
                       )}
                     >
                       <div className="flex items-center space-x-2">
@@ -483,38 +380,60 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                     </button>
                     {isExpanded(item.title) && (
                       <div className="ml-6 mt-2 space-y-1">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            className={cn(
-                              "flex items-center space-x-2 p-2 rounded-lg text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
-                              isActive(child.href) && "bg-accent text-accent-foreground"
-                            )}
-                            onClick={() => setSidebarOpen(false)}
-                          >
-                            <child.icon className="h-4 w-4" />
-                            <span>{child.title}</span>
-                          </Link>
-                        ))}
+                        {item.children
+                          .filter((child): child is NavigationItem & { href: string } => {
+                            // Strict type guard: href must be a non-empty string
+                            return Boolean(child?.href) && typeof child.href === 'string' && child.href.length > 0;
+                          })
+                          .map((child, index) => {
+                            // Final runtime check before rendering Link
+                            const href = child.href;
+                            if (!href || typeof href !== 'string' || href.length === 0) {
+                              console.warn(`Navigation item "${child.title}" has invalid href, skipping.`);
+                              return null;
+                            }
+                            return (
+                              <NextLink
+                                key={href || `${child.title}-${index}`}
+                                href={href}
+                                className={cn(
+                                  "flex items-center space-x-2 p-2 rounded-lg text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
+                                  isChildActive(href) && "bg-accent text-accent-foreground"
+                                )}
+                                onClick={() => setSidebarOpen(false)}
+                              >
+                                <child.icon className="h-4 w-4" />
+                                <span>{child.title}</span>
+                              </NextLink>
+                            );
+                          })
+                          .filter(Boolean) // Remove any null entries
+                        }
                       </div>
                     )}
                   </div>
                 ) : (
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "flex items-center space-x-2 p-2 rounded-lg text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-                      isActive(item.href) && "bg-accent text-accent-foreground"
-                    )}
-                    onClick={() => setSidebarOpen(false)}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.title}</span>
-                  </Link>
+                  item.href && typeof item.href === 'string' ? (
+                    <NextLink
+                      href={item.href}
+                      className={cn(
+                        "flex items-center space-x-2 p-2 rounded-lg text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+                        isActive(item.href, false) && "bg-accent text-accent-foreground"
+                      )}
+                      onClick={() => setSidebarOpen(false)}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </NextLink>
+                  ) : (
+                    <div className="flex items-center space-x-2 p-2 rounded-lg text-sm font-medium text-muted-foreground">
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </div>
+                  )
                 )}
               </div>
-            ))}
+            )))}
           </nav>
 
           {/* User Menu */}
@@ -525,8 +444,8 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                   <User className="h-4 w-4 text-primary-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{user.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user.role}</p>
+                  <p className="text-sm font-medium truncate">{user?.name || user?.email || 'User'}</p>
+                  <p className="text-xs text-muted-foreground truncate">{user?.role || 'Guest'}</p>
                 </div>
                 <Button
                   variant="ghost"

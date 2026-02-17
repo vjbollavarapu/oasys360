@@ -1,6 +1,7 @@
 from rest_framework import permissions
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
+from backend.tenant_utils import get_request_tenant
 
 
 class IsTenantMember(permissions.BasePermission):
@@ -8,7 +9,11 @@ class IsTenantMember(permissions.BasePermission):
     Permission to check if user is a member of the tenant
     """
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.tenant is not None
+        if not request.user.is_authenticated:
+            return False
+        # Check request.tenant (set by middleware) or request.user.tenant
+        tenant = get_request_tenant(request)
+        return tenant is not None
 
 
 class IsTenantAdmin(permissions.BasePermission):
@@ -16,11 +21,12 @@ class IsTenantAdmin(permissions.BasePermission):
     Permission to check if user is a tenant admin
     """
     def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated and 
-            request.user.tenant is not None and
-            request.user.role in ['tenant_admin', 'platform_admin']
-        )
+        if not request.user.is_authenticated:
+            return False
+        tenant = get_request_tenant(request)
+        if not tenant:
+            return False
+        return request.user.role in ['tenant_admin', 'platform_admin']
 
 
 class IsFirmAdmin(permissions.BasePermission):
@@ -28,11 +34,12 @@ class IsFirmAdmin(permissions.BasePermission):
     Permission to check if user is a firm admin
     """
     def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated and 
-            request.user.tenant is not None and
-            request.user.role in ['firm_admin', 'tenant_admin', 'platform_admin']
-        )
+        if not request.user.is_authenticated:
+            return False
+        tenant = get_request_tenant(request)
+        if not tenant:
+            return False
+        return request.user.role in ['firm_admin', 'tenant_admin', 'platform_admin']
 
 
 class IsCFO(permissions.BasePermission):
@@ -40,23 +47,26 @@ class IsCFO(permissions.BasePermission):
     Permission to check if user is a CFO or higher
     """
     def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated and 
-            request.user.tenant is not None and
-            request.user.role in ['cfo', 'firm_admin', 'tenant_admin', 'platform_admin']
-        )
+        if not request.user.is_authenticated:
+            return False
+        tenant = get_request_tenant(request)
+        if not tenant:
+            return False
+        return request.user.role in ['cfo', 'firm_admin', 'tenant_admin', 'platform_admin']
 
 
 class IsAccountant(permissions.BasePermission):
     """
-    Permission to check if user is an accountant or higher
+    Permission to check if user is an accountant or higher.
+    Includes 'staff' so demo/basic users can access accounting (e.g. dashboard, reports).
     """
     def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated and 
-            request.user.tenant is not None and
-            request.user.role in ['accountant', 'cfo', 'firm_admin', 'tenant_admin', 'platform_admin']
-        )
+        if not request.user.is_authenticated:
+            return False
+        tenant = get_request_tenant(request)
+        if not tenant:
+            return False
+        return request.user.role in ['staff', 'accountant', 'cfo', 'firm_admin', 'tenant_admin', 'platform_admin']
 
 
 class IsPlatformAdmin(permissions.BasePermission):
@@ -75,17 +85,21 @@ class TenantObjectPermission(permissions.BasePermission):
     Permission to check if user has access to a specific tenant object
     """
     def has_object_permission(self, request, view, obj):
+        tenant = get_request_tenant(request)
+        if not tenant:
+            return False
+        
         # Check if object has tenant attribute
         if hasattr(obj, 'tenant'):
-            return obj.tenant == request.user.tenant
+            return obj.tenant == tenant
         
         # Check if object has company attribute with tenant
         if hasattr(obj, 'company') and hasattr(obj.company, 'tenant'):
-            return obj.company.tenant == request.user.tenant
+            return obj.company.tenant == tenant
         
         # Check if object is a user
         if isinstance(obj, request.user.__class__):
-            return obj.tenant == request.user.tenant
+            return obj.tenant == tenant
         
         return False
 
@@ -120,23 +134,27 @@ class TenantResourcePermission(permissions.BasePermission):
     Permission for tenant-specific resources
     """
     def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated and 
-            request.user.tenant is not None
-        )
+        if not request.user.is_authenticated:
+            return False
+        tenant = get_request_tenant(request)
+        return tenant is not None
     
     def has_object_permission(self, request, view, obj):
+        tenant = get_request_tenant(request)
+        if not tenant:
+            return False
+        
         # Check if object belongs to the same tenant
         if hasattr(obj, 'tenant'):
-            return obj.tenant == request.user.tenant
+            return obj.tenant == tenant
         
         # Check if object has a company that belongs to the tenant
         if hasattr(obj, 'company'):
-            return obj.company.tenant == request.user.tenant
+            return obj.company.tenant == tenant
         
         # Check if object is a user
         if isinstance(obj, request.user.__class__):
-            return obj.tenant == request.user.tenant
+            return obj.tenant == tenant
         
         return False
 

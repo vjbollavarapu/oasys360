@@ -47,9 +47,9 @@ export function MultiClientDashboard() {
     {
       id: "client-1",
       firmId: "globalaccounting",
-      name: "TechFlow Solutions",
-      email: "contact@techflow.com",
-      company: "TechFlow Solutions Inc.",
+      name: "oasys360 Solutions",
+      email: "contact@oasys360.com",
+      company: "oasys360 Solutions Inc.",
       subscriptionPlan: {
         id: "ai_full_web3",
         name: "AI + Full Web3",

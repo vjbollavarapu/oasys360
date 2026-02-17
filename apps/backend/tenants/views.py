@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+import logging
+import traceback
 
 from .models import Tenant, Company, TenantInvitation
 from .serializers import (
@@ -11,6 +13,8 @@ from .serializers import (
     TenantStatsSerializer
 )
 from authentication.permissions import IsTenantAdmin, IsFirmAdmin, IsTenantMember
+
+logger = logging.getLogger(__name__)
 
 
 class TenantListView(generics.ListCreateAPIView):
@@ -50,7 +54,7 @@ class TenantDetailView(generics.RetrieveUpdateDestroyAPIView):
 class TenantStatsView(generics.RetrieveAPIView):
     """Get tenant statistics"""
     serializer_class = TenantStatsSerializer
-    permission_classes = [IsTenantMember]
+    # permission_classes = [IsTenantMember]
     
     def get_object(self):
         return self.request.user.tenant
@@ -188,3 +192,135 @@ def search_companies(request):
     
     serializer = CompanySerializer(companies, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def tenant_me(request):
+    """Get current tenant information for the authenticated user's tenant"""
+    if not request.user.is_authenticated:
+        return Response(
+            {'error': 'Authentication required'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    # Get tenant from user (more reliable than middleware for this endpoint)
+    tenant = request.user.tenant
+    if not tenant:
+        return Response(
+            {'error': 'No tenant associated with user'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    # Return tenant info including primary_domain
+    return Response({
+        'id': str(tenant.id),
+        'name': tenant.name,
+        'slug': tenant.slug,
+        'primary_domain': tenant.primary_domain or tenant.slug,
+        'domain_status': tenant.domain_status,
+        'onboarding_status': tenant.onboarding_status,
+        'industry_code': tenant.industry_code,
+        'country_code': tenant.country_code,
+        'currency_code': tenant.currency_code,
+        'timezone': tenant.timezone,
+    })
+
+
+@api_view(['GET', 'PUT'])
+@permission_classes([IsTenantAdmin])
+def tenant_settings(request):
+    """Get and update tenant settings"""
+    try:
+        tenant = request.user.tenant
+        if not tenant:
+            return Response(
+                {'error': 'No tenant associated with user'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if request.method == 'GET':
+            # Get primary company if exists
+            primary_company = Company.objects.filter(tenant=tenant, is_primary=True).first()
+            
+            serializer = TenantSerializer(tenant)
+            data = serializer.data
+            
+            # Add company information if exists
+            if primary_company:
+                company_serializer = CompanySerializer(primary_company)
+                data['company'] = company_serializer.data
+            else:
+                data['company'] = None
+            
+            # Add statistics
+            try:
+                data['active_users_count'] = tenant.get_active_users_count()
+                data['can_add_user'] = tenant.can_add_user()
+            except Exception as e:
+                # If there's an error getting user count, set defaults
+                logger.error(f"Error getting user count for tenant {tenant.id}: {str(e)}\n{traceback.format_exc()}")
+                data['active_users_count'] = 0
+                data['can_add_user'] = True
+            
+            return Response(data)
+    
+        elif request.method == 'PUT':
+            # Update tenant settings
+            serializer = TenantSerializer(tenant, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                
+                # Update company if provided
+                company_data = request.data.get('company')
+                if company_data:
+                    primary_company = Company.objects.filter(tenant=tenant, is_primary=True).first()
+                    if primary_company:
+                        company_serializer = CompanySerializer(primary_company, data=company_data, partial=True)
+                        if company_serializer.is_valid():
+                            company_serializer.save()
+                        else:
+                            # Log validation errors but don't fail the tenant update
+                            logger.warning(f"Company validation errors: {company_serializer.errors}")
+                    else:
+                        # Create primary company if doesn't exist
+                        company_data['tenant'] = tenant
+                        company_data['is_primary'] = True
+                        company_serializer = CompanySerializer(data=company_data)
+                        if company_serializer.is_valid():
+                            company_serializer.save()
+                        else:
+                            # Log validation errors but don't fail the tenant update
+                            logger.warning(f"Company creation errors: {company_serializer.errors}")
+                
+                # Get updated tenant with company info
+                updated_tenant = Tenant.objects.get(id=tenant.id)
+                primary_company = Company.objects.filter(tenant=updated_tenant, is_primary=True).first()
+                
+                response_data = TenantSerializer(updated_tenant).data
+                if primary_company:
+                    response_data['company'] = CompanySerializer(primary_company).data
+                else:
+                    response_data['company'] = None
+                
+                try:
+                    response_data['active_users_count'] = updated_tenant.get_active_users_count()
+                    response_data['can_add_user'] = updated_tenant.can_add_user()
+                except Exception as e:
+                    # If there's an error getting user count, set defaults
+                    logger.error(f"Error getting user count for tenant {updated_tenant.id}: {str(e)}\n{traceback.format_exc()}")
+                    response_data['active_users_count'] = 0
+                    response_data['can_add_user'] = True
+                
+                return Response({
+                    'message': 'Tenant settings updated successfully',
+                    'tenant': response_data
+                })
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    except Exception as e:
+        logger.error(f"Error in tenant_settings view: {str(e)}\n{traceback.format_exc()}")
+        return Response(
+            {'error': 'Internal server error', 'detail': str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

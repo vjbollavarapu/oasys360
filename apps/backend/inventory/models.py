@@ -33,7 +33,7 @@ class Item(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE, related_name='items')
     company = models.ForeignKey('tenants.Company', on_delete=models.CASCADE, related_name='items')
-    sku = models.CharField(max_length=100, unique=True)
+    sku = models.CharField(max_length=100)  # Removed unique=True to allow tenant-scoped uniqueness
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     category = models.ForeignKey(ItemCategory, on_delete=models.SET_NULL, null=True, blank=True)
@@ -59,7 +59,7 @@ class Item(models.Model):
     max_stock_level = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     current_stock = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     reorder_point = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    supplier = models.ForeignKey('purchase.Supplier', on_delete=models.SET_NULL, null=True, blank=True)
+    # supplier = models.ForeignKey('purchase.Supplier', on_delete=models.SET_NULL, null=True, blank=True)  # Temporarily commented to break circular dependency
     gl_account = models.ForeignKey('accounting.ChartOfAccounts', on_delete=models.SET_NULL, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_tracked = models.BooleanField(default=True)  # Whether to track stock levels
@@ -196,6 +196,7 @@ class WarehouseStock(models.Model):
     Warehouse Stock model for tracking stock levels by warehouse
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE, related_name='warehouse_stock')
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='stock_levels')
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='warehouse_stock')
     quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -216,3 +217,96 @@ class WarehouseStock(models.Model):
         # Calculate available quantity
         self.available_quantity = self.quantity - self.reserved_quantity
         super().save(*args, **kwargs)
+
+
+class InventoryValuation(models.Model):
+    """
+    Inventory Valuation model for tracking inventory valuation methods and calculations
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE, related_name='inventory_valuations')
+    company = models.ForeignKey('tenants.Company', on_delete=models.CASCADE, related_name='inventory_valuations')
+    valuation_method = models.CharField(max_length=50, choices=[
+        ('fifo', 'FIFO (First In First Out)'),
+        ('lifo', 'LIFO (Last In First Out)'),
+        ('average_cost', 'Average Cost'),
+        ('weighted_average', 'Weighted Average'),
+        ('specific_identification', 'Specific Identification'),
+    ], default='fifo')
+    valuation_date = models.DateField()
+    total_inventory_value = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    total_items = models.IntegerField(default=0)
+    currency = models.CharField(max_length=3, default='USD')
+    notes = models.TextField(blank=True)
+    calculated_by = models.ForeignKey('authentication.User', on_delete=models.CASCADE, related_name='calculated_valuations')
+    calculated_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'inventory_valuations'
+        verbose_name = 'Inventory Valuation'
+        verbose_name_plural = 'Inventory Valuations'
+        ordering = ['-valuation_date', '-calculated_at']
+
+    def __str__(self):
+        return f"Valuation - {self.get_valuation_method_display()} ({self.valuation_date})"
+
+
+class InventorySettings(models.Model):
+    """
+    Inventory Settings model for tenant/company-specific inventory configurations
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tenant = models.ForeignKey('tenants.Tenant', on_delete=models.CASCADE, related_name='inventory_settings')
+    company = models.ForeignKey('tenants.Company', on_delete=models.CASCADE, related_name='inventory_settings', null=True, blank=True)
+    
+    # Valuation Settings
+    default_valuation_method = models.CharField(max_length=50, default='fifo', choices=[
+        ('fifo', 'FIFO (First In First Out)'),
+        ('lifo', 'LIFO (Last In First Out)'),
+        ('average_cost', 'Average Cost'),
+        ('weighted_average', 'Weighted Average'),
+        ('specific_identification', 'Specific Identification'),
+    ])
+    enable_automatic_valuation = models.BooleanField(default=False)
+    valuation_currency = models.CharField(max_length=3, default='USD')
+    
+    # Stock Management Settings
+    allow_negative_stock = models.BooleanField(default=False)
+    enable_low_stock_alerts = models.BooleanField(default=True)
+    low_stock_threshold_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('20.00'), help_text='Percentage of min stock level to trigger alert')
+    auto_calculate_reorder_points = models.BooleanField(default=False)
+    
+    # Barcode Settings
+    enable_barcode_scanning = models.BooleanField(default=True)
+    barcode_prefix = models.CharField(max_length=20, blank=True, help_text='Prefix for auto-generated barcodes')
+    require_barcode = models.BooleanField(default=False)
+    
+    # Warehouse Settings
+    enable_multi_warehouse = models.BooleanField(default=True)
+    default_warehouse = models.ForeignKey(Warehouse, on_delete=models.SET_NULL, null=True, blank=True, related_name='default_for_settings')
+    
+    # Notification Settings
+    notify_on_low_stock = models.BooleanField(default=True)
+    notify_on_reorder_point = models.BooleanField(default=True)
+    notify_on_negative_stock = models.BooleanField(default=True)
+    
+    # Import/Export Settings
+    default_export_format = models.CharField(max_length=20, default='csv', choices=[
+        ('csv', 'CSV'),
+        ('xlsx', 'Excel'),
+        ('json', 'JSON'),
+    ])
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'inventory_settings'
+        verbose_name = 'Inventory Settings'
+        verbose_name_plural = 'Inventory Settings'
+        unique_together = ['tenant', 'company']
+
+    def __str__(self):
+        return f"Inventory Settings - {self.tenant.name}"

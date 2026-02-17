@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 """
-Database setup script for OASYS Platform
-This script sets up the PostgreSQL database for development
+Database setup script for OASYS Platform (row-based multi-tenancy).
+- Initial setup: migrations + seed users (all roles, password: Pass123456).
+- To EMPTY the database and re-run seed: use reset_and_seed instead (see below).
 """
 
 import os
@@ -19,37 +20,30 @@ django.setup()
 
 from django.core.management import execute_from_command_line
 from django.db import connection
-from django.conf import settings
 
 def setup_database():
-    """Set up the database for development"""
+    """Run migrations and create seed users (password: Pass123456)."""
     print("🚀 Setting up OASYS Database...")
-    
     try:
-        # Check if database exists
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
         print("✅ Database connection successful")
-        
-        # Run migrations
+
         print("📦 Running migrations...")
-        execute_from_command_line(['manage.py', 'migrate_schemas', '--shared'])
-        execute_from_command_line(['manage.py', 'migrate_schemas', '--tenant'])
-        
-        # Create superuser (optional)
-        print("👤 Creating superuser...")
-        execute_from_command_line(['manage.py', 'createsuperuser', '--noinput', '--username', 'admin', '--email', 'admin@oasys.com'])
-        
+        execute_from_command_line(['manage.py', 'migrate', '--noinput'])
+        print("✅ Migrations done")
+
+        print("👤 Creating seed users (all roles, password: Pass123456)...")
+        execute_from_command_line(['manage.py', 'create_test_users'])
         print("✅ Database setup completed successfully!")
-        
     except Exception as e:
         print(f"❌ Database setup failed: {e}")
-        print("\n📋 Manual setup instructions:")
-        print("1. Make sure PostgreSQL is running")
-        print("2. Create database: createdb oasysdb")
-        print("3. Run: python manage.py migrate_schemas --shared")
-        print("4. Run: python manage.py migrate_schemas --tenant")
-        print("5. Run: python manage.py createsuperuser")
+        print("\n📋 Manual setup:")
+        print("  1. Ensure PostgreSQL is running and DB exists (e.g. createdb oasysdb)")
+        print("  2. python manage.py migrate --noinput")
+        print("  3. python manage.py create_test_users")
+        print("\n📋 To EMPTY the database and re-seed from scratch:")
+        print("  From apps/backend: python manage.py reset_and_seed --no-input")
 
 if __name__ == "__main__":
     setup_database()

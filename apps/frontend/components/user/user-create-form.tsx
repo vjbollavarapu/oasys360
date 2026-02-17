@@ -19,7 +19,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, User, Mail, Lock, Shield, Building2, AlertCircle } from 'lucide-react';
 import { userService } from '@/lib/api-services';
 import { useErrorHandler } from '@/hooks/use-error-handler';
-import { useRBAC, ROLES } from '@/lib/rbac';
+import { useRBAC, ROLES, ROLE_HIERARCHY } from '@/lib/rbac';
+import { useAuth } from '@/hooks/use-auth';
 
 // Form validation schema
 const createUserSchema = z.object({
@@ -47,6 +48,7 @@ interface UserCreateFormProps {
 export function UserCreateForm({ onSuccess, onCancel, tenantId }: UserCreateFormProps) {
   const { hasPermission } = useRBAC();
   const { error, handleError, clearError } = useErrorHandler();
+  const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -64,40 +66,43 @@ export function UserCreateForm({ onSuccess, onCancel, tenantId }: UserCreateForm
     },
   });
 
-  // Available roles based on user permissions
+  // Available roles based on current user's role
+  // Tenant admins can only assign roles at or below their level
+  // Exclude platform_admin, super_admin, firm_staff, and viewer (not valid backend roles or too high privilege)
   const getAvailableRoles = () => {
-    const roles = [];
+    const currentUserRole = user?.role || 'staff';
+    const currentUserWeight = ROLE_HIERARCHY[currentUserRole as keyof typeof ROLE_HIERARCHY] || 0;
     
-    if (hasPermission('create_user')) {
-      roles.push(
-        { value: ROLES.STAFF, label: 'Staff' },
-        { value: ROLES.ACCOUNTANT, label: 'Accountant' },
-        { value: ROLES.VIEWER, label: 'Viewer' },
-      );
-    }
+    // Define valid backend roles that can be assigned
+    // Only include roles that exist in the backend User model
+    // Note: Based on backend, valid roles are: platform_admin, tenant_admin, firm_admin, cfo, accountant, staff
+    const validBackendRoles = [
+      { value: ROLES.STAFF, label: 'Staff', weight: ROLE_HIERARCHY[ROLES.STAFF] },
+      { value: ROLES.ACCOUNTANT, label: 'Accountant', weight: ROLE_HIERARCHY[ROLES.ACCOUNTANT] },
+      { value: ROLES.CFO, label: 'CFO', weight: ROLE_HIERARCHY[ROLES.CFO] },
+      { value: ROLES.FIRM_ADMIN, label: 'Firm Admin', weight: ROLE_HIERARCHY[ROLES.FIRM_ADMIN] },
+      { value: ROLES.TENANT_ADMIN, label: 'Tenant Admin', weight: ROLE_HIERARCHY[ROLES.TENANT_ADMIN] },
+    ];
     
-    if (hasPermission('create_user')) {
-      roles.push(
-        { value: ROLES.CFO, label: 'CFO' },
-        { value: ROLES.TENANT_ADMIN, label: 'Tenant Admin' },
-      );
-    }
+    // Filter roles: only show roles that are at or below the current user's level
+    // Exclude platform_admin and super_admin (platform admins only, above tenant_admin)
+    // Exclude firm_staff and viewer (not valid backend roles)
+    const availableRoles = validBackendRoles.filter(role => {
+      // Always exclude platform_admin and super_admin (too high privilege)
+      if (role.value === ROLES.PLATFORM_ADMIN || role.value === ROLES.SUPER_ADMIN) {
+        return false;
+      }
+      
+      // Exclude invalid backend roles
+      if (role.value === ROLES.FIRM_STAFF || role.value === ROLES.VIEWER) {
+        return false;
+      }
+      
+      // Only show roles at or below current user's level
+      return role.weight <= currentUserWeight;
+    });
     
-    if (hasPermission('create_user')) {
-      roles.push(
-        { value: ROLES.FIRM_STAFF, label: 'Firm Staff' },
-        { value: ROLES.FIRM_ADMIN, label: 'Firm Admin' },
-      );
-    }
-    
-    if (hasPermission('create_user')) {
-      roles.push(
-        { value: ROLES.SUPER_ADMIN, label: 'Super Admin' },
-        { value: ROLES.PLATFORM_ADMIN, label: 'Platform Admin' },
-      );
-    }
-    
-    return roles;
+    return availableRoles;
   };
 
   const onSubmit = async (data: CreateUserFormData) => {

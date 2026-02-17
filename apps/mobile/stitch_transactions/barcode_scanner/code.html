@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OASYS360 Barcode Scanner</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Noto+Sans:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom utilities */
+        .scan-overlay-shadow {
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
+        }
+        .laser-line {
+            background: linear-gradient(90deg, transparent 0%, #ef4444 50%, transparent 100%);
+            box-shadow: 0 0 4px #ef4444;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark text-white font-display overflow-hidden h-screen w-full">
+<div class="relative h-full w-full flex flex-col group/design-root">
+<!-- 1. Simulated Camera Feed Background -->
+<!-- In a real app, this would be the <video> element or camera preview layer -->
+<div class="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat" data-alt="Blurred warehouse environment with shelves and packages" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAz5Ac14FsISxoUQZHTUQzUee4T1DArTtYBMWzkgUr5zq8G38aAyC7MhEQdVGX3BFKFy0-S492DpdJCplR6LpX6CvxlcHuT1mH8f-_VHWDf7xwUAmVY_0pQf_MdwuSeotxz0QFkFwbbZdhuSdFy93K7_ePjq14AJKYc6iABDBySWlzErevd9bnKj1nYngl3tXKyyoWutVcrjByaDoBuT6vaLwQjwXktK3GrFBcRBd5yiJMxLvBrvZf2IMTzHiyc78mkQe0BLQOQ5Dk');">
+</div>
+<!-- 2. Main Scanning Interface Overlay -->
+<div class="relative z-10 flex flex-col h-full w-full">
+<!-- Top Navigation Bar -->
+<div class="flex items-center justify-between p-4 pt-12 w-full absolute top-0 z-30 bg-gradient-to-b from-black/80 to-transparent">
+<button class="flex size-10 items-center justify-center rounded-full bg-black/30 backdrop-blur-md text-white hover:bg-black/50 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">arrow_back</span>
+</button>
+<h2 class="text-white text-lg font-bold tracking-tight drop-shadow-md">Scan Asset</h2>
+<button class="flex h-9 items-center px-4 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 hover:bg-black/50 transition-colors">
+<span class="text-sm font-semibold">Manual</span>
+</button>
+</div>
+<!-- Viewfinder Area -->
+<!-- Using flex-col to position the viewfinder in the upper-middle area -->
+<div class="flex-1 flex flex-col items-center justify-center relative pb-32">
+<!-- The Scanning Frame "Hole" -->
+<!-- The box-shadow property creates the dark overlay around this clear box -->
+<div class="relative w-[80%] aspect-square max-w-[320px] rounded-2xl scan-overlay-shadow border border-white/20">
+<!-- Corner Markers (Primary Color) -->
+<div class="absolute top-0 left-0 w-8 h-8 border-l-[4px] border-t-[4px] border-primary rounded-tl-xl -ml-[1px] -mt-[1px]"></div>
+<div class="absolute top-0 right-0 w-8 h-8 border-r-[4px] border-t-[4px] border-primary rounded-tr-xl -mr-[1px] -mt-[1px]"></div>
+<div class="absolute bottom-0 left-0 w-8 h-8 border-l-[4px] border-b-[4px] border-primary rounded-bl-xl -ml-[1px] -mb-[1px]"></div>
+<div class="absolute bottom-0 right-0 w-8 h-8 border-r-[4px] border-b-[4px] border-primary rounded-br-xl -mr-[1px] -mb-[1px]"></div>
+<!-- Laser Line (Static representation of scanning) -->
+<div class="absolute top-1/2 left-4 right-4 h-[2px] laser-line opacity-80"></div>
+<!-- Prompt Text floating below frame -->
+<div class="absolute -bottom-12 left-0 right-0 text-center">
+<p class="text-white font-medium text-sm tracking-wide drop-shadow-lg bg-black/40 px-3 py-1 rounded-full inline-block backdrop-blur-sm">
+                            Align barcode within frame
+                        </p>
+</div>
+<!-- Flashlight Toggle inside the overlay area -->
+<div class="absolute -right-2 -bottom-24">
+<button class="flex items-center justify-center size-12 rounded-full bg-black/60 text-white backdrop-blur-md border border-white/10 hover:bg-primary/80 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">flashlight_on</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 3. Bottom Sheet / Action Panel -->
+<!-- This slides up over the camera view -->
+<div class="relative w-full bg-[#101622] rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.4)] border-t border-white/5 pb-8 z-40 flex flex-col max-h-[45vh]">
+<!-- Drag Handle -->
+<div class="w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing">
+<div class="w-12 h-1 bg-gray-600/50 rounded-full"></div>
+</div>
+<div class="px-5 pt-2 flex-1 overflow-y-auto no-scrollbar">
+<!-- Status & Auto-Scan Toggle -->
+<div class="flex items-center justify-between mb-5">
+<div class="flex flex-col">
+<h3 class="text-white text-base font-bold leading-tight">Scanner Active</h3>
+<p class="text-[#9da6b9] text-xs font-normal">Ready to capture...</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Result Card (Most Recent) -->
+<div class="mb-6">
+<div class="flex flex-col gap-3 rounded-xl bg-[#1c1f27] p-4 border border-[#2d3442] shadow-lg relative overflow-hidden group">
+<!-- Accent bar on left -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex items-start gap-4">
+<div class="size-16 rounded-lg bg-gray-800 bg-cover bg-center shrink-0 border border-white/5" data-alt="Modern silver laptop computer" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBlBy1ibjfOF3BGYpLWQLGjLCLl_dKTM3OR_mbh3i19FXFXF2GgesVnCwmrwQsMUEcj77g2wMJ8S_kLODJJoJPkOIMZeVsb22cQ5X-zHlwnE2UFeeVCaRkDyvWPxR4S4swWd50GGAisJDZXdW2ByefpzUfFwK1zFqjlTY9r3m5-Z4sK1bQCI8figw8TWpnErupaErwez3EsGlzPyVsxVOymq-dYihAdsfa_tZbIsPBp8d2bL4NUpOKaWgj5-pjje8yiY3eqGBRWsBQ");'>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h4 class="text-white text-base font-bold truncate pr-2">Dell XPS 15 - 2023</h4>
+<span class="inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-inset ring-green-400/20">In Service</span>
+</div>
+<p class="text-[#9da6b9] text-sm font-medium leading-normal mb-3">SKU: AST-99283-X</p>
+<div class="flex gap-2">
+<button class="flex-1 rounded-lg bg-primary px-3 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary flex items-center justify-center gap-1.5">
+<span>View Details</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+<button class="px-3 py-2 rounded-lg bg-[#282e39] text-white hover:bg-[#323946] transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Scans History -->
+<div>
+<h3 class="text-white text-sm font-bold leading-tight tracking-wide uppercase text-opacity-70 mb-3 px-1">Recent History</h3>
+<div class="flex flex-col gap-2">
+<!-- History Item 1 -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-[#282e39] flex items-center justify-center text-[#9da6b9] group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" style="font-size: 20px;">print</span>
+</div>
+<div class="flex flex-col">
+<span class="text-white text-sm font-bold">HP LaserJet Pro M404</span>
+<span class="text-[#9da6b9] text-xs">AST-10293 • Office 3A</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-600 group-hover:text-gray-400" style="font-size: 20px;">chevron_right</span>
+</div>
+<!-- History Item 2 -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-[#282e39] flex items-center justify-center text-[#9da6b9] group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" style="font-size: 20px;">router</span>
+</div>
+<div class="flex flex-col">
+<span class="text-white text-sm font-bold">Cisco Catalyst 9200</span>
+<span class="text-[#9da6b9] text-xs">AST-44512 • Server Room</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-600 group-hover:text-gray-400" style="font-size: 20px;">chevron_right</span>
+</div>
+<!-- History Item 3 -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-[#282e39] flex items-center justify-center text-[#9da6b9] group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" style="font-size: 20px;">chair</span>
+</div>
+<div class="flex flex-col">
+<span class="text-white text-sm font-bold">Herman Miller Aeron</span>
+<span class="text-[#9da6b9] text-xs">AST-55102 • Conf Room B</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-gray-600 group-hover:text-gray-400" style="font-size: 20px;">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,23 +1,24 @@
+"""
+URL configuration for tenants app
+"""
 from django.urls import path
-from . import views
+from . import onboarding_views, views
 
 app_name = 'tenants'
 
 urlpatterns = [
-    # Tenant management
-    path('', views.TenantListView.as_view(), name='tenant_list'),
-    path('<uuid:pk>/', views.TenantDetailView.as_view(), name='tenant_detail'),
-    path('stats/', views.TenantStatsView.as_view(), name='tenant_stats'),
-    path('dashboard/', views.tenant_dashboard, name='tenant_dashboard'),
-    path('<uuid:tenant_id>/upgrade/', views.upgrade_tenant_plan, name='upgrade_tenant_plan'),
-    path('<uuid:tenant_id>/deactivate/', views.deactivate_tenant, name='deactivate_tenant'),
+    # Tenant info endpoint
+    path('me/', views.tenant_me, name='tenant_me'),
     
-    # Company management
-    path('companies/', views.CompanyListView.as_view(), name='company_list'),
-    path('companies/<uuid:pk>/', views.CompanyDetailView.as_view(), name='company_detail'),
-    path('companies/search/', views.search_companies, name='search_companies'),
+    # Tenant settings endpoint
+    path('settings/', views.tenant_settings, name='tenant_settings'),
     
-    # Tenant invitations
-    path('invitations/', views.TenantInvitationListView.as_view(), name='invitation_list'),
-    path('invitations/<uuid:pk>/', views.TenantInvitationDetailView.as_view(), name='invitation_detail'),
+    # Onboarding endpoints
+    path('onboarding/status/', onboarding_views.OnboardingStatusView.as_view(), name='onboarding_status'),
+    path('onboarding/progress/', onboarding_views.OnboardingProgressView.as_view(), name='onboarding_progress'),
+    path('onboarding/step/1/', onboarding_views.OnboardingStep1View.as_view(), name='onboarding_step_1'),
+    path('onboarding/step/2/', onboarding_views.OnboardingStep2View.as_view(), name='onboarding_step_2'),
+    path('onboarding/step/3/', onboarding_views.OnboardingStep3View.as_view(), name='onboarding_step_3'),
+    path('onboarding/step/4/', onboarding_views.OnboardingStep4View.as_view(), name='onboarding_step_4'),
+    path('onboarding/step/5/', onboarding_views.OnboardingStep5View.as_view(), name='onboarding_step_5'),
 ]

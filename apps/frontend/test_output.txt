@@ -1,0 +1,1992 @@
+
+> my-v0-project@0.1.0 test
+> jest __tests__/e2e/tenant-isolation.e2e.test.tsx
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '2',
+        email: 'user@company.com',
+        name: 'Regular User',
+        role: 'user',
+        tenantId: 'tenant-2'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.error
+    MockAccountingPage rendered, session: {"user":{"email":"test@example.com","role":"admin","name":"Test User"}}
+
+      13 | const MockAccountingPage = () => {
+      14 |   const { data: session } = useSession()
+    > 15 |   console.error('MockAccountingPage rendered, session:', JSON.stringify(session))
+         |           ^
+      16 |
+      17 |   useEffect(() => {
+      18 |     const user = session?.user as any
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:15:11)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23863:20)
+      at renderWithHooks (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:5529:22)
+      at updateFunctionComponent (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:8897:19)
+      at beginWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:10522:18)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at performUnitOfWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15140:22)
+      at workLoopSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14956:41)
+      at renderRootSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14936:11)
+      at performWorkOnRoot (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14419:13)
+      at performWorkOnRootViaSchedulerTask (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:16216:7)
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:106:26)
+
+  console.error
+    MockAccountingPage useEffect, tenantId: undefined
+
+      18 |     const user = session?.user as any
+      19 |     const tenantId = user?.tenantId
+    > 20 |     console.error('MockAccountingPage useEffect, tenantId:', tenantId)
+         |             ^
+      21 |
+      22 |     if (tenantId) {
+      23 |       console.error('MockAccountingPage fetching...')
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:20:13)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:106:26)
+
+  console.error
+    No tenantId found in session user
+
+      28 |       })
+      29 |     } else {
+    > 30 |       console.error('No tenantId found in session user')
+         |               ^
+      31 |     }
+      32 |   }, [session])
+      33 |
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:30:15)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:106:26)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '2',
+        email: 'user@company.com',
+        name: 'Regular User',
+        role: 'user',
+        tenantId: 'tenant-2'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '1',
+        email: 'admin@oasys360.com',
+        name: 'Admin User',
+        role: 'admin',
+        tenantId: 'tenant-1'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.error
+    MockAccountingPage rendered, session: {"user":{"email":"test@example.com","role":"admin","name":"Test User"}}
+
+      13 | const MockAccountingPage = () => {
+      14 |   const { data: session } = useSession()
+    > 15 |   console.error('MockAccountingPage rendered, session:', JSON.stringify(session))
+         |           ^
+      16 |
+      17 |   useEffect(() => {
+      18 |     const user = session?.user as any
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:15:11)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23863:20)
+      at renderWithHooks (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:5529:22)
+      at updateFunctionComponent (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:8897:19)
+      at beginWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:10522:18)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at performUnitOfWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15140:22)
+      at workLoopSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14956:41)
+      at renderRootSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14936:11)
+      at performWorkOnRoot (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14419:13)
+      at performWorkOnRootViaSchedulerTask (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:16216:7)
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:149:46)
+
+  console.error
+    MockAccountingPage useEffect, tenantId: undefined
+
+      18 |     const user = session?.user as any
+      19 |     const tenantId = user?.tenantId
+    > 20 |     console.error('MockAccountingPage useEffect, tenantId:', tenantId)
+         |             ^
+      21 |
+      22 |     if (tenantId) {
+      23 |       console.error('MockAccountingPage fetching...')
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:20:13)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:149:46)
+
+  console.error
+    No tenantId found in session user
+
+      28 |       })
+      29 |     } else {
+    > 30 |       console.error('No tenantId found in session user')
+         |               ^
+      31 |     }
+      32 |   }, [session])
+      33 |
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:30:15)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:149:46)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '1',
+        email: 'admin@oasys360.com',
+        name: 'Admin User',
+        role: 'admin',
+        tenantId: 'tenant-1'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '1',
+        email: 'admin@oasys360.com',
+        name: 'Admin User',
+        role: 'admin',
+        tenantId: 'tenant-1'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '2',
+        email: 'user@company.com',
+        name: 'Regular User',
+        role: 'user',
+        tenantId: 'tenant-2'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '2',
+        email: 'user@company.com',
+        name: 'Regular User',
+        role: 'user',
+        tenantId: 'tenant-2'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.error
+    MockAccountingPage rendered, session: {"user":{"email":"test@example.com","role":"admin","name":"Test User"}}
+
+      13 | const MockAccountingPage = () => {
+      14 |   const { data: session } = useSession()
+    > 15 |   console.error('MockAccountingPage rendered, session:', JSON.stringify(session))
+         |           ^
+      16 |
+      17 |   useEffect(() => {
+      18 |     const user = session?.user as any
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:15:11)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23863:20)
+      at renderWithHooks (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:5529:22)
+      at updateFunctionComponent (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:8897:19)
+      at beginWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:10522:18)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at performUnitOfWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15140:22)
+      at workLoopSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14956:41)
+      at renderRootSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14936:11)
+      at performWorkOnRoot (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14419:13)
+      at performWorkOnRootViaSchedulerTask (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:16216:7)
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:224:26)
+
+  console.error
+    MockAccountingPage useEffect, tenantId: undefined
+
+      18 |     const user = session?.user as any
+      19 |     const tenantId = user?.tenantId
+    > 20 |     console.error('MockAccountingPage useEffect, tenantId:', tenantId)
+         |             ^
+      21 |
+      22 |     if (tenantId) {
+      23 |       console.error('MockAccountingPage fetching...')
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:20:13)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:224:26)
+
+  console.error
+    No tenantId found in session user
+
+      28 |       })
+      29 |     } else {
+    > 30 |       console.error('No tenantId found in session user')
+         |               ^
+      31 |     }
+      32 |   }, [session])
+      33 |
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:30:15)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:224:26)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '1',
+        email: 'admin@oasys360.com',
+        name: 'Admin User',
+        role: 'admin',
+        tenantId: 'tenant-1'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.error
+    MockAccountingPage rendered, session: {"user":{"email":"test@example.com","role":"admin","name":"Test User"}}
+
+      13 | const MockAccountingPage = () => {
+      14 |   const { data: session } = useSession()
+    > 15 |   console.error('MockAccountingPage rendered, session:', JSON.stringify(session))
+         |           ^
+      16 |
+      17 |   useEffect(() => {
+      18 |     const user = session?.user as any
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:15:11)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23863:20)
+      at renderWithHooks (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:5529:22)
+      at updateFunctionComponent (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:8897:19)
+      at beginWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:10522:18)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at performUnitOfWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15140:22)
+      at workLoopSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14956:41)
+      at renderRootSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14936:11)
+      at performWorkOnRoot (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14419:13)
+      at performWorkOnRootViaSchedulerTask (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:16216:7)
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:236:26)
+
+  console.error
+    MockAccountingPage useEffect, tenantId: undefined
+
+      18 |     const user = session?.user as any
+      19 |     const tenantId = user?.tenantId
+    > 20 |     console.error('MockAccountingPage useEffect, tenantId:', tenantId)
+         |             ^
+      21 |
+      22 |     if (tenantId) {
+      23 |       console.error('MockAccountingPage fetching...')
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:20:13)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:236:26)
+
+  console.error
+    No tenantId found in session user
+
+      28 |       })
+      29 |     } else {
+    > 30 |       console.error('No tenantId found in session user')
+         |               ^
+      31 |     }
+      32 |   }, [session])
+      33 |
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:30:15)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:236:26)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '2',
+        email: 'user@company.com',
+        name: 'Regular User',
+        role: 'user',
+        tenantId: 'tenant-2'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.error
+    MockAccountingPage rendered, session: {"user":{"email":"test@example.com","role":"admin","name":"Test User"}}
+
+      13 | const MockAccountingPage = () => {
+      14 |   const { data: session } = useSession()
+    > 15 |   console.error('MockAccountingPage rendered, session:', JSON.stringify(session))
+         |           ^
+      16 |
+      17 |   useEffect(() => {
+      18 |     const user = session?.user as any
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:15:11)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23863:20)
+      at renderWithHooks (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:5529:22)
+      at updateFunctionComponent (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:8897:19)
+      at beginWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:10522:18)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at performUnitOfWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15140:22)
+      at workLoopSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14956:41)
+      at renderRootSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14936:11)
+      at performWorkOnRoot (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14419:13)
+      at performWorkOnRootViaSchedulerTask (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:16216:7)
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:273:26)
+
+  console.error
+    MockAccountingPage useEffect, tenantId: undefined
+
+      18 |     const user = session?.user as any
+      19 |     const tenantId = user?.tenantId
+    > 20 |     console.error('MockAccountingPage useEffect, tenantId:', tenantId)
+         |             ^
+      21 |
+      22 |     if (tenantId) {
+      23 |       console.error('MockAccountingPage fetching...')
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:20:13)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:273:26)
+
+  console.error
+    No tenantId found in session user
+
+      28 |       })
+      29 |     } else {
+    > 30 |       console.error('No tenantId found in session user')
+         |               ^
+      31 |     }
+      32 |   }, [session])
+      33 |
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:30:15)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:273:26)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '2',
+        email: 'user@company.com',
+        name: 'Regular User',
+        role: 'user',
+        tenantId: 'tenant-2'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '2',
+        email: 'user@company.com',
+        name: 'Regular User',
+        role: 'user',
+        tenantId: 'tenant-2'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.error
+    MockAccountingPage rendered, session: {"user":{"email":"test@example.com","role":"admin","name":"Test User"}}
+
+      13 | const MockAccountingPage = () => {
+      14 |   const { data: session } = useSession()
+    > 15 |   console.error('MockAccountingPage rendered, session:', JSON.stringify(session))
+         |           ^
+      16 |
+      17 |   useEffect(() => {
+      18 |     const user = session?.user as any
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:15:11)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23863:20)
+      at renderWithHooks (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:5529:22)
+      at updateFunctionComponent (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:8897:19)
+      at beginWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:10522:18)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at performUnitOfWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15140:22)
+      at workLoopSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14956:41)
+      at renderRootSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14936:11)
+      at performWorkOnRoot (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14419:13)
+      at performWorkOnRootViaSchedulerTask (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:16216:7)
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:306:26)
+
+  console.error
+    MockAccountingPage useEffect, tenantId: undefined
+
+      18 |     const user = session?.user as any
+      19 |     const tenantId = user?.tenantId
+    > 20 |     console.error('MockAccountingPage useEffect, tenantId:', tenantId)
+         |             ^
+      21 |
+      22 |     if (tenantId) {
+      23 |       console.error('MockAccountingPage fetching...')
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:20:13)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:306:26)
+
+  console.error
+    No tenantId found in session user
+
+      28 |       })
+      29 |     } else {
+    > 30 |       console.error('No tenantId found in session user')
+         |               ^
+      31 |     }
+      32 |   }, [session])
+      33 |
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:30:15)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:306:26)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '2',
+        email: 'user@company.com',
+        name: 'Regular User',
+        role: 'user',
+        tenantId: 'tenant-2'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.error
+    MockAccountingPage rendered, session: {"user":{"email":"test@example.com","role":"admin","name":"Test User"}}
+
+      13 | const MockAccountingPage = () => {
+      14 |   const { data: session } = useSession()
+    > 15 |   console.error('MockAccountingPage rendered, session:', JSON.stringify(session))
+         |           ^
+      16 |
+      17 |   useEffect(() => {
+      18 |     const user = session?.user as any
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:15:11)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23863:20)
+      at renderWithHooks (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:5529:22)
+      at updateFunctionComponent (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:8897:19)
+      at beginWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:10522:18)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at performUnitOfWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15140:22)
+      at workLoopSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14956:41)
+      at renderRootSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14936:11)
+      at performWorkOnRoot (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14419:13)
+      at performWorkOnRootViaSchedulerTask (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:16216:7)
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:330:26)
+
+  console.error
+    MockAccountingPage useEffect, tenantId: undefined
+
+      18 |     const user = session?.user as any
+      19 |     const tenantId = user?.tenantId
+    > 20 |     console.error('MockAccountingPage useEffect, tenantId:', tenantId)
+         |             ^
+      21 |
+      22 |     if (tenantId) {
+      23 |       console.error('MockAccountingPage fetching...')
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:20:13)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:330:26)
+
+  console.error
+    No tenantId found in session user
+
+      28 |       })
+      29 |     } else {
+    > 30 |       console.error('No tenantId found in session user')
+         |               ^
+      31 |     }
+      32 |   }, [session])
+      33 |
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:30:15)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:330:26)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '2',
+        email: 'user@company.com',
+        name: 'Regular User',
+        role: 'user',
+        tenantId: 'tenant-2'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.error
+    MockAccountingPage rendered, session: {"user":{"email":"test@example.com","role":"admin","name":"Test User"}}
+
+      13 | const MockAccountingPage = () => {
+      14 |   const { data: session } = useSession()
+    > 15 |   console.error('MockAccountingPage rendered, session:', JSON.stringify(session))
+         |           ^
+      16 |
+      17 |   useEffect(() => {
+      18 |     const user = session?.user as any
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:15:11)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23863:20)
+      at renderWithHooks (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:5529:22)
+      at updateFunctionComponent (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:8897:19)
+      at beginWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:10522:18)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at performUnitOfWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15140:22)
+      at workLoopSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14956:41)
+      at renderRootSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14936:11)
+      at performWorkOnRoot (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14419:13)
+      at performWorkOnRootViaSchedulerTask (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:16216:7)
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:357:26)
+
+  console.error
+    MockAccountingPage useEffect, tenantId: undefined
+
+      18 |     const user = session?.user as any
+      19 |     const tenantId = user?.tenantId
+    > 20 |     console.error('MockAccountingPage useEffect, tenantId:', tenantId)
+         |             ^
+      21 |
+      22 |     if (tenantId) {
+      23 |       console.error('MockAccountingPage fetching...')
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:20:13)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:357:26)
+
+  console.error
+    No tenantId found in session user
+
+      28 |       })
+      29 |     } else {
+    > 30 |       console.error('No tenantId found in session user')
+         |               ^
+      31 |     }
+      32 |   }, [session])
+      33 |
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:30:15)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:357:26)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '2',
+        email: 'user@company.com',
+        name: 'Regular User',
+        role: 'user',
+        tenantId: 'tenant-2'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.error
+    MockAccountingPage rendered, session: {"user":{"email":"test@example.com","role":"admin","name":"Test User"}}
+
+      13 | const MockAccountingPage = () => {
+      14 |   const { data: session } = useSession()
+    > 15 |   console.error('MockAccountingPage rendered, session:', JSON.stringify(session))
+         |           ^
+      16 |
+      17 |   useEffect(() => {
+      18 |     const user = session?.user as any
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:15:11)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23863:20)
+      at renderWithHooks (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:5529:22)
+      at updateFunctionComponent (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:8897:19)
+      at beginWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:10522:18)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at performUnitOfWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15140:22)
+      at workLoopSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14956:41)
+      at renderRootSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14936:11)
+      at performWorkOnRoot (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14419:13)
+      at performWorkOnRootViaSchedulerTask (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:16216:7)
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:376:26)
+
+  console.error
+    MockAccountingPage useEffect, tenantId: undefined
+
+      18 |     const user = session?.user as any
+      19 |     const tenantId = user?.tenantId
+    > 20 |     console.error('MockAccountingPage useEffect, tenantId:', tenantId)
+         |             ^
+      21 |
+      22 |     if (tenantId) {
+      23 |       console.error('MockAccountingPage fetching...')
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:20:13)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:376:26)
+
+  console.error
+    No tenantId found in session user
+
+      28 |       })
+      29 |     } else {
+    > 30 |       console.error('No tenantId found in session user')
+         |               ^
+      31 |     }
+      32 |   }, [session])
+      33 |
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:30:15)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:376:26)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '2',
+        email: 'user@company.com',
+        name: 'Regular User',
+        role: 'user',
+        tenantId: 'tenant-2'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.error
+    MockAccountingPage rendered, session: {"user":{"email":"test@example.com","role":"admin","name":"Test User"}}
+
+      13 | const MockAccountingPage = () => {
+      14 |   const { data: session } = useSession()
+    > 15 |   console.error('MockAccountingPage rendered, session:', JSON.stringify(session))
+         |           ^
+      16 |
+      17 |   useEffect(() => {
+      18 |     const user = session?.user as any
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:15:11)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23863:20)
+      at renderWithHooks (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:5529:22)
+      at updateFunctionComponent (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:8897:19)
+      at beginWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:10522:18)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at performUnitOfWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15140:22)
+      at workLoopSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14956:41)
+      at renderRootSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14936:11)
+      at performWorkOnRoot (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14419:13)
+      at performWorkOnRootViaSchedulerTask (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:16216:7)
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:388:26)
+
+  console.error
+    MockAccountingPage useEffect, tenantId: undefined
+
+      18 |     const user = session?.user as any
+      19 |     const tenantId = user?.tenantId
+    > 20 |     console.error('MockAccountingPage useEffect, tenantId:', tenantId)
+         |             ^
+      21 |
+      22 |     if (tenantId) {
+      23 |       console.error('MockAccountingPage fetching...')
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:20:13)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:388:26)
+
+  console.error
+    No tenantId found in session user
+
+      28 |       })
+      29 |     } else {
+    > 30 |       console.error('No tenantId found in session user')
+         |               ^
+      31 |     }
+      32 |   }, [session])
+      33 |
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:30:15)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:388:26)
+
+  console.log
+    Setting up useSession mock with session: {
+      user: {
+        id: '1',
+        email: 'admin@oasys360.com',
+        name: 'Admin User',
+        role: 'admin',
+        tenantId: 'tenant-1'
+      },
+      expires: '2026-01-11T19:37:00.362Z'
+    }
+
+      at log (__tests__/e2e/test-setup.tsx:198:11)
+
+  console.error
+    MockAccountingPage rendered, session: {"user":{"email":"test@example.com","role":"admin","name":"Test User"}}
+
+      13 | const MockAccountingPage = () => {
+      14 |   const { data: session } = useSession()
+    > 15 |   console.error('MockAccountingPage rendered, session:', JSON.stringify(session))
+         |           ^
+      16 |
+      17 |   useEffect(() => {
+      18 |     const user = session?.user as any
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:15:11)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23863:20)
+      at renderWithHooks (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:5529:22)
+      at updateFunctionComponent (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:8897:19)
+      at beginWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:10522:18)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at performUnitOfWork (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15140:22)
+      at workLoopSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14956:41)
+      at renderRootSync (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14936:11)
+      at performWorkOnRoot (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:14419:13)
+      at performWorkOnRootViaSchedulerTask (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:16216:7)
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:425:46)
+
+  console.error
+    MockAccountingPage useEffect, tenantId: undefined
+
+      18 |     const user = session?.user as any
+      19 |     const tenantId = user?.tenantId
+    > 20 |     console.error('MockAccountingPage useEffect, tenantId:', tenantId)
+         |             ^
+      21 |
+      22 |     if (tenantId) {
+      23 |       console.error('MockAccountingPage fetching...')
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:20:13)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:425:46)
+
+  console.error
+    No tenantId found in session user
+
+      28 |       })
+      29 |     } else {
+    > 30 |       console.error('No tenantId found in session user')
+         |               ^
+      31 |     }
+      32 |   }, [session])
+      33 |
+
+      at error (__tests__/e2e/tenant-isolation.e2e.test.tsx:30:15)
+      at Object.react_stack_bottom_frame (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:23953:20)
+      at runWithFiberInDEV (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:1522:13)
+      at commitHookEffectListMount (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+      at commitHookPassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+      at commitPassiveMountOnFiber (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:13853:11)
+      at flushPassiveEffects (node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15737:9)
+      at node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js:15379:15
+      at flushActQueue (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:566:34)
+      at process.env.NODE_ENV.exports.act (node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js:860:10)
+      at node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/act-compat.js:47:25
+      at renderRoot (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:190:26)
+      at render (node_modules/.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.1_@types+react-dom@19.1.9_@type_c2ea4b86fe3cef0acb26c19afb6fc80f/node_modules/@testing-library/react/dist/pure.js:292:10)
+      at renderWithProviders (__tests__/e2e/test-setup.tsx:210:16)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:425:46)
+
+FAIL __tests__/e2e/tenant-isolation.e2e.test.tsx (6.417 s)
+  Tenant Isolation E2E Tests
+    Data Isolation
+      ✕ should only show tenant-specific accounting data (44 ms)
+      ✕ should only show tenant-specific banking data (4 ms)
+      ✕ should isolate data between different tenants (1013 ms)
+    Tenant Switching
+      ✓ should allow admin users to switch tenants (7 ms)
+      ✕ should switch tenant context when selecting different tenant (5 ms)
+      ✕ should restrict regular users to their own tenant (5 ms)
+    Feature Access Control
+      ✓ should show features based on tenant plan (12 ms)
+      ✕ should show advanced features for enterprise tenants (8 ms)
+    Cross-Tenant Data Protection
+      ✓ should prevent access to other tenant's data (10 ms)
+      ✕ should handle tenant context in API requests (1008 ms)
+    Session Management
+      ✕ should maintain tenant context across page navigation (11 ms)
+      ✕ should clear tenant context on logout (8 ms)
+    Error Handling
+      ✕ should handle tenant access denied errors (1013 ms)
+      ✕ should handle invalid tenant errors (1012 ms)
+    Performance and Caching
+      ✕ should cache tenant-specific data (1014 ms)
+      ✕ should invalidate cache when switching tenants (1010 ms)
+
+  ● Tenant Isolation E2E Tests › Data Isolation › should only show tenant-specific accounting data
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: StringContaining "/accounting/accounts", ObjectContaining {"headers": ObjectContaining {"X-Tenant-ID": "tenant-2"}}
+
+    Number of calls: 0
+
+      114 |
+      115 |       // Verify API call includes tenant context
+    > 116 |       expect(global.fetch).toHaveBeenCalledWith(
+          |                            ^
+      117 |         expect.stringContaining('/accounting/accounts'),
+      118 |         expect.objectContaining({
+      119 |           headers: expect.objectContaining({
+
+      at Object.toHaveBeenCalledWith (__tests__/e2e/tenant-isolation.e2e.test.tsx:116:28)
+
+  ● Tenant Isolation E2E Tests › Data Isolation › should only show tenant-specific banking data
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: StringContaining "/banking/transactions", ObjectContaining {"headers": ObjectContaining {"X-Tenant-ID": "tenant-2"}}
+
+    Number of calls: 0
+
+      135 |
+      136 |       // Verify API call includes tenant context
+    > 137 |       expect(global.fetch).toHaveBeenCalledWith(
+          |                            ^
+      138 |         expect.stringContaining('/banking/transactions'),
+      139 |         expect.objectContaining({
+      140 |           headers: expect.objectContaining({
+
+      at Object.toHaveBeenCalledWith (__tests__/e2e/tenant-isolation.e2e.test.tsx:137:28)
+
+  ● Tenant Isolation E2E Tests › Data Isolation › should isolate data between different tenants
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: StringContaining "/accounting/accounts", ObjectContaining {"headers": ObjectContaining {"X-Tenant-ID": "tenant-1"}}
+
+    Number of calls: 0
+
+    Ignored nodes: comments, script, style
+    [36m<html>[39m
+      [36m<head />[39m
+      [36m<body>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mdata-session[39m=[32m"{\"user\":{\"id\":\"1\",\"email\":\"admin@oasys360.com\",\"name\":\"Admin User\",\"role\":\"admin\",\"tenantId\":\"tenant-1\"},\"expires\":\"2026-01-11T19:37:00.362Z\"}"[39m
+            [33mdata-testid[39m=[32m"session-provider"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<h1>[39m
+                [0mAccounting[0m
+              [36m</h1>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"accounts-list"[39m
+              [36m>[39m
+                [36m<h2>[39m
+                  [0mChart of Accounts[0m
+                [36m</h2>[39m
+                [36m<div[39m
+                  [33mdata-testid[39m=[32m"account-item"[39m
+                [36m>[39m
+                  [0mCash Account - $10,000.00[0m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mdata-testid[39m=[32m"account-item"[39m
+                [36m>[39m
+                  [0mAccounts Receivable - $5,000.00[0m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<button[39m
+                [33mdata-testid[39m=[32m"add-account-button"[39m
+              [36m>[39m
+                [0mAdd Account[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</body>[39m
+    [36m</html>[39m
+
+      152 |
+      153 |       await waitFor(() => {
+    > 154 |         expect(global.fetch).toHaveBeenCalledWith(
+          |                              ^
+      155 |           expect.stringContaining('/accounting/accounts'),
+      156 |           expect.objectContaining({
+      157 |             headers: expect.objectContaining({
+
+      at toHaveBeenCalledWith (__tests__/e2e/tenant-isolation.e2e.test.tsx:154:30)
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/.pnpm/jsdom@26.1.0/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Tenant Isolation E2E Tests › Tenant Switching › should switch tenant context when selecting different tenant
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="tenant-item[data-tenant-id="tenant-2"]"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mdata-session[39m=[32m"{\"user\":{\"id\":\"1\",\"email\":\"admin@oasys360.com\",\"name\":\"Admin User\",\"role\":\"admin\",\"tenantId\":\"tenant-1\"},\"expires\":\"2026-01-11T19:37:00.362Z\"}"[39m
+          [33mdata-testid[39m=[32m"session-provider"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<h1>[39m
+              [0mSelect Tenant[0m
+            [36m</h1>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"tenant-list"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mdata-tenant-id[39m=[32m"tenant-1"[39m
+                [33mdata-testid[39m=[32m"tenant-item"[39m
+              [36m>[39m
+                [36m<h3>[39m
+                  [0mAcme Corp[0m
+                [36m</h3>[39m
+                [36m<p>[39m
+                  [0mEnterprise Plan[0m
+                [36m</p>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mdata-tenant-id[39m=[32m"tenant-2"[39m
+                [33mdata-testid[39m=[32m"tenant-item"[39m
+              [36m>[39m
+                [36m<h3>[39m
+                  [0mSmall Business[0m
+                [36m</h3>[39m
+                [36m<p>[39m
+                  [0mBasic Plan[0m
+                [36m</p>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      201 |       })
+      202 |
+    > 203 |       const tenantItem = screen.getByTestId('tenant-item[data-tenant-id="tenant-2"]')
+          |                                 ^
+      204 |       fireEvent.click(tenantItem)
+      205 |
+      206 |       await waitFor(() => {
+
+      at Object.getElementError (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByTestId (__tests__/e2e/tenant-isolation.e2e.test.tsx:203:33)
+
+  ● Tenant Isolation E2E Tests › Tenant Switching › should restrict regular users to their own tenant
+
+    expect(element).not.toBeInTheDocument()
+
+    expected document not to contain element, found <h3>Acme Corp</h3> instead
+
+      216 |       // Regular users should only see their own tenant
+      217 |       expect(screen.getByText('Small Business')).toBeInTheDocument()
+    > 218 |       expect(screen.queryByText('Acme Corp')).not.toBeInTheDocument()
+          |                                                   ^
+      219 |     })
+      220 |   })
+      221 |
+
+      at Object.toBeInTheDocument (__tests__/e2e/tenant-isolation.e2e.test.tsx:218:51)
+
+  ● Tenant Isolation E2E Tests › Feature Access Control › should show advanced features for enterprise tenants
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="advanced-features"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mdata-session[39m=[32m"{\"user\":{\"id\":\"1\",\"email\":\"admin@oasys360.com\",\"name\":\"Admin User\",\"role\":\"admin\",\"tenantId\":\"tenant-1\"},\"expires\":\"2026-01-11T19:37:00.362Z\"}"[39m
+          [33mdata-testid[39m=[32m"session-provider"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<h1>[39m
+              [0mAccounting[0m
+            [36m</h1>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"accounts-list"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mChart of Accounts[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"account-item"[39m
+              [36m>[39m
+                [0mCash Account - $10,000.00[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"account-item"[39m
+              [36m>[39m
+                [0mAccounts Receivable - $5,000.00[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mdata-testid[39m=[32m"add-account-button"[39m
+            [36m>[39m
+              [0mAdd Account[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      242 |
+      243 |       // Enterprise plan users should have advanced features
+    > 244 |       expect(screen.getByTestId('advanced-features')).toBeInTheDocument()
+          |                     ^
+      245 |     })
+      246 |   })
+      247 |
+
+      at Object.getElementError (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByTestId (__tests__/e2e/tenant-isolation.e2e.test.tsx:244:21)
+
+  ● Tenant Isolation E2E Tests › Cross-Tenant Data Protection › should handle tenant context in API requests
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: StringContaining "/banking/transactions", ObjectContaining {"headers": ObjectContaining {"X-Tenant-ID": "tenant-2"}}
+
+    Number of calls: 0
+
+    Ignored nodes: comments, script, style
+    [36m<html>[39m
+      [36m<head />[39m
+      [36m<body>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mdata-session[39m=[32m"{\"user\":{\"id\":\"2\",\"email\":\"user@company.com\",\"name\":\"Regular User\",\"role\":\"user\",\"tenantId\":\"tenant-2\"},\"expires\":\"2026-01-11T19:37:00.362Z\"}"[39m
+            [33mdata-testid[39m=[32m"session-provider"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<h1>[39m
+                [0mBanking[0m
+              [36m</h1>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"transactions-list"[39m
+              [36m>[39m
+                [36m<h2>[39m
+                  [0mRecent Transactions[0m
+                [36m</h2>[39m
+                [36m<div[39m
+                  [33mdata-testid[39m=[32m"transaction-item"[39m
+                [36m>[39m
+                  [0mPayment received - $1,000.00[0m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<button[39m
+                [33mdata-testid[39m=[32m"add-transaction-button"[39m
+              [36m>[39m
+                [0mAdd Transaction[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</body>[39m
+    [36m</html>[39m
+
+      290 |
+      291 |       await waitFor(() => {
+    > 292 |         expect(global.fetch).toHaveBeenCalledWith(
+          |                              ^
+      293 |           expect.stringContaining('/banking/transactions'),
+      294 |           expect.objectContaining({
+      295 |             headers: expect.objectContaining({
+
+      at toHaveBeenCalledWith (__tests__/e2e/tenant-isolation.e2e.test.tsx:292:30)
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/.pnpm/jsdom@26.1.0/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Tenant Isolation E2E Tests › Session Management › should maintain tenant context across page navigation
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="banking-link"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mdata-session[39m=[32m"{\"user\":{\"id\":\"2\",\"email\":\"user@company.com\",\"name\":\"Regular User\",\"role\":\"user\",\"tenantId\":\"tenant-2\"},\"expires\":\"2026-01-11T19:37:00.362Z\"}"[39m
+          [33mdata-testid[39m=[32m"session-provider"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<h1>[39m
+              [0mAccounting[0m
+            [36m</h1>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"accounts-list"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mChart of Accounts[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"account-item"[39m
+              [36m>[39m
+                [0mCash Account - $10,000.00[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"account-item"[39m
+              [36m>[39m
+                [0mAccounts Receivable - $5,000.00[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mdata-testid[39m=[32m"add-account-button"[39m
+            [36m>[39m
+              [0mAdd Account[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      309 |
+      310 |       // Navigate to banking page
+    > 311 |       const bankingLink = screen.getByTestId('banking-link')
+          |                                  ^
+      312 |       fireEvent.click(bankingLink)
+      313 |
+      314 |       await waitFor(() => {
+
+      at Object.getElementError (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByTestId (__tests__/e2e/tenant-isolation.e2e.test.tsx:311:34)
+
+  ● Tenant Isolation E2E Tests › Session Management › should clear tenant context on logout
+
+    TestingLibraryElementError: Unable to find an element by: [data-testid="logout-button"]
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mdata-session[39m=[32m"{\"user\":{\"id\":\"2\",\"email\":\"user@company.com\",\"name\":\"Regular User\",\"role\":\"user\",\"tenantId\":\"tenant-2\"},\"expires\":\"2026-01-11T19:37:00.362Z\"}"[39m
+          [33mdata-testid[39m=[32m"session-provider"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<h1>[39m
+              [0mAccounting[0m
+            [36m</h1>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"accounts-list"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mChart of Accounts[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"account-item"[39m
+              [36m>[39m
+                [0mCash Account - $10,000.00[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"account-item"[39m
+              [36m>[39m
+                [0mAccounts Receivable - $5,000.00[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mdata-testid[39m=[32m"add-account-button"[39m
+            [36m>[39m
+              [0mAdd Account[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      332 |       })
+      333 |
+    > 334 |       const logoutButton = screen.getByTestId('logout-button')
+          |                                   ^
+      335 |       fireEvent.click(logoutButton)
+      336 |
+      337 |       await waitFor(() => {
+
+      at Object.getElementError (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByTestId (__tests__/e2e/tenant-isolation.e2e.test.tsx:334:35)
+
+  ● Tenant Isolation E2E Tests › Error Handling › should handle tenant access denied errors
+
+    Unable to find an element with the text: Access denied for this tenant. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mdata-session[39m=[32m"{\"user\":{\"id\":\"2\",\"email\":\"user@company.com\",\"name\":\"Regular User\",\"role\":\"user\",\"tenantId\":\"tenant-2\"},\"expires\":\"2026-01-11T19:37:00.362Z\"}"[39m
+          [33mdata-testid[39m=[32m"session-provider"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<h1>[39m
+              [0mAccounting[0m
+            [36m</h1>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"accounts-list"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mChart of Accounts[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"account-item"[39m
+              [36m>[39m
+                [0mCash Account - $10,000.00[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"account-item"[39m
+              [36m>[39m
+                [0mAccounts Receivable - $5,000.00[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mdata-testid[39m=[32m"add-account-button"[39m
+            [36m>[39m
+              [0mAdd Account[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      359 |       })
+      360 |
+    > 361 |       await waitFor(() => {
+          |                    ^
+      362 |         expect(screen.getByText('Access denied for this tenant')).toBeInTheDocument()
+      363 |       })
+      364 |     })
+
+      at waitForWrapper (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:361:20)
+
+  ● Tenant Isolation E2E Tests › Error Handling › should handle invalid tenant errors
+
+    Unable to find an element with the text: Invalid tenant ID. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mdata-session[39m=[32m"{\"user\":{\"id\":\"2\",\"email\":\"user@company.com\",\"name\":\"Regular User\",\"role\":\"user\",\"tenantId\":\"tenant-2\"},\"expires\":\"2026-01-11T19:37:00.362Z\"}"[39m
+          [33mdata-testid[39m=[32m"session-provider"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<h1>[39m
+              [0mAccounting[0m
+            [36m</h1>[39m
+            [36m<div[39m
+              [33mdata-testid[39m=[32m"accounts-list"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mChart of Accounts[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"account-item"[39m
+              [36m>[39m
+                [0mCash Account - $10,000.00[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"account-item"[39m
+              [36m>[39m
+                [0mAccounts Receivable - $5,000.00[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mdata-testid[39m=[32m"add-account-button"[39m
+            [36m>[39m
+              [0mAdd Account[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      378 |       })
+      379 |
+    > 380 |       await waitFor(() => {
+          |                    ^
+      381 |         expect(screen.getByText('Invalid tenant ID')).toBeInTheDocument()
+      382 |       })
+      383 |     })
+
+      at waitForWrapper (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (__tests__/e2e/tenant-isolation.e2e.test.tsx:380:20)
+
+  ● Tenant Isolation E2E Tests › Performance and Caching › should cache tenant-specific data
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: StringContaining "/accounting/accounts", Any<Object>
+
+    Number of calls: 0
+
+    Ignored nodes: comments, script, style
+    [36m<html>[39m
+      [36m<head />[39m
+      [36m<body>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mdata-session[39m=[32m"{\"user\":{\"id\":\"2\",\"email\":\"user@company.com\",\"name\":\"Regular User\",\"role\":\"user\",\"tenantId\":\"tenant-2\"},\"expires\":\"2026-01-11T19:37:00.362Z\"}"[39m
+            [33mdata-testid[39m=[32m"session-provider"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<h1>[39m
+                [0mAccounting[0m
+              [36m</h1>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"accounts-list"[39m
+              [36m>[39m
+                [36m<h2>[39m
+                  [0mChart of Accounts[0m
+                [36m</h2>[39m
+                [36m<div[39m
+                  [33mdata-testid[39m=[32m"account-item"[39m
+                [36m>[39m
+                  [0mCash Account - $10,000.00[0m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mdata-testid[39m=[32m"account-item"[39m
+                [36m>[39m
+                  [0mAccounts Receivable - $5,000.00[0m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<button[39m
+                [33mdata-testid[39m=[32m"add-account-button"[39m
+              [36m>[39m
+                [0mAdd Account[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</body>[39m
+    [36m</html>[39m
+
+      392 |       // First load
+      393 |       await waitFor(() => {
+    > 394 |         expect(global.fetch).toHaveBeenCalledWith(
+          |                              ^
+      395 |           expect.stringContaining('/accounting/accounts'),
+      396 |           expect.any(Object)
+      397 |         )
+
+      at toHaveBeenCalledWith (__tests__/e2e/tenant-isolation.e2e.test.tsx:394:30)
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/.pnpm/jsdom@26.1.0/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+  ● Tenant Isolation E2E Tests › Performance and Caching › should invalidate cache when switching tenants
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: StringContaining "/accounting/accounts", ObjectContaining {"headers": ObjectContaining {"X-Tenant-ID": "tenant-1"}}
+
+    Number of calls: 0
+
+    Ignored nodes: comments, script, style
+    [36m<html>[39m
+      [36m<head />[39m
+      [36m<body>[39m
+        [36m<div>[39m
+          [36m<div[39m
+            [33mdata-session[39m=[32m"{\"user\":{\"id\":\"1\",\"email\":\"admin@oasys360.com\",\"name\":\"Admin User\",\"role\":\"admin\",\"tenantId\":\"tenant-1\"},\"expires\":\"2026-01-11T19:37:00.362Z\"}"[39m
+            [33mdata-testid[39m=[32m"session-provider"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<h1>[39m
+                [0mAccounting[0m
+              [36m</h1>[39m
+              [36m<div[39m
+                [33mdata-testid[39m=[32m"accounts-list"[39m
+              [36m>[39m
+                [36m<h2>[39m
+                  [0mChart of Accounts[0m
+                [36m</h2>[39m
+                [36m<div[39m
+                  [33mdata-testid[39m=[32m"account-item"[39m
+                [36m>[39m
+                  [0mCash Account - $10,000.00[0m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mdata-testid[39m=[32m"account-item"[39m
+                [36m>[39m
+                  [0mAccounts Receivable - $5,000.00[0m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<button[39m
+                [33mdata-testid[39m=[32m"add-account-button"[39m
+              [36m>[39m
+                [0mAdd Account[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</body>[39m
+    [36m</html>[39m
+
+      428 |
+      429 |       await waitFor(() => {
+    > 430 |         expect(global.fetch).toHaveBeenCalledWith(
+          |                              ^
+      431 |           expect.stringContaining('/accounting/accounts'),
+      432 |           expect.objectContaining({
+      433 |             headers: expect.objectContaining({
+
+      at toHaveBeenCalledWith (__tests__/e2e/tenant-isolation.e2e.test.tsx:430:30)
+      at runWithExpensiveErrorDiagnosticsDisabled (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at checkRealTimersCallback (node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at Timeout.task [as _onTimeout] (node_modules/.pnpm/jsdom@26.1.0/node_modules/jsdom/lib/jsdom/browser/Window.js:579:19)
+
+Test Suites: 1 failed, 1 total
+Tests:       13 failed, 3 passed, 16 total
+Snapshots:   0 total
+Time:        6.712 s, estimated 7 s
+Ran all test suites matching __tests__/e2e/tenant-isolation.e2e.test.tsx.

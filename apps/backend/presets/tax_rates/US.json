@@ -1,0 +1,56 @@
+{
+  "country_code": "US",
+  "country_name": "United States",
+  "description": "Sales Tax rates for United States (varies by state)",
+  "tax_rates": [
+    {
+      "name": "Sales Tax - California",
+      "code": "SALES_TAX_CA",
+      "rate": 7.25,
+      "tax_type": "sales",
+      "region": "California",
+      "category": "",
+      "is_default": false,
+      "is_active": true,
+      "description": "California state sales tax (base rate, local rates may vary)",
+      "effective_from": "2024-01-01"
+    },
+    {
+      "name": "Sales Tax - New York",
+      "code": "SALES_TAX_NY",
+      "rate": 4.00,
+      "tax_type": "sales",
+      "region": "New York",
+      "category": "",
+      "is_default": false,
+      "is_active": true,
+      "description": "New York state sales tax (base rate, local rates may vary)",
+      "effective_from": "2024-01-01"
+    },
+    {
+      "name": "Sales Tax - Texas",
+      "code": "SALES_TAX_TX",
+      "rate": 6.25,
+      "tax_type": "sales",
+      "region": "Texas",
+      "category": "",
+      "is_default": false,
+      "is_active": true,
+      "description": "Texas state sales tax (base rate, local rates may vary)",
+      "effective_from": "2024-01-01"
+    },
+    {
+      "name": "Sales Tax - No Tax",
+      "code": "SALES_TAX_EXEMPT",
+      "rate": 0.00,
+      "tax_type": "sales",
+      "region": "Alaska, Delaware, Montana, New Hampshire, Oregon",
+      "category": "Exempt",
+      "is_default": false,
+      "is_active": true,
+      "description": "States with no state sales tax",
+      "effective_from": "2024-01-01"
+    }
+  ]
+}
+

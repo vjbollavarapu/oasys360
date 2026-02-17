@@ -179,9 +179,12 @@ export function TransactionManagement({ className = '' }: TransactionManagementP
       }
       
       // Load categories
+      // Note: Backend doesn't have a categories endpoint - categories are stored as strings in transactions
       const categoriesResponse = await bankingService.getTransactionCategories();
       if (categoriesResponse.success && categoriesResponse.data) {
-        setCategories(categoriesResponse.data);
+        // Handle paginated response
+        const categoriesData = categoriesResponse.data.results || categoriesResponse.data || [];
+        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
       }
     });
     setLoading(false);

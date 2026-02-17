@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OASYS360 - Bank Accounts Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "card-dark": "#1a202c",
+                        "card-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased selection:bg-primary selection:text-white">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden pb-24">
+<!-- Header -->
+<header class="sticky top-0 z-20 flex items-center justify-between bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md p-4 pb-2 transition-colors duration-300">
+<div class="flex items-center gap-3">
+<div class="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full ring-2 ring-primary/20">
+<div class="bg-center bg-no-repeat h-full w-full bg-cover" data-alt="User profile avatar showing a professional person" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB_eJ-YmEUvo9KKzdTmcLBpM5VCIVZRI97qzrocEuIAg8m4ixQZQbvpKhwpyb6ORsCbCNj-dhtbrMpmcb6sOxtbwLIsf9JWZr6E2kViiXT7505vGRa9VCHPPfk4OMUaZCZuAVZ1LToR0I90dleTV0mrF4Jv88tVEFbmEWjFBmmi7pPmiylIHTf94Rjx7yE8yTfwEjrh_SyyuRLHCv4Nvxu65smJ0X8h-y006THXILv8va0AOzrIGk2AtyJxWA2s9luBgfPmPq2Z1UQ");'></div>
+</div>
+<div>
+<h2 class="text-sm font-medium text-slate-500 dark:text-slate-400 leading-none">Welcome back,</h2>
+<h1 class="text-lg font-bold text-slate-900 dark:text-white leading-tight">Jameson</h1>
+</div>
+</div>
+<div class="flex items-center justify-end gap-3">
+<button class="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</button>
+<button class="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<span class="absolute top-2 right-2.5 h-2 w-2 rounded-full bg-red-500 border border-white dark:border-slate-800"></span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-4 pt-2">
+<!-- Total Liquidity Card -->
+<div class="relative w-full overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-[#0f4ac7] shadow-xl shadow-primary/20 text-white mb-6">
+<!-- Decorative background elements -->
+<div class="absolute -right-10 -top-10 h-64 w-64 rounded-full bg-white/5 blur-3xl"></div>
+<div class="absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-black/10 blur-2xl"></div>
+<div class="relative p-6">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="text-primary-100 text-sm font-medium tracking-wide opacity-90">Total Liquidity</h3>
+<h2 class="mt-1 text-3xl font-bold tracking-tight">$4,520,000.50</h2>
+</div>
+<div class="flex flex-col items-end">
+<span class="flex items-center gap-1 rounded-full bg-white/20 px-2 py-1 text-xs font-bold backdrop-blur-md">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                                +5.2%
+                            </span>
+<span class="mt-1 text-xs text-primary-100 opacity-80">vs last month</span>
+</div>
+</div>
+<!-- Mini Chart -->
+<div class="mt-6 h-24 w-full">
+<svg class="h-full w-full overflow-visible" preserveaspectratio="none" viewbox="0 0 478 100">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="white" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="white" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0 80 C40 80, 60 40, 100 40 C140 40, 160 70, 200 60 C240 50, 260 20, 300 30 C340 40, 360 80, 400 60 C440 40, 460 10, 478 10 V 100 H 0 Z" fill="url(#chartGradient)"></path>
+<path d="M0 80 C40 80, 60 40, 100 40 C140 40, 160 70, 200 60 C240 50, 260 20, 300 30 C340 40, 360 80, 400 60 C440 40, 460 10, 478 10" fill="none" stroke="white" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="mb-8 grid grid-cols-4 gap-3">
+<button class="flex flex-col items-center gap-2 group">
+<div class="flex h-14 w-14 items-center justify-center rounded-xl bg-card-light dark:bg-card-dark shadow-sm border border-slate-100 dark:border-slate-800 group-active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined text-primary text-[28px]">swap_horiz</span>
+</div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-400">Transfer</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="flex h-14 w-14 items-center justify-center rounded-xl bg-card-light dark:bg-card-dark shadow-sm border border-slate-100 dark:border-slate-800 group-active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined text-primary text-[28px]">arrow_downward</span>
+</div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-400">Deposit</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="flex h-14 w-14 items-center justify-center rounded-xl bg-card-light dark:bg-card-dark shadow-sm border border-slate-100 dark:border-slate-800 group-active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined text-primary text-[28px]">arrow_upward</span>
+</div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-400">Withdraw</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="flex h-14 w-14 items-center justify-center rounded-xl bg-card-light dark:bg-card-dark shadow-sm border border-slate-100 dark:border-slate-800 group-active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined text-primary text-[28px]">more_horiz</span>
+</div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-400">More</span>
+</button>
+</div>
+<!-- Accounts Section -->
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Your Accounts</h3>
+<button class="text-sm font-medium text-primary hover:text-primary/80">Manage</button>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Account Card 1 -->
+<div class="group relative overflow-hidden rounded-xl bg-card-light dark:bg-card-dark p-5 shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:border-primary/50 cursor-pointer">
+<div class="mb-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#e8f0fe] p-2 dark:bg-[#1a202c] border border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-400">account_balance</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-900 dark:text-white">Silicon Valley Bank</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Main Operating</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="mb-4">
+<p class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">$2,100,500.00</p>
+</div>
+<div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-700 pt-4">
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium text-slate-500">•••• 8821</span>
+<button class="text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-1">
+<div class="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-emerald-500">Active</span>
+</div>
+</div>
+</div>
+<!-- Account Card 2 -->
+<div class="group relative overflow-hidden rounded-xl bg-card-light dark:bg-card-dark p-5 shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:border-primary/50 cursor-pointer">
+<div class="mb-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#e8f0fe] p-2 dark:bg-[#1a202c] border border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined text-indigo-600 dark:text-indigo-400">corporate_fare</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-900 dark:text-white">Chase Bank</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Global Payroll</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="mb-4">
+<p class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">$450,200.00</p>
+</div>
+<div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-700 pt-4">
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium text-slate-500">•••• 1102</span>
+<button class="text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-1">
+<div class="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-emerald-500">Active</span>
+</div>
+</div>
+</div>
+<!-- Account Card 3 -->
+<div class="group relative overflow-hidden rounded-xl bg-card-light dark:bg-card-dark p-5 shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:border-primary/50 cursor-pointer">
+<div class="mb-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#e8f0fe] p-2 dark:bg-[#1a202c] border border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined text-purple-600 dark:text-purple-400">savings</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-900 dark:text-white">US Treasury</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Reserves</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="mb-4">
+<p class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">$1,969,300.50</p>
+</div>
+<div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-700 pt-4">
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium text-slate-500">•••• 9934</span>
+<button class="text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2 py-1">
+<div class="h-1.5 w-1.5 rounded-full bg-amber-500"></div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-amber-500">Audit</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/90 dark:bg-[#151b26]/95 dark:border-slate-800 backdrop-blur-lg pb-safe">
+<div class="flex h-16 items-center justify-around px-2">
+<a class="flex flex-col items-center justify-center gap-1 p-2 text-primary" href="#">
+<span class="material-symbols-outlined filled">grid_view</span>
+<span class="text-[10px] font-bold">Overview</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">pie_chart</span>
+<span class="text-[10px] font-medium">Reports</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<div class="relative">
+<span class="material-symbols-outlined">approval</span>
+<span class="absolute -right-1 -top-1 flex h-3 w-3 items-center justify-center rounded-full bg-primary text-[8px] font-bold text-white">3</span>
+</div>
+<span class="text-[10px] font-medium">Approvals</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</a>
+</div>
+<!-- iOS Home Indicator Spacing -->
+<div class="h-4 w-full"></div>
+</nav>
+</div>
+</body></html>

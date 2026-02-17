@@ -166,8 +166,8 @@ export function SuperAdminOverview() {
   const tenants = [
     {
       id: "tenant-1",
-      name: "TechFlow Solutions",
-      domain: "techflow.oasys.com",
+      name: "oasys360 Solutions",
+      domain: "oasys360.oasys360.com",
       status: "Active",
       users: 45,
       lastActivity: "2024-01-15",
@@ -176,7 +176,7 @@ export function SuperAdminOverview() {
     {
       id: "tenant-2",
       name: "Global Dynamics",
-      domain: "globaldynamics.oasys.com",
+      domain: "globaldynamics.oasys360.com",
       status: "Active",
       users: 128,
       lastActivity: "2024-01-14",
@@ -185,7 +185,7 @@ export function SuperAdminOverview() {
     {
       id: "tenant-3",
       name: "Startup Inc",
-      domain: "startup.oasys.com",
+      domain: "startup.oasys360.com",
       status: "Trial",
       users: 12,
       lastActivity: "2024-01-13",
@@ -194,7 +194,7 @@ export function SuperAdminOverview() {
     {
       id: "tenant-4",
       name: "MegaCorp",
-      domain: "megacorp.oasys.com",
+      domain: "megacorp.oasys360.com",
       status: "Active",
       users: 256,
       lastActivity: "2024-01-12",
@@ -206,7 +206,7 @@ export function SuperAdminOverview() {
     {
       id: "1",
       name: "Production API",
-      tenant: "TechFlow Solutions",
+      tenant: "oasys360 Solutions",
       lastUsed: "2 hours ago",
       requests: "45.2K",
       status: "Active",
@@ -327,7 +327,7 @@ export function SuperAdminOverview() {
                 Add Tenant
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[600px] rounded-4xl">
               <DialogHeader>
                 <DialogTitle>Add New Tenant</DialogTitle>
                 <DialogDescription>
@@ -358,7 +358,7 @@ export function SuperAdminOverview() {
                       onChange={(e) => setNewTenant(prev => ({ ...prev, domain: e.target.value }))}
                       placeholder="company-name"
                     />
-                    <span className="text-sm text-gray-500">.oasys.com</span>
+                    <span className="text-sm text-gray-500">.oasys360.com</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -366,10 +366,10 @@ export function SuperAdminOverview() {
                     Subscription Plan
                   </Label>
                   <Select value={newTenant.plan} onValueChange={(value) => setNewTenant(prev => ({ ...prev, plan: value }))}>
-                    <SelectTrigger className="col-span-3">
+                    <SelectTrigger className="col-span-3 rounded-xl">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="rounded-xl">
                       <SelectItem value="trial">Trial - Free (14 days)</SelectItem>
                       <SelectItem value="starter">Starter - $19/month</SelectItem>
                       <SelectItem value="professional">Professional - $59/month</SelectItem>
@@ -392,10 +392,10 @@ export function SuperAdminOverview() {
                 </div>
               </div>
               <div className="flex justify-end space-x-2">
-                <Button variant="outline" onClick={() => setShowAddTenantModal(false)}>
+                <Button variant="outline" onClick={() => setShowAddTenantModal(false)} className="rounded-full">
                   Cancel
                 </Button>
-                <Button onClick={handleAddTenant} disabled={!newTenant.name || !newTenant.domain || !newTenant.adminEmail}>
+                <Button onClick={handleAddTenant} disabled={!newTenant.name || !newTenant.domain || !newTenant.adminEmail} className="rounded-full">
                   <Save className="w-4 h-4 mr-2" />
                   Create Tenant
                 </Button>
@@ -407,24 +407,24 @@ export function SuperAdminOverview() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
         <div className="overflow-x-auto">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 gap-1 p-1 bg-blue-50 rounded-2xl min-w-max">
-            <TabsTrigger value="overview" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-sm text-blue-600">
+          <TabsList className="rounded-full p-1 h-auto grid w-full grid-cols-2 lg:grid-cols-5 min-w-max">
+            <TabsTrigger value="overview">
               <BarChart3 className="w-4 h-4 mr-2" />
               Overview
             </TabsTrigger>
-            <TabsTrigger value="tenants" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-sm text-blue-600">
+            <TabsTrigger value="tenants">
               <Building2 className="w-4 h-4 mr-2" />
               Tenants
             </TabsTrigger>
-            <TabsTrigger value="api-keys" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-sm text-blue-600">
+            <TabsTrigger value="api-keys">
               <Key className="w-4 h-4 mr-2" />
               API Keys
             </TabsTrigger>
-            <TabsTrigger value="roles" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-sm text-blue-600">
+            <TabsTrigger value="roles">
               <Shield className="w-4 h-4 mr-2" />
               Roles
             </TabsTrigger>
-            <TabsTrigger value="system" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-sm text-blue-600">
+            <TabsTrigger value="system">
               <Server className="w-4 h-4 mr-2" />
               System
             </TabsTrigger>
@@ -454,26 +454,33 @@ export function SuperAdminOverview() {
                 orange: "text-orange-900"
               }
 
+              const iconBgColors = {
+                blue: "bg-blue-100 dark:bg-blue-900/20",
+                green: "bg-green-100 dark:bg-green-900/20",
+                purple: "bg-purple-100 dark:bg-purple-900/20",
+                orange: "bg-orange-100 dark:bg-orange-900/20"
+              }
+              const iconTextColors = {
+                blue: "text-blue-600 dark:text-blue-400",
+                green: "text-green-600 dark:text-green-400",
+                purple: "text-purple-600 dark:text-purple-400",
+                orange: "text-orange-600 dark:text-orange-400"
+              }
+
               return (
                 <Card
                   key={kpi.title}
-                  className={gradientClasses[kpi.color as keyof typeof gradientClasses]}
+                  className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0"
                 >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className={`text-sm font-medium ${textClasses[kpi.color as keyof typeof textClasses]}`}>
-                          {kpi.title}
-                        </p>
-                        <p className={`text-2xl font-bold ${valueClasses[kpi.color as keyof typeof valueClasses]}`}>
-                          {kpi.value}
-                        </p>
-                        <p className={`text-xs mt-1 ${textClasses[kpi.color as keyof typeof textClasses]}`}>
-                          {kpi.change} from last month
-                        </p>
-                      </div>
-                      <kpi.icon className={`h-8 w-8 ${textClasses[kpi.color as keyof typeof textClasses]}`} />
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">{kpi.title}</CardTitle>
+                    <div className={`p-3 ${iconBgColors[kpi.color as keyof typeof iconBgColors]} rounded-2xl`}>
+                      <kpi.icon className={`h-5 w-5 ${iconTextColors[kpi.color as keyof typeof iconTextColors]}`} />
                     </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{kpi.value}</div>
+                    <p className="text-xs text-muted-foreground mt-2">{kpi.change} from last month</p>
                   </CardContent>
                 </Card>
               )
@@ -481,13 +488,15 @@ export function SuperAdminOverview() {
           </div>
 
           {/* Quick Actions with Modals */}
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
-              <CardTitle className="text-blue-900 flex items-center gap-2">
-                <Zap className="w-5 h-5" />
+              <CardTitle className="flex items-center gap-2">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-xl">
+                  <Zap className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                </div>
                 Quick Actions
               </CardTitle>
-              <CardDescription className="text-blue-600">
+              <CardDescription>
                 Common platform administration tasks
               </CardDescription>
             </CardHeader>
@@ -497,7 +506,7 @@ export function SuperAdminOverview() {
                   <DialogTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="h-20 flex-col gap-2 bg-white border-blue-200 hover:bg-blue-50"
+                      className="h-20 flex-col gap-2 rounded-full"
                     >
                       <Building2 className="w-6 h-6 text-blue-600" />
                       <span className="text-sm text-blue-900">Add Tenant</span>
@@ -509,7 +518,7 @@ export function SuperAdminOverview() {
                   <DialogTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="h-20 flex-col gap-2 bg-white border-blue-200 hover:bg-blue-50"
+                      className="h-20 flex-col gap-2 rounded-full"
                     >
                       <Key className="w-6 h-6 text-blue-600" />
                       <span className="text-sm text-blue-900">Generate API Key</span>
@@ -534,10 +543,10 @@ export function SuperAdminOverview() {
                       </ul>
                     </div>
                     <div className="flex justify-end space-x-2">
-                      <Button variant="outline" onClick={() => setShowGenerateKeyModal(false)}>
+                      <Button variant="outline" onClick={() => setShowGenerateKeyModal(false)} className="rounded-full">
                         Cancel
                       </Button>
-                      <Button onClick={handleGenerateApiKey}>
+                      <Button onClick={handleGenerateApiKey} className="rounded-full">
                         Go to API Management
                       </Button>
                     </div>
@@ -548,13 +557,13 @@ export function SuperAdminOverview() {
                   <DialogTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="h-20 flex-col gap-2 bg-white border-blue-200 hover:bg-blue-50"
+                      className="h-20 flex-col gap-2 rounded-full"
                     >
                       <Shield className="w-6 h-6 text-blue-600" />
                       <span className="text-sm text-blue-900">Manage Roles</span>
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="rounded-4xl">
                     <DialogHeader>
                       <DialogTitle>Role Management</DialogTitle>
                       <DialogDescription>
@@ -573,10 +582,10 @@ export function SuperAdminOverview() {
                       </ul>
                     </div>
                     <div className="flex justify-end space-x-2">
-                      <Button variant="outline" onClick={() => setShowManageRolesModal(false)}>
+                      <Button variant="outline" onClick={() => setShowManageRolesModal(false)} className="rounded-full">
                         Cancel
                       </Button>
-                      <Button onClick={handleManageRoles}>
+                      <Button onClick={handleManageRoles} className="rounded-full">
                         Go to Role Management
                       </Button>
                     </div>
@@ -587,13 +596,13 @@ export function SuperAdminOverview() {
                   <DialogTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="h-20 flex-col gap-2 bg-white border-blue-200 hover:bg-blue-50"
+                      className="h-20 flex-col gap-2 rounded-full"
                     >
                       <BarChart3 className="w-6 h-6 text-blue-600" />
                       <span className="text-sm text-blue-900">View Analytics</span>
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="rounded-4xl">
                     <DialogHeader>
                       <DialogTitle>Platform Analytics</DialogTitle>
                       <DialogDescription>
@@ -612,10 +621,10 @@ export function SuperAdminOverview() {
                       </ul>
                     </div>
                     <div className="flex justify-end space-x-2">
-                      <Button variant="outline" onClick={() => setShowAnalyticsModal(false)}>
+                      <Button variant="outline" onClick={() => setShowAnalyticsModal(false)} className="rounded-full">
                         Cancel
                       </Button>
-                      <Button onClick={handleViewAnalytics}>
+                      <Button onClick={handleViewAnalytics} className="rounded-full">
                         Coming Soon
                       </Button>
                     </div>
@@ -626,34 +635,34 @@ export function SuperAdminOverview() {
           </Card>
 
           {/* Recent Activity */}
-          <Card className="bg-gradient-to-br from-white to-blue-50 border-blue-200">
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
-              <CardTitle className="text-blue-900">Recent Platform Activity</CardTitle>
-              <CardDescription className="text-blue-600">
+              <CardTitle>Recent Platform Activity</CardTitle>
+              <CardDescription>
                 Latest tenant activities and system events
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-blue-100">
+                <div className="flex items-center gap-4 p-4 border rounded-2xl">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-blue-900">New tenant "StartupCorp" registered</p>
-                    <p className="text-xs text-blue-600">2 hours ago</p>
+                    <p className="text-sm font-medium">New tenant "StartupCorp" registered</p>
+                    <p className="text-xs text-muted-foreground">2 hours ago</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-blue-100">
+                <div className="flex items-center gap-4 p-4 border rounded-2xl">
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-blue-900">API key renewed for TechFlow Solutions</p>
-                    <p className="text-xs text-blue-600">4 hours ago</p>
+                    <p className="text-sm font-medium">API key renewed for oasys360 Solutions</p>
+                    <p className="text-xs text-muted-foreground">4 hours ago</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-blue-100">
+                <div className="flex items-center gap-4 p-4 border rounded-2xl">
                   <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-blue-900">System maintenance completed</p>
-                    <p className="text-xs text-blue-600">1 day ago</p>
+                    <p className="text-sm font-medium">System maintenance completed</p>
+                    <p className="text-xs text-muted-foreground">1 day ago</p>
                   </div>
                 </div>
               </div>
@@ -662,23 +671,23 @@ export function SuperAdminOverview() {
         </TabsContent>
 
         <TabsContent value="tenants" className="space-y-6">
-          <Card className="bg-gradient-to-br from-white to-blue-50 border-blue-200">
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
               <div>
-                <CardTitle className="text-blue-900">Tenant Management</CardTitle>
-                <CardDescription className="text-blue-600">
+                <CardTitle>Tenant Management</CardTitle>
+                <CardDescription>
                   Manage platform tenants and their configurations
                 </CardDescription>
               </div>
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <Input
                     placeholder="Search tenants..."
-                    className="pl-10 border-blue-200 focus:border-blue-400"
+                    className="pl-10 rounded-xl"
                   />
                 </div>
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button className="rounded-full">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Tenant
                 </Button>
@@ -688,62 +697,62 @@ export function SuperAdminOverview() {
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="border-blue-200">
-                      <TableHead className="text-blue-900">Tenant</TableHead>
-                      <TableHead className="text-blue-900">Domain</TableHead>
-                      <TableHead className="text-blue-900">Plan</TableHead>
-                      <TableHead className="text-blue-900">Users</TableHead>
-                      <TableHead className="text-blue-900">Status</TableHead>
-                      <TableHead className="text-blue-900">Last Activity</TableHead>
-                      <TableHead className="text-blue-900">Actions</TableHead>
+                    <TableRow>
+                      <TableHead>Tenant</TableHead>
+                      <TableHead>Domain</TableHead>
+                      <TableHead>Plan</TableHead>
+                      <TableHead>Users</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Last Activity</TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {tenants.map((tenant) => (
-                      <TableRow key={tenant.id} className="border-blue-100">
+                      <TableRow key={tenant.id}>
                         <TableCell>
-                          <div className="font-medium text-blue-900">{tenant.name}</div>
+                          <div className="font-medium">{tenant.name}</div>
                         </TableCell>
-                        <TableCell className="text-blue-700">{tenant.domain}</TableCell>
+                        <TableCell>{tenant.domain}</TableCell>
                         <TableCell>
                           <Badge 
                             variant="outline" 
-                            className={
+                            className={`rounded-full ${
                               tenant.plan === "Enterprise"
-                                ? "border-purple-200 text-purple-700 bg-purple-50"
+                                ? "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300"
                                 : tenant.plan === "Professional"
-                                ? "border-blue-200 text-blue-700 bg-blue-50"
-                                : "border-yellow-200 text-yellow-700 bg-yellow-50"
-                            }
+                                ? "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300"
+                                : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300"
+                            }`}
                           >
                             {tenant.plan}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-blue-800">{tenant.users}</TableCell>
+                        <TableCell>{tenant.users}</TableCell>
                         <TableCell>
                           <Badge 
-                            className={
+                            className={`rounded-full ${
                               tenant.status === "Active" 
-                                ? "bg-green-100 text-green-700 border-green-200"
-                                : "bg-yellow-100 text-yellow-700 border-yellow-200"
-                            }
+                                ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
+                                : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300"
+                            }`}
                           >
                             {tenant.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-blue-700">{tenant.lastActivity}</TableCell>
+                        <TableCell>{tenant.lastActivity}</TableCell>
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button 
-                                variant="outline" 
+                                variant="ghost" 
                                 size="sm"
-                                className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                                className="rounded-full"
                               >
                                 <MoreHorizontal className="w-4 h-4" />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
+                            <DropdownMenuContent align="end" className="rounded-xl">
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               <DropdownMenuItem onClick={() => toast({ title: "Tenant Details", description: `Viewing details for ${tenant.name}` })}>
                                 View Details
@@ -771,10 +780,10 @@ export function SuperAdminOverview() {
         </TabsContent>
 
         <TabsContent value="api-keys" className="space-y-6">
-          <Card className="bg-gradient-to-br from-white to-blue-50 border-blue-200">
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
-              <CardTitle className="text-blue-900">API Key Management</CardTitle>
-              <CardDescription className="text-blue-600">
+              <CardTitle>API Key Management</CardTitle>
+              <CardDescription>
                 Monitor and manage all API keys across tenants
               </CardDescription>
             </CardHeader>
@@ -782,47 +791,47 @@ export function SuperAdminOverview() {
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="border-blue-200">
-                      <TableHead className="text-blue-900">Key Name</TableHead>
-                      <TableHead className="text-blue-900">Tenant</TableHead>
-                      <TableHead className="text-blue-900">Last Used</TableHead>
-                      <TableHead className="text-blue-900">Requests</TableHead>
-                      <TableHead className="text-blue-900">Status</TableHead>
-                      <TableHead className="text-blue-900">Scope</TableHead>
-                      <TableHead className="text-blue-900">Actions</TableHead>
+                    <TableRow>
+                      <TableHead>Key Name</TableHead>
+                      <TableHead>Tenant</TableHead>
+                      <TableHead>Last Used</TableHead>
+                      <TableHead>Requests</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Scope</TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {apiKeys.map((key) => (
-                      <TableRow key={key.id} className="border-blue-100">
-                        <TableCell className="font-medium text-blue-900">{key.name}</TableCell>
-                        <TableCell className="text-blue-700">{key.tenant}</TableCell>
-                        <TableCell className="text-blue-700">{key.lastUsed}</TableCell>
-                        <TableCell className="text-blue-900 font-mono">{key.requests}</TableCell>
+                      <TableRow key={key.id}>
+                        <TableCell className="font-medium">{key.name}</TableCell>
+                        <TableCell>{key.tenant}</TableCell>
+                        <TableCell>{key.lastUsed}</TableCell>
+                        <TableCell className="font-mono">{key.requests}</TableCell>
                         <TableCell>
                           <Badge 
-                            className={
+                            className={`rounded-full ${
                               key.status === "Active" 
-                                ? "bg-green-100 text-green-700 border-green-200"
-                                : "bg-yellow-100 text-yellow-700 border-yellow-200"
-                            }
+                                ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
+                                : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300"
+                            }`}
                           >
                             {key.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-blue-600">{key.scope}</TableCell>
+                        <TableCell>{key.scope}</TableCell>
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button 
-                                variant="outline" 
+                                variant="ghost" 
                                 size="sm"
-                                className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                                className="rounded-full"
                               >
                                 <MoreHorizontal className="w-4 h-4" />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
+                            <DropdownMenuContent align="end" className="rounded-xl">
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               <DropdownMenuItem onClick={() => toast({ title: "API Key Details", description: `Viewing details for ${key.name}` })}>
                                 View Details
@@ -850,16 +859,16 @@ export function SuperAdminOverview() {
         </TabsContent>
 
         <TabsContent value="roles" className="space-y-6">
-          <Card className="bg-gradient-to-br from-white to-blue-50 border-blue-200">
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-blue-900">Role & Permission Management</CardTitle>
-                  <CardDescription className="text-blue-600">
+                  <CardTitle>Role & Permission Management</CardTitle>
+                  <CardDescription>
                     Create and manage system-wide roles and permissions
                   </CardDescription>
                 </div>
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button className="rounded-full">
                   <Plus className="w-4 h-4 mr-2" />
                   Create Role
                 </Button>
@@ -869,33 +878,33 @@ export function SuperAdminOverview() {
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="border-blue-200">
-                      <TableHead className="text-blue-900">Role Name</TableHead>
-                      <TableHead className="text-blue-900">Description</TableHead>
-                      <TableHead className="text-blue-900">Permissions</TableHead>
-                      <TableHead className="text-blue-900">Users</TableHead>
-                      <TableHead className="text-blue-900">Type</TableHead>
-                      <TableHead className="text-blue-900">Actions</TableHead>
+                    <TableRow>
+                      <TableHead>Role Name</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead>Permissions</TableHead>
+                      <TableHead>Users</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {roles.map((role) => (
-                      <TableRow key={role.id} className="border-blue-100">
-                        <TableCell className="font-medium text-blue-900">{role.name}</TableCell>
-                        <TableCell className="text-blue-700">{role.description}</TableCell>
+                      <TableRow key={role.id}>
+                        <TableCell className="font-medium">{role.name}</TableCell>
+                        <TableCell>{role.description}</TableCell>
                         <TableCell>
-                          <Badge variant="outline" className="border-purple-200 text-purple-700 bg-purple-50">
+                          <Badge variant="outline" className="rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300">
                             {role.permissions} permissions
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-blue-800">{role.users}</TableCell>
+                        <TableCell>{role.users}</TableCell>
                         <TableCell>
                           <Badge
-                            className={
+                            className={`rounded-full ${
                               role.system
-                                ? "bg-yellow-100 text-yellow-700 border-yellow-200"
-                                : "bg-green-100 text-green-700 border-green-200"
-                            }
+                                ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300"
+                                : "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
+                            }`}
                           >
                             {role.system ? "System" : "Custom"}
                           </Badge>
@@ -904,14 +913,14 @@ export function SuperAdminOverview() {
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button 
-                                variant="outline" 
+                                variant="ghost" 
                                 size="sm"
-                                className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                                className="rounded-full"
                               >
                                 <MoreHorizontal className="w-4 h-4" />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
+                            <DropdownMenuContent align="end" className="rounded-xl">
                               <DropdownMenuItem onClick={() => toast({ title: "Edit Permissions", description: `Editing permissions for ${role.name}` })}>
                                 Edit Permissions
                               </DropdownMenuItem>
@@ -947,110 +956,101 @@ export function SuperAdminOverview() {
         <TabsContent value="system" className="space-y-6">
           {/* System Health Overview */}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {systemMetrics.map((metric, index) => (
-              <Card
-                key={index}
-                className={`
-                  ${metric.status === 'healthy' 
-                    ? 'bg-gradient-to-br from-green-50 to-green-100 border-green-200' 
-                    : 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200'
-                  }
-                `}
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className={`text-sm font-medium ${
-                        metric.status === 'healthy' ? 'text-green-600' : 'text-yellow-600'
-                      }`}>
-                        {metric.title}
-                      </p>
-                      <p className={`text-2xl font-bold ${
-                        metric.status === 'healthy' ? 'text-green-900' : 'text-yellow-900'
-                      }`}>
-                        {metric.value}
-                      </p>
-                      <p className={`text-xs mt-1 ${
-                        metric.status === 'healthy' ? 'text-green-600' : 'text-yellow-600'
-                      }`}>
-                        {metric.description}
-                      </p>
+            {systemMetrics.map((metric, index) => {
+              const iconBgColors = {
+                healthy: "bg-green-100 dark:bg-green-900/20",
+                warning: "bg-yellow-100 dark:bg-yellow-900/20"
+              }
+              const iconTextColors = {
+                healthy: "text-green-600 dark:text-green-400",
+                warning: "text-yellow-600 dark:text-yellow-400"
+              }
+              return (
+                <Card
+                  key={index}
+                  className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0"
+                >
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">{metric.title}</CardTitle>
+                    <div className={`p-3 ${iconBgColors[metric.status as keyof typeof iconBgColors]} rounded-2xl`}>
+                      <metric.icon className={`h-5 w-5 ${iconTextColors[metric.status as keyof typeof iconTextColors]}`} />
                     </div>
-                    <metric.icon className={`h-8 w-8 ${
-                      metric.status === 'healthy' ? 'text-green-600' : 'text-yellow-600'
-                    }`} />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{metric.value}</div>
+                    <p className="text-xs text-muted-foreground mt-2">{metric.description}</p>
+                  </CardContent>
+                </Card>
+              )
+            })}
           </div>
 
           {/* System Configuration */}
           <div className="grid gap-6 md:grid-cols-2">
-            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
               <CardHeader>
-                <CardTitle className="text-blue-900">System Configuration</CardTitle>
-                <CardDescription className="text-blue-600">
+                <CardTitle>System Configuration</CardTitle>
+                <CardDescription>
                   Platform-wide settings and configurations
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-blue-100">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
-                    <div className="font-medium text-blue-900">Maintenance Mode</div>
-                    <div className="text-sm text-blue-600">System maintenance status</div>
+                    <div className="font-medium">Maintenance Mode</div>
+                    <div className="text-sm text-muted-foreground">System maintenance status</div>
                   </div>
-                  <Badge className="bg-green-100 text-green-700 border-green-200">Disabled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Disabled</Badge>
                 </div>
 
-                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-blue-100">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
-                    <div className="font-medium text-blue-900">Auto Backup</div>
-                    <div className="text-sm text-blue-600">Daily at 2:00 AM UTC</div>
+                    <div className="font-medium">Auto Backup</div>
+                    <div className="text-sm text-muted-foreground">Daily at 2:00 AM UTC</div>
                   </div>
-                  <Badge className="bg-green-100 text-green-700 border-green-200">Enabled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Enabled</Badge>
                 </div>
 
-                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-blue-100">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
-                    <div className="font-medium text-blue-900">Rate Limiting</div>
-                    <div className="text-sm text-blue-600">API request throttling</div>
+                    <div className="font-medium">Rate Limiting</div>
+                    <div className="text-sm text-muted-foreground">API request throttling</div>
                   </div>
-                  <Badge className="bg-green-100 text-green-700 border-green-200">Active</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Active</Badge>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
               <CardHeader>
-                <CardTitle className="text-purple-900">Security Status</CardTitle>
-                <CardDescription className="text-purple-600">
+                <CardTitle>Security Status</CardTitle>
+                <CardDescription>
                   Security monitoring and alerts
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-purple-100">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
-                    <div className="font-medium text-purple-900">SSL Certificate</div>
-                    <div className="text-sm text-purple-600">Valid until Dec 2024</div>
+                    <div className="font-medium">SSL Certificate</div>
+                    <div className="text-sm text-muted-foreground">Valid until Dec 2024</div>
                   </div>
-                  <CheckCircle className="w-5 h-5 text-green-600" />
+                  <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
                 </div>
 
-                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-purple-100">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
-                    <div className="font-medium text-purple-900">Security Scan</div>
-                    <div className="text-sm text-purple-600">Last scan: 2 hours ago</div>
+                    <div className="font-medium">Security Scan</div>
+                    <div className="text-sm text-muted-foreground">Last scan: 2 hours ago</div>
                   </div>
-                  <CheckCircle className="w-5 h-5 text-green-600" />
+                  <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
                 </div>
 
-                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-purple-100">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
-                    <div className="font-medium text-purple-900">Failed Login Attempts</div>
-                    <div className="text-sm text-purple-600">Last 24 hours: 12</div>
+                    <div className="font-medium">Failed Login Attempts</div>
+                    <div className="text-sm text-muted-foreground">Last 24 hours: 12</div>
                   </div>
-                  <Badge className="bg-yellow-100 text-yellow-700 border-yellow-200">Low</Badge>
+                  <Badge className="rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">Low</Badge>
                 </div>
               </CardContent>
             </Card>

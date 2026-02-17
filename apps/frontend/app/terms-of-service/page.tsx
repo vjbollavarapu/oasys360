@@ -439,11 +439,11 @@ export default function TermsOfServicePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div>
                     <h4 className="font-semibold mb-2">Legal Department</h4>
-                    <p className="text-sm opacity-90">legal@oasys.com</p>
+                    <p className="text-sm opacity-90">legal@oasys360.com</p>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2">General Support</h4>
-                    <p className="text-sm opacity-90">support@oasys.com</p>
+                    <p className="text-sm opacity-90">support@oasys360.com</p>
                   </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4">

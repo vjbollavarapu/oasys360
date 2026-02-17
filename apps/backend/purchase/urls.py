@@ -32,4 +32,32 @@ urlpatterns = [
     
     # Purchase Statistics
     path('stats/', views.purchase_stats, name='purchase_stats'),
+    path('overview-stats/', views.purchase_overview_stats, name='purchase_overview_stats'),
+    
+    # Purchase Analytics
+    path('analytics/', views.purchase_analytics, name='purchase_analytics'),
+    
+    # Purchase Approvals
+    path('approvals/', views.PurchaseApprovalRequestListView.as_view(), name='approvals_list'),
+    path('approvals/<uuid:pk>/', views.PurchaseApprovalRequestDetailView.as_view(), name='approvals_detail'),
+    path('approvals/<uuid:pk>/approve/', views.approve_purchase_request, name='approve_purchase_request'),
+    
+    # Purchase Contracts
+    path('contracts/', views.PurchaseContractListView.as_view(), name='contracts_list'),
+    path('contracts/<uuid:pk>/', views.PurchaseContractDetailView.as_view(), name='contracts_detail'),
+    
+    # Purchase Settings
+    path('settings/', views.PurchaseSettingsView.as_view(), name='purchase_settings'),
+    
+    # Vendor Identity Verification
+    path('suppliers/<uuid:supplier_id>/verify-wallet/', views.verify_vendor_wallet, name='verify_vendor_wallet'),
+    path('suppliers/<uuid:supplier_id>/register-wallet/', views.register_vendor_wallet, name='register_vendor_wallet'),
+    path('vendor-wallets/', views.VendorWalletAddressListView.as_view(), name='vendor_wallet_list'),
+    path('vendor-wallets/<uuid:pk>/', views.VendorWalletAddressDetailView.as_view(), name='vendor_wallet_detail'),
+    path('vendor-wallets/<uuid:wallet_id>/verify/', views.verify_vendor_wallet_manual, name='verify_vendor_wallet_manual'),
+    path('payments/check-before-processing/', views.check_payment_before_processing, name='check_payment_before_processing'),
+    path('verification-logs/', views.VendorVerificationLogListView.as_view(), name='verification_log_list'),
+    path('payment-blocks/', views.PaymentBlockListView.as_view(), name='payment_block_list'),
+    path('payment-blocks/<uuid:pk>/', views.PaymentBlockDetailView.as_view(), name='payment_block_detail'),
+    path('payment-blocks/<uuid:block_id>/resolve/', views.resolve_payment_block, name='resolve_payment_block'),
 ]

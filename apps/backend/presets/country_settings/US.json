@@ -1,0 +1,40 @@
+{
+  "country_code": "US",
+  "country_name": "United States",
+  "currency": {
+    "code": "USD",
+    "name": "US Dollar",
+    "symbol": "$"
+  },
+  "fiscal_year": {
+    "start_month": 1,
+    "start_day": 1,
+    "end_month": 12,
+    "end_day": 31,
+    "description": "Calendar year (January to December). Can be customized to any 12-month period."
+  },
+  "timezone": "America/New_York",
+  "date_format": "MM/DD/YYYY",
+  "number_format": {
+    "decimal_separator": ".",
+    "thousands_separator": ",",
+    "decimal_places": 2
+  },
+  "tax": {
+    "system": "Sales Tax",
+    "registration_threshold": 0,
+    "registration_threshold_currency": "USD",
+    "filing_frequency": "varies_by_state",
+    "filing_due_days": 20,
+    "note": "Sales tax varies by state and locality"
+  },
+  "accounting_standards": "US GAAP",
+  "features": {
+    "sales_tax_enabled": true,
+    "multi_currency": true,
+    "bank_reconciliation": true,
+    "inventory_tracking": true,
+    "1099_reporting": true
+  }
+}
+

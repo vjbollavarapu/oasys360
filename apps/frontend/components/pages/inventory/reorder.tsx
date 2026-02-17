@@ -23,11 +23,11 @@ export function ReorderPointsOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Plus className="h-4 w-4 mr-2" />
             Add Rule
           </Button>
@@ -43,44 +43,52 @@ export function ReorderPointsOverview() {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Active Rules</CardTitle>
-                <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Active Rules</CardTitle>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-2xl">
+                  <AlertTriangle className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">24</div>
-                <p className="text-xs text-muted-foreground">Reorder rules</p>
+                <p className="text-xs text-muted-foreground mt-2">Reorder rules</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Low Stock Alerts</CardTitle>
-                <Eye className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Low Stock Alerts</CardTitle>
+                <div className="p-3 bg-yellow-100 dark:bg-yellow-900/20 rounded-2xl">
+                  <Eye className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">8</div>
-                <p className="text-xs text-muted-foreground">Items below threshold</p>
+                <div className="text-2xl font-bold text-yellow-600">8</div>
+                <p className="text-xs text-muted-foreground mt-2">Items below threshold</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Auto Orders</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Auto Orders</CardTitle>
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/20 rounded-2xl">
+                  <Clock className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">3</div>
-                <p className="text-xs text-muted-foreground">Pending orders</p>
+                <p className="text-xs text-muted-foreground mt-2">Pending orders</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
-                <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Success Rate</CardTitle>
+                <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-2xl">
+                  <AlertTriangle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">94.2%</div>
-                <p className="text-xs text-muted-foreground">Stockout prevention</p>
+                <p className="text-xs text-muted-foreground mt-2">Stockout prevention</p>
               </CardContent>
             </Card>
           </div>
@@ -94,10 +102,10 @@ export function ReorderPointsOverview() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                      <AlertTriangle className="h-5 w-5 text-red-600" />
+                    <div className="w-10 h-10 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
+                      <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
                     </div>
                     <div>
                       <p className="font-medium">Logitech MX Master Mouse</p>
@@ -106,13 +114,13 @@ export function ReorderPointsOverview() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">2 days ago</p>
-                    <Badge className="bg-red-100 text-red-800">Critical</Badge>
+                    <Badge className="rounded-full bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300">Critical</Badge>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                    <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center">
+                      <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                     </div>
                     <div>
                       <p className="font-medium">Office Chair - Ergonomic</p>
@@ -121,13 +129,13 @@ export function ReorderPointsOverview() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">1 day ago</p>
-                    <Badge className="bg-yellow-100 text-yellow-800">Low</Badge>
+                    <Badge className="rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">Low</Badge>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                      <AlertTriangle className="h-5 w-5 text-orange-600" />
+                    <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/20 rounded-full flex items-center justify-center">
+                      <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400" />
                     </div>
                     <div>
                       <p className="font-medium">Wireless Keyboard</p>
@@ -136,7 +144,7 @@ export function ReorderPointsOverview() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">3 days ago</p>
-                    <Badge className="bg-orange-100 text-orange-800">Warning</Badge>
+                    <Badge className="rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300">Warning</Badge>
                   </div>
                 </div>
               </div>
@@ -145,7 +153,7 @@ export function ReorderPointsOverview() {
         </TabsContent>
 
         <TabsContent value="rules" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Reorder Rules</CardTitle>
               <CardDescription>
@@ -153,7 +161,7 @@ export function ReorderPointsOverview() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground">
+              <div className="text-center text-muted-foreground py-12">
                 <AlertTriangle className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Reorder rules interface will appear here</p>
               </div>
@@ -162,7 +170,7 @@ export function ReorderPointsOverview() {
         </TabsContent>
 
         <TabsContent value="alerts" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Stock Alerts</CardTitle>
               <CardDescription>
@@ -170,7 +178,7 @@ export function ReorderPointsOverview() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground">
+              <div className="text-center text-muted-foreground py-12">
                 <AlertTriangle className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Stock alerts interface will appear here</p>
               </div>

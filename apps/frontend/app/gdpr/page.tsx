@@ -148,7 +148,7 @@ export default function GDPRPage() {
               </p>
               <div className="bg-blue-50 rounded-lg p-6">
                 <h3 className="font-semibold text-gray-900 mb-2">Data Protection Officer</h3>
-                <p className="text-gray-600 mb-2">Email: <a href="mailto:dpo@oasys.com" className="text-blue-600 hover:underline">dpo@oasys.com</a></p>
+                <p className="text-gray-600 mb-2">Email: <a href="mailto:dpo@oasys360.com" className="text-blue-600 hover:underline">dpo@oasys360.com</a></p>
                 <p className="text-gray-600 mb-2">Phone: +1 (555) 123-4567</p>
                 <p className="text-gray-600">Response Time: Within 30 days</p>
               </div>

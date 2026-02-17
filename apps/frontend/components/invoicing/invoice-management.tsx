@@ -44,6 +44,9 @@ import { invoicingService } from '@/lib/api-services';
 import { useErrorHandler } from '@/hooks/use-error-handler';
 import { useRBAC, PERMISSIONS } from '@/lib/rbac';
 import { PermissionGate } from '@/components/rbac/permission-gate';
+import { EInvoiceStatusBadge } from '@/components/invoicing/e-invoice-status-badge';
+import { EInvoiceSubmission } from '@/components/invoicing/e-invoice-submission';
+import { EInvoiceSubmissionHistory } from '@/components/invoicing/e-invoice-submission-history';
 
 // Form validation schema
 const invoiceSchema = z.object({
@@ -98,6 +101,12 @@ interface Invoice {
     id: string;
     name: string;
   };
+  // E-Invoice (LHDN) fields
+  e_invoice_status?: 'pending' | 'submitted' | 'accepted' | 'rejected' | 'cancelled' | null;
+  lhdn_reference_number?: string | null;
+  submitted_to_lhdn_at?: string | null;
+  lhdn_validated_at?: string | null;
+  e_invoice_errors?: string[] | null;
 }
 
 interface Customer {
@@ -124,6 +133,7 @@ export function InvoiceManagement({ className = '' }: InvoiceManagementProps) {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showDetailDialog, setShowDetailDialog] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -267,6 +277,26 @@ export function InvoiceManagement({ className = '' }: InvoiceManagementProps) {
         component: 'InvoiceManagement',
         action: 'sendInvoice',
       });
+    }
+  };
+
+  // Handle view invoice details
+  const handleViewInvoice = async (invoice: Invoice) => {
+    try {
+      // Load full invoice details including e-invoice fields
+      const response = await invoicingService.getInvoice(invoice.id);
+      if (response.success && response.data) {
+        setSelectedInvoice(response.data);
+        setShowDetailDialog(true);
+      } else {
+        // Fallback to existing invoice data
+        setSelectedInvoice(invoice);
+        setShowDetailDialog(true);
+      }
+    } catch (error) {
+      // Fallback to existing invoice data
+      setSelectedInvoice(invoice);
+      setShowDetailDialog(true);
     }
   };
 
@@ -670,6 +700,7 @@ export function InvoiceManagement({ className = '' }: InvoiceManagementProps) {
                 <TableHead>Due Date</TableHead>
                 <TableHead>Total</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>E-Invoice</TableHead>
                 <TableHead>Created By</TableHead>
                 <TableHead className="w-12"></TableHead>
               </TableRow>
@@ -712,6 +743,14 @@ export function InvoiceManagement({ className = '' }: InvoiceManagementProps) {
                     </Badge>
                   </TableCell>
                   <TableCell>
+                    {invoice.e_invoice_status && (
+                      <EInvoiceStatusBadge status={invoice.e_invoice_status} />
+                    )}
+                    {!invoice.e_invoice_status && (
+                      <span className="text-sm text-muted-foreground">-</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
                     <div className="flex items-center space-x-2">
                       <User className="w-4 h-4 text-muted-foreground" />
                       <span className="text-sm">{invoice.createdBy.name}</span>
@@ -720,7 +759,11 @@ export function InvoiceManagement({ className = '' }: InvoiceManagementProps) {
                   <TableCell>
                     <div className="flex items-center space-x-1">
                       <PermissionGate permission="READ_INVOICE">
-                        <Button variant="ghost" size="icon">
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          onClick={() => handleViewInvoice(invoice)}
+                        >
                           <Eye className="w-4 h-4" />
                         </Button>
                       </PermissionGate>
@@ -761,6 +804,190 @@ export function InvoiceManagement({ className = '' }: InvoiceManagementProps) {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Invoice Detail Dialog */}
+      <Dialog open={showDetailDialog} onOpenChange={setShowDetailDialog}>
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Invoice Details</DialogTitle>
+            <DialogDescription>
+              View invoice details and manage e-invoicing
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedInvoice && (
+            <div className="space-y-6">
+              {/* Invoice Header Info */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span>Invoice #{selectedInvoice.invoiceNumber}</span>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={getStatusBadgeVariant(selectedInvoice.status)}>
+                        {selectedInvoice.status.charAt(0).toUpperCase() + selectedInvoice.status.slice(1)}
+                      </Badge>
+                      {selectedInvoice.e_invoice_status && (
+                        <EInvoiceStatusBadge status={selectedInvoice.e_invoice_status} />
+                      )}
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-muted-foreground">Customer</Label>
+                      <p className="font-medium">{selectedInvoice.customer.name}</p>
+                      <p className="text-sm text-muted-foreground">{selectedInvoice.customer.email}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">Issue Date</Label>
+                      <p className="font-medium">{formatDate(selectedInvoice.issueDate)}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">Due Date</Label>
+                      <p className="font-medium">{formatDate(selectedInvoice.dueDate)}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">Total Amount</Label>
+                      <p className="font-medium text-lg">
+                        {formatCurrency(selectedInvoice.total, selectedInvoice.currency)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* E-Invoice Info */}
+                  {selectedInvoice.lhdn_reference_number && (
+                    <div className="pt-4 border-t">
+                      <Label className="text-muted-foreground">LHDN Reference Number (QRID)</Label>
+                      <p className="font-mono text-sm">{selectedInvoice.lhdn_reference_number}</p>
+                    </div>
+                  )}
+
+                  {selectedInvoice.submitted_to_lhdn_at && (
+                    <div>
+                      <Label className="text-muted-foreground">Submitted to LHDN</Label>
+                      <p className="text-sm">
+                        {new Date(selectedInvoice.submitted_to_lhdn_at).toLocaleString()}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedInvoice.e_invoice_errors && selectedInvoice.e_invoice_errors.length > 0 && (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        <div className="font-medium mb-2">Validation Errors:</div>
+                        <ul className="list-disc list-inside space-y-1">
+                          {selectedInvoice.e_invoice_errors.map((error, index) => (
+                            <li key={index} className="text-sm">{error}</li>
+                          ))}
+                        </ul>
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Invoice Items */}
+              {selectedInvoice.items && selectedInvoice.items.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Invoice Items</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Description</TableHead>
+                          <TableHead className="text-right">Quantity</TableHead>
+                          <TableHead className="text-right">Unit Price</TableHead>
+                          <TableHead className="text-right">Tax Rate</TableHead>
+                          <TableHead className="text-right">Amount</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {selectedInvoice.items.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell>{item.description}</TableCell>
+                            <TableCell className="text-right">{item.quantity}</TableCell>
+                            <TableCell className="text-right">
+                              {formatCurrency(item.unitPrice, selectedInvoice.currency)}
+                            </TableCell>
+                            <TableCell className="text-right">{item.taxRate}%</TableCell>
+                            <TableCell className="text-right">
+                              {formatCurrency(item.amount, selectedInvoice.currency)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    <div className="mt-4 flex justify-end space-x-4 pt-4 border-t">
+                      <div className="text-right space-y-1">
+                        <div className="text-sm text-muted-foreground">
+                          Subtotal: {formatCurrency(selectedInvoice.subtotal, selectedInvoice.currency)}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Tax: {formatCurrency(selectedInvoice.taxAmount, selectedInvoice.currency)}
+                        </div>
+                        <div className="text-lg font-bold">
+                          Total: {formatCurrency(selectedInvoice.total, selectedInvoice.currency)}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* E-Invoice Submission Component */}
+              <EInvoiceSubmission
+                invoiceId={selectedInvoice.id}
+                currentStatus={selectedInvoice.e_invoice_status}
+                qrid={selectedInvoice.lhdn_reference_number}
+                onStatusUpdate={async () => {
+                  await loadData();
+                  // Reload invoice details
+                  const response = await invoicingService.getInvoice(selectedInvoice.id);
+                  if (response.success && response.data) {
+                    setSelectedInvoice(response.data);
+                  }
+                }}
+              />
+
+              {/* E-Invoice Submission History */}
+              <EInvoiceSubmissionHistory invoiceId={selectedInvoice.id} />
+
+              {/* Notes & Terms */}
+              {(selectedInvoice.notes || selectedInvoice.terms) && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Additional Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {selectedInvoice.notes && (
+                      <div>
+                        <Label className="text-muted-foreground">Notes</Label>
+                        <p className="text-sm whitespace-pre-wrap">{selectedInvoice.notes}</p>
+                      </div>
+                    )}
+                    {selectedInvoice.terms && (
+                      <div>
+                        <Label className="text-muted-foreground">Terms & Conditions</Label>
+                        <p className="text-sm whitespace-pre-wrap">{selectedInvoice.terms}</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+
+          <div className="flex justify-end pt-4">
+            <Button variant="outline" onClick={() => setShowDetailDialog(false)}>
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

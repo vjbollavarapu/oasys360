@@ -27,11 +27,11 @@ export function InvoicingSettingsOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <FileText className="h-4 w-4 mr-2" />
             Test Invoice
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Save Settings
           </Button>
@@ -47,7 +47,7 @@ export function InvoicingSettingsOverview() {
         </TabsList>
 
         <TabsContent value="general" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>General Settings</CardTitle>
               <CardDescription>
@@ -59,7 +59,7 @@ export function InvoicingSettingsOverview() {
                 <div>
                   <Label htmlFor="default-currency">Default Currency</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
                     <SelectContent>
@@ -72,14 +72,14 @@ export function InvoicingSettingsOverview() {
                 </div>
                 <div>
                   <Label htmlFor="invoice-prefix">Invoice Prefix</Label>
-                  <Input id="invoice-prefix" placeholder="INV-" />
+                  <Input id="invoice-prefix" placeholder="INV-" className="rounded-xl" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="payment-terms">Default Payment Terms</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select terms" />
                     </SelectTrigger>
                     <SelectContent>
@@ -92,7 +92,7 @@ export function InvoicingSettingsOverview() {
                 </div>
                 <div>
                   <Label htmlFor="tax-rate">Default Tax Rate</Label>
-                  <Input id="tax-rate" type="number" step="0.01" placeholder="0.00" />
+                  <Input id="tax-rate" type="number" step="0.01" placeholder="0.00" className="rounded-xl" />
                 </div>
               </div>
             </CardContent>
@@ -100,7 +100,7 @@ export function InvoicingSettingsOverview() {
         </TabsContent>
 
         <TabsContent value="compliance" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Compliance Settings</CardTitle>
               <CardDescription>
@@ -109,26 +109,26 @@ export function InvoicingSettingsOverview() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">US Tax Compliance</p>
                     <p className="text-sm text-muted-foreground">IRS requirements and tax codes</p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Enabled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Enabled</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">EU VAT Compliance</p>
                     <p className="text-sm text-muted-foreground">European Union VAT regulations</p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Enabled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Enabled</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">Digital Signatures</p>
                     <p className="text-sm text-muted-foreground">Electronic signature requirements</p>
                   </div>
-                  <Badge className="bg-yellow-100 text-yellow-800">Configured</Badge>
+                  <Badge className="rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">Configured</Badge>
                 </div>
               </div>
             </CardContent>
@@ -136,7 +136,7 @@ export function InvoicingSettingsOverview() {
         </TabsContent>
 
         <TabsContent value="templates" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Template Settings</CardTitle>
               <CardDescription>
@@ -148,7 +148,7 @@ export function InvoicingSettingsOverview() {
                 <div>
                   <Label htmlFor="default-template">Default Template</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select template" />
                     </SelectTrigger>
                     <SelectContent>
@@ -161,7 +161,7 @@ export function InvoicingSettingsOverview() {
                 </div>
                 <div>
                   <Label htmlFor="logo">Company Logo</Label>
-                  <Input id="logo" type="file" accept="image/*" />
+                  <Input id="logo" type="file" accept="image/*" className="rounded-xl" />
                 </div>
               </div>
             </CardContent>
@@ -169,7 +169,7 @@ export function InvoicingSettingsOverview() {
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Notification Settings</CardTitle>
               <CardDescription>
@@ -178,26 +178,26 @@ export function InvoicingSettingsOverview() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">Payment Reminders</p>
                     <p className="text-sm text-muted-foreground">Send payment reminders</p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Enabled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Enabled</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">Overdue Notifications</p>
                     <p className="text-sm text-muted-foreground">Notify about overdue invoices</p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Enabled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Enabled</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">Compliance Alerts</p>
                     <p className="text-sm text-muted-foreground">Alert about compliance issues</p>
                   </div>
-                  <Badge className="bg-yellow-100 text-yellow-800">Weekly</Badge>
+                  <Badge className="rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">Weekly</Badge>
                 </div>
               </div>
             </CardContent>

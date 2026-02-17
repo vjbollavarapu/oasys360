@@ -1,8 +1,19 @@
-"use client"
+/**
+ * Inventory Categories Page
+ * Main page for managing inventory categories
+ */
 
-import { useState, useEffect } from "react"
+"use client";
+
+import { DashboardLayout } from "@/components/dashboard-layout"
 import { InventoryCategoriesOverview } from "@/components/pages/inventory/categories"
 
 export default function InventoryCategoriesPage() {
-  return <InventoryCategoriesOverview />
+  return (
+    <DashboardLayout>
+      <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
+        <InventoryCategoriesOverview />
+      </div>
+    </DashboardLayout>
+  )
 }

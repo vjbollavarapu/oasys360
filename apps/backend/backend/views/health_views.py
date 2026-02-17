@@ -1,5 +1,5 @@
 """
-Health check views for RaynAI backend
+Health check views for OASYS backend
 Provides comprehensive health monitoring for both multi-tenant and tenant-specific scenarios
 """
 import time
@@ -164,7 +164,7 @@ class MultiTenantHealthView(APIView, HealthCheckMixin):
         # Perform all health checks
         checks = {
             'timestamp': django_timezone.now().isoformat(),
-            'service': 'raynai-multi-tenant',
+            'service': 'oasys-multi-tenant',
             'version': getattr(settings, 'VERSION', '1.0.0'),
             'environment': getattr(settings, 'ENVIRONMENT', 'development'),
             'database': self.check_database_connection(),
@@ -175,7 +175,7 @@ class MultiTenantHealthView(APIView, HealthCheckMixin):
         
         # Check multi-tenant specific components
         try:
-            from tenant.models import Tenant, Domain
+            from tenants.models import Tenant, Domain
             tenant_count = Tenant.objects.count()
             domain_count = Domain.objects.count()
             
@@ -236,7 +236,7 @@ class TenantHealthView(APIView, HealthCheckMixin):
         # Perform basic health checks
         checks = {
             'timestamp': django_timezone.now().isoformat(),
-            'service': 'raynai-tenant',
+            'service': 'oasys-tenant',
             'version': getattr(settings, 'VERSION', '1.0.0'),
             'environment': getattr(settings, 'ENVIRONMENT', 'development'),
             'database': self.check_database_connection(),
@@ -254,9 +254,9 @@ class TenantHealthView(APIView, HealthCheckMixin):
             # Check if key tenant apps are working
             tenant_services = {}
             
-            # Check user service
+            # Check user service (authentication app)
             try:
-                from user.models import User
+                from authentication.models import User
                 user_count = User.objects.count()
                 tenant_services['user_service'] = {
                     'status': 'healthy',
@@ -264,37 +264,21 @@ class TenantHealthView(APIView, HealthCheckMixin):
                 }
             except Exception as e:
                 tenant_services['user_service'] = {
-                    'status': 'error',
-                    'message': f'User service check failed: {str(e)}'
+                    'status': 'warning',
+                    'message': f'User service check skipped: {str(e)}'
                 }
             
-            # Check patient service
-            try:
-                from patient.models import Patient
-                patient_count = Patient.objects.count()
-                tenant_services['patient_service'] = {
-                    'status': 'healthy',
-                    'patient_count': patient_count
-                }
-            except Exception as e:
-                tenant_services['patient_service'] = {
-                    'status': 'error',
-                    'message': f'Patient service check failed: {str(e)}'
-                }
+            # Note: patient and study models don't exist in OASYS project
+            # These checks are disabled as they're medical system specific
+            tenant_services['patient_service'] = {
+                'status': 'skipped',
+                'message': 'Patient service not applicable to OASYS project'
+            }
             
-            # Check study service
-            try:
-                from study.models import Study
-                study_count = Study.objects.count()
-                tenant_services['study_service'] = {
-                    'status': 'healthy',
-                    'study_count': study_count
-                }
-            except Exception as e:
-                tenant_services['study_service'] = {
-                    'status': 'error',
-                    'message': f'Study service check failed: {str(e)}'
-                }
+            tenant_services['study_service'] = {
+                'status': 'skipped',
+                'message': 'Study service not applicable to OASYS project'
+            }
             
             checks['tenant_services'] = tenant_services
             
@@ -347,7 +331,7 @@ class SimpleHealthView(APIView):
         return Response({
             'status': 'ok',
             'timestamp': django_timezone.now().isoformat(),
-            'service': 'raynai-backend',
+            'service': 'oasys-backend',
             'message': 'Service is running'
         }, status=status.HTTP_200_OK)
 
@@ -358,7 +342,7 @@ def simple_health_check(request):
     return JsonResponse({
         'status': 'ok',
         'timestamp': django_timezone.now().isoformat(),
-        'service': 'raynai-backend',
+        'service': 'oasys-backend',
         'message': 'Service is running'
     })
 

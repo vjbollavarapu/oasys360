@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OASYS360 Dashboard</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-dark": "#1e232e", // Slightly lighter than background-dark for cards
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for horizontal scroll areas */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-white overflow-x-hidden selection:bg-primary selection:text-white">
+<div class="relative min-h-screen flex flex-col pb-24"> <!-- Padding bottom for fixed nav -->
+<!-- Header -->
+<header class="sticky top-0 z-30 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-4 py-3">
+<div class="flex items-center justify-between">
+<!-- Left: Menu/Profile -->
+<button class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Center: Date Selector -->
+<button class="flex items-center gap-2 rounded-full bg-gray-200/50 dark:bg-surface-dark px-4 py-2 transition-colors active:scale-95">
+<span class="text-sm font-bold">October 2023</span>
+<span class="material-symbols-outlined text-sm">arrow_drop_down</span>
+</button>
+<!-- Right: Actions -->
+<div class="flex items-center gap-1">
+<button class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="relative flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300">
+<span class="material-symbols-outlined">filter_list</span>
+<!-- Notification dot -->
+<span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary border border-background-light dark:border-background-dark"></span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex flex-col gap-6 pt-4">
+<!-- Horizontal Stats Scroller -->
+<section>
+<div class="flex overflow-x-auto no-scrollbar snap-x snap-mandatory px-4 gap-4 pb-2">
+<!-- Card 1: Cash Flow -->
+<div class="snap-center shrink-0 min-w-[260px] flex flex-col gap-3 rounded-2xl bg-white dark:bg-surface-dark p-5 shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex items-center justify-between">
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Cash Flow</p>
+<div class="h-8 w-8 rounded-full bg-green-500/10 flex items-center justify-center text-green-500">
+<span class="material-symbols-outlined text-lg">trending_up</span>
+</div>
+</div>
+<div>
+<p class="text-2xl font-bold tracking-tight">$124,500.00</p>
+<p class="text-green-500 text-xs font-semibold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">arrow_upward</span>
+                                12% vs last month
+                            </p>
+</div>
+</div>
+<!-- Card 2: Account Balances -->
+<div class="snap-center shrink-0 min-w-[260px] flex flex-col gap-3 rounded-2xl bg-white dark:bg-surface-dark p-5 shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex items-center justify-between">
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Account Balances</p>
+<div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg">account_balance_wallet</span>
+</div>
+</div>
+<div>
+<p class="text-2xl font-bold tracking-tight">$45,200.00</p>
+<p class="text-green-500 text-xs font-semibold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">arrow_upward</span>
+                                5% vs last month
+                            </p>
+</div>
+</div>
+<!-- Card 3: Invoice Status -->
+<div class="snap-center shrink-0 min-w-[260px] flex flex-col gap-3 rounded-2xl bg-white dark:bg-surface-dark p-5 shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex items-center justify-between">
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Invoice Status</p>
+<div class="h-8 w-8 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500">
+<span class="material-symbols-outlined text-lg">pending</span>
+</div>
+</div>
+<div>
+<p class="text-2xl font-bold tracking-tight">5 Unpaid</p>
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium mt-1">
+                                Pending value: <span class="text-white font-bold">$4,200</span>
+</p>
+</div>
+</div>
+<!-- Card 4: Expenses -->
+<div class="snap-center shrink-0 min-w-[260px] flex flex-col gap-3 rounded-2xl bg-white dark:bg-surface-dark p-5 shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex items-center justify-between">
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Expenses</p>
+<div class="h-8 w-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500">
+<span class="material-symbols-outlined text-lg">trending_down</span>
+</div>
+</div>
+<div>
+<p class="text-2xl font-bold tracking-tight">$12,800.00</p>
+<p class="text-green-500 text-xs font-semibold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">arrow_downward</span>
+                                2% vs last month
+                            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Chart Section -->
+<section class="px-4">
+<div class="rounded-3xl bg-white dark:bg-surface-dark p-5 shadow-sm border border-gray-100 dark:border-gray-800">
+<!-- Segmented Controls -->
+<div class="mb-6 flex rounded-xl bg-gray-100 dark:bg-background-dark p-1">
+<label class="flex-1 cursor-pointer">
+<input checked="" class="peer sr-only" name="chart-view" type="radio"/>
+<div class="flex items-center justify-center rounded-lg py-2 text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-surface-dark peer-checked:text-primary peer-checked:shadow-sm dark:peer-checked:shadow-md">
+                                Revenue
+                            </div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input class="peer sr-only" name="chart-view" type="radio"/>
+<div class="flex items-center justify-center rounded-lg py-2 text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-surface-dark peer-checked:text-primary peer-checked:shadow-sm dark:peer-checked:shadow-md">
+                                Expense
+                            </div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input class="peer sr-only" name="chart-view" type="radio"/>
+<div class="flex items-center justify-center rounded-lg py-2 text-sm font-semibold text-gray-500 transition-all peer-checked:bg-white dark:peer-checked:bg-surface-dark peer-checked:text-primary peer-checked:shadow-sm dark:peer-checked:shadow-md">
+                                P/L
+                            </div>
+</label>
+</div>
+<!-- Chart Header -->
+<div class="flex items-end justify-between mb-4">
+<div>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Revenue</p>
+<h3 class="text-3xl font-bold text-gray-900 dark:text-white">$124,500.00</h3>
+</div>
+<div class="text-right">
+<p class="text-green-500 text-sm font-bold bg-green-500/10 px-2 py-1 rounded-lg inline-block">+12.5%</p>
+</div>
+</div>
+<!-- Chart SVG -->
+<div class="relative h-48 w-full select-none touch-none">
+<!-- Tooltip indicator line (Simulated) -->
+<div class="absolute left-1/2 top-0 bottom-0 w-px border-l border-dashed border-gray-400 dark:border-gray-600 opacity-50 z-10 pointer-events-none"></div>
+<div class="absolute left-1/2 top-8 -translate-x-1/2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold py-1 px-2 rounded shadow-lg z-20 pointer-events-none whitespace-nowrap">
+                            $48,200
+                        </div>
+<div class="absolute left-1/2 top-[61px] -translate-x-[4.5px] w-2.5 h-2.5 bg-primary rounded-full border-2 border-white dark:border-surface-dark z-20 pointer-events-none"></div>
+<svg class="h-full w-full overflow-visible" fill="none" preserveaspectratio="none" viewbox="0 0 478 150" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="chartGradient" x1="236" x2="236" y1="1" y2="149">
+<stop stop-color="#135bec" stop-opacity="0.5"></stop>
+<stop offset="1" stop-color="#135bec" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V149H326.769H0V109Z" fill="url(#chartGradient)"></path>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#135bec" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<!-- X Axis Labels -->
+<div class="flex justify-between mt-2 text-xs text-gray-500 dark:text-gray-400 font-medium">
+<span>1 Oct</span>
+<span>8 Oct</span>
+<span>15 Oct</span>
+<span>22 Oct</span>
+<span>29 Oct</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Access Grid -->
+<section class="px-4">
+<h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
+<div class="grid grid-cols-4 gap-x-2 gap-y-6">
+<!-- Item 1 -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="h-14 w-14 rounded-2xl bg-blue-500/10 group-hover:bg-blue-500/20 dark:bg-surface-dark dark:group-hover:bg-surface-dark/80 dark:border dark:border-gray-800 flex items-center justify-center text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl">calculate</span>
+</div>
+<span class="text-xs font-medium text-gray-600 dark:text-gray-400 text-center leading-tight">Accounting</span>
+</button>
+<!-- Item 2 -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="h-14 w-14 rounded-2xl bg-purple-500/10 group-hover:bg-purple-500/20 dark:bg-surface-dark dark:group-hover:bg-surface-dark/80 dark:border dark:border-gray-800 flex items-center justify-center text-purple-500 transition-colors">
+<span class="material-symbols-outlined text-2xl">description</span>
+</div>
+<span class="text-xs font-medium text-gray-600 dark:text-gray-400 text-center leading-tight">Invoicing</span>
+</button>
+<!-- Item 3 -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="h-14 w-14 rounded-2xl bg-emerald-500/10 group-hover:bg-emerald-500/20 dark:bg-surface-dark dark:group-hover:bg-surface-dark/80 dark:border dark:border-gray-800 flex items-center justify-center text-emerald-500 transition-colors">
+<span class="material-symbols-outlined text-2xl">account_balance</span>
+</div>
+<span class="text-xs font-medium text-gray-600 dark:text-gray-400 text-center leading-tight">Banking</span>
+</button>
+<!-- Item 4 -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="h-14 w-14 rounded-2xl bg-amber-500/10 group-hover:bg-amber-500/20 dark:bg-surface-dark dark:group-hover:bg-surface-dark/80 dark:border dark:border-gray-800 flex items-center justify-center text-amber-500 transition-colors">
+<span class="material-symbols-outlined text-2xl">inventory_2</span>
+</div>
+<span class="text-xs font-medium text-gray-600 dark:text-gray-400 text-center leading-tight">Inventory</span>
+</button>
+<!-- Item 5 -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="h-14 w-14 rounded-2xl bg-rose-500/10 group-hover:bg-rose-500/20 dark:bg-surface-dark dark:group-hover:bg-surface-dark/80 dark:border dark:border-gray-800 flex items-center justify-center text-rose-500 transition-colors">
+<span class="material-symbols-outlined text-2xl">sell</span>
+</div>
+<span class="text-xs font-medium text-gray-600 dark:text-gray-400 text-center leading-tight">Sales</span>
+</button>
+<!-- Item 6 -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="h-14 w-14 rounded-2xl bg-cyan-500/10 group-hover:bg-cyan-500/20 dark:bg-surface-dark dark:group-hover:bg-surface-dark/80 dark:border dark:border-gray-800 flex items-center justify-center text-cyan-500 transition-colors">
+<span class="material-symbols-outlined text-2xl">shopping_cart</span>
+</div>
+<span class="text-xs font-medium text-gray-600 dark:text-gray-400 text-center leading-tight">Purchase</span>
+</button>
+<!-- Item 7 -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="h-14 w-14 rounded-2xl bg-indigo-500/10 group-hover:bg-indigo-500/20 dark:bg-surface-dark dark:group-hover:bg-surface-dark/80 dark:border dark:border-gray-800 flex items-center justify-center text-indigo-500 transition-colors">
+<span class="material-symbols-outlined text-2xl">pie_chart</span>
+</div>
+<span class="text-xs font-medium text-gray-600 dark:text-gray-400 text-center leading-tight">Reports</span>
+</button>
+<!-- Item 8 -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="h-14 w-14 rounded-2xl bg-gray-500/10 group-hover:bg-gray-500/20 dark:bg-surface-dark dark:group-hover:bg-surface-dark/80 dark:border dark:border-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 transition-colors">
+<span class="material-symbols-outlined text-2xl">folder</span>
+</div>
+<span class="text-xs font-medium text-gray-600 dark:text-gray-400 text-center leading-tight">Documents</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Fixed Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 w-full z-40 bg-white/95 dark:bg-surface-dark/95 backdrop-blur-lg border-t border-gray-200 dark:border-gray-800 pb-safe">
+<div class="flex items-center justify-around h-16 px-2">
+<!-- Nav Item: Dashboard -->
+<button class="flex flex-1 flex-col items-center justify-center gap-1 h-full text-primary">
+<span class="material-symbols-outlined text-2xl filled-icon">grid_view</span>
+<span class="text-[10px] font-bold">Dashboard</span>
+</button>
+<!-- Nav Item: Transactions -->
+<button class="flex flex-1 flex-col items-center justify-center gap-1 h-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+<span class="material-symbols-outlined text-2xl">receipt_long</span>
+<span class="text-[10px] font-medium">Transactions</span>
+</button>
+<!-- Floating FAB for new actions (Optional modern touch for enterprise apps) -->
+<div class="relative -top-6">
+<button class="flex h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-primary/40 text-white transform transition-transform active:scale-95">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+<!-- Nav Item: Invoices -->
+<button class="flex flex-1 flex-col items-center justify-center gap-1 h-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+<span class="material-symbols-outlined text-2xl">description</span>
+<span class="text-[10px] font-medium">Invoices</span>
+</button>
+<!-- Nav Item: More -->
+<button class="flex flex-1 flex-col items-center justify-center gap-1 h-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+<span class="material-symbols-outlined text-2xl">more_horiz</span>
+<span class="text-[10px] font-medium">More</span>
+</button>
+</div>
+<!-- Safe Area Spacer for iOS Home Indicator -->
+<div class="h-safe-bottom w-full"></div>
+</nav>
+</div>
+<!-- Extra styles for icon fill simulation and safe area -->
+<style>
+        .filled-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Safe Area support for newer iPhones */
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+        .h-safe-bottom {
+            height: env(safe-area-inset-bottom, 0px);
+        }
+    </style>
+</body></html>

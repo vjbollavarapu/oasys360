@@ -18,7 +18,7 @@ import {
 
 export function Web3SettingsOverview() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Web3 Settings</h1>
@@ -27,11 +27,11 @@ export function Web3SettingsOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Shield className="h-4 w-4 mr-2" />
             Security
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Save Settings
           </Button>

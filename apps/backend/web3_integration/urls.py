@@ -43,4 +43,21 @@ urlpatterns = [
     
     # Statistics
     path('stats/', views.web3_stats, name='web3_stats'),
+    
+    # Gnosis Safe
+    path('gnosis-safe/', views.GnosisSafeListView.as_view(), name='gnosis_safe_list'),
+    path('gnosis-safe/<uuid:pk>/', views.GnosisSafeDetailView.as_view(), name='gnosis_safe_detail'),
+    path('gnosis-safe/owners/', views.GnosisSafeOwnerListView.as_view(), name='gnosis_safe_owners_list'),
+    path('gnosis-safe/transactions/', views.GnosisSafeTransactionListView.as_view(), name='gnosis_safe_transactions_list'),
+    path('gnosis-safe/transactions/<uuid:pk>/', views.GnosisSafeTransactionDetailView.as_view(), name='gnosis_safe_transactions_detail'),
+    path('gnosis-safe/transactions/<uuid:pk>/confirm/', views.confirm_gnosis_transaction, name='confirm_gnosis_transaction'),
+    
+    # Coinbase Prime
+    path('coinbase-prime/connections/', views.CoinbasePrimeConnectionListView.as_view(), name='coinbase_prime_connections_list'),
+    path('coinbase-prime/connections/<uuid:pk>/', views.CoinbasePrimeConnectionDetailView.as_view(), name='coinbase_prime_connections_detail'),
+    path('coinbase-prime/connections/<uuid:connection_id>/sync/', views.sync_coinbase_accounts, name='sync_coinbase_accounts'),
+    path('coinbase-prime/accounts/', views.CoinbasePrimeAccountListView.as_view(), name='coinbase_prime_accounts_list'),
+    path('coinbase-prime/accounts/<uuid:pk>/', views.CoinbasePrimeAccountDetailView.as_view(), name='coinbase_prime_accounts_detail'),
+    path('coinbase-prime/orders/', views.CoinbasePrimeOrderListView.as_view(), name='coinbase_prime_orders_list'),
+    path('coinbase-prime/orders/<uuid:pk>/', views.CoinbasePrimeOrderDetailView.as_view(), name='coinbase_prime_orders_detail'),
 ]

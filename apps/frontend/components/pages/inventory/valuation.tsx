@@ -23,11 +23,11 @@ export function InventoryValuationOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Calculator className="h-4 w-4 mr-2" />
             Calculate
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
@@ -43,49 +43,57 @@ export function InventoryValuationOverview() {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Value</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Value</CardTitle>
+                <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-2xl">
+                  <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">$124,567</div>
-                <p className="text-xs text-muted-foreground">Current valuation</p>
+                <p className="text-xs text-muted-foreground mt-2">Current valuation</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Items Valued</CardTitle>
-                <Calculator className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Items Valued</CardTitle>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-2xl">
+                  <Calculator className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">1,247</div>
-                <p className="text-xs text-muted-foreground">Total items</p>
+                <p className="text-xs text-muted-foreground mt-2">Total items</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Avg Value</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Avg Value</CardTitle>
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/20 rounded-2xl">
+                  <TrendingUp className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">$99.89</div>
-                <p className="text-xs text-muted-foreground">Per item</p>
+                <p className="text-xs text-muted-foreground mt-2">Per item</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Last Updated</CardTitle>
-                <Eye className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Last Updated</CardTitle>
+                <div className="p-3 bg-gray-100 dark:bg-gray-900/20 rounded-2xl">
+                  <Eye className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">2 hours</div>
-                <p className="text-xs text-muted-foreground">Ago</p>
+                <p className="text-xs text-muted-foreground mt-2">Ago</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Valuation Summary</CardTitle>
               <CardDescription>
@@ -94,10 +102,10 @@ export function InventoryValuationOverview() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <DollarSign className="h-5 w-5 text-blue-600" />
+                    <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
+                      <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
                       <p className="font-medium">Electronics</p>
@@ -106,13 +114,13 @@ export function InventoryValuationOverview() {
                   </div>
                   <div className="text-right">
                     <p className="font-medium">$67,890</p>
-                    <Badge className="bg-blue-100 text-blue-800">54.5%</Badge>
+                    <Badge className="rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">54.5%</Badge>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <DollarSign className="h-5 w-5 text-green-600" />
+                    <div className="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                      <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
                       <p className="font-medium">Office Supplies</p>
@@ -121,13 +129,13 @@ export function InventoryValuationOverview() {
                   </div>
                   <div className="text-right">
                     <p className="font-medium">$23,456</p>
-                    <Badge className="bg-green-100 text-green-800">18.8%</Badge>
+                    <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">18.8%</Badge>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                      <DollarSign className="h-5 w-5 text-purple-600" />
+                    <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded-full flex items-center justify-center">
+                      <DollarSign className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                     </div>
                     <div>
                       <p className="font-medium">Furniture</p>
@@ -136,7 +144,7 @@ export function InventoryValuationOverview() {
                   </div>
                   <div className="text-right">
                     <p className="font-medium">$33,221</p>
-                    <Badge className="bg-purple-100 text-purple-800">26.7%</Badge>
+                    <Badge className="rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300">26.7%</Badge>
                   </div>
                 </div>
               </div>
@@ -145,7 +153,7 @@ export function InventoryValuationOverview() {
         </TabsContent>
 
         <TabsContent value="methods" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Valuation Methods</CardTitle>
               <CardDescription>
@@ -153,7 +161,7 @@ export function InventoryValuationOverview() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground">
+              <div className="text-center text-muted-foreground py-12">
                 <Calculator className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Valuation methods interface will appear here</p>
               </div>
@@ -162,7 +170,7 @@ export function InventoryValuationOverview() {
         </TabsContent>
 
         <TabsContent value="reports" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Valuation Reports</CardTitle>
               <CardDescription>
@@ -170,7 +178,7 @@ export function InventoryValuationOverview() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground">
+              <div className="text-center text-muted-foreground py-12">
                 <DollarSign className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Valuation reports interface will appear here</p>
               </div>

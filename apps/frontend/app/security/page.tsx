@@ -524,11 +524,11 @@ export default function SecurityPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
                 <h4 className="font-semibold mb-2">Security Team</h4>
-                <p className="text-sm opacity-90">security@oasys.com</p>
+                <p className="text-sm opacity-90">security@oasys360.com</p>
               </div>
               <div>
                 <h4 className="font-semibold mb-2">Vulnerability Reports</h4>
-                <p className="text-sm opacity-90">security-reports@oasys.com</p>
+                <p className="text-sm opacity-90">security-reports@oasys360.com</p>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

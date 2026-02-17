@@ -1,0 +1,286 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: oasys360-network-policy
+  namespace: oasys360
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow ingress from ingress controller
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 8000
+    - protocol: TCP
+      port: 8001
+  
+  # Allow ingress from monitoring namespace
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    ports:
+    - protocol: TCP
+      port: 8001
+  
+  # Allow ingress from same namespace
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: oasys360
+    ports:
+    - protocol: TCP
+      port: 8000
+    - protocol: TCP
+      port: 8001
+    - protocol: TCP
+      port: 5432
+    - protocol: TCP
+      port: 6379
+  
+  egress:
+  # Allow egress to external DNS
+  - to: []
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  
+  # Allow egress to external HTTPS
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 443
+  
+  # Allow egress to external HTTP (for package downloads)
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 80
+  
+  # Allow egress to database
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - protocol: TCP
+      port: 5432
+  
+  # Allow egress to Redis
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis
+    ports:
+    - protocol: TCP
+      port: 6379
+  
+  # Allow egress to monitoring
+  - to:
+    - podSelector:
+        matchLabels:
+          app: prometheus
+    ports:
+    - protocol: TCP
+      port: 9090
+  
+  - to:
+    - podSelector:
+        matchLabels:
+          app: grafana
+    ports:
+    - protocol: TCP
+      port: 3000
+  
+  # Allow egress to tenant metrics exporter
+  - to:
+    - podSelector:
+        matchLabels:
+          app: tenant-metrics-exporter
+    ports:
+    - protocol: TCP
+      port: 8001
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-network-policy
+  namespace: oasys360
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow ingress from Django app
+  - from:
+    - podSelector:
+        matchLabels:
+          app: django
+    ports:
+    - protocol: TCP
+      port: 5432
+  
+  # Allow ingress from FastAPI app
+  - from:
+    - podSelector:
+        matchLabels:
+          app: fastapi
+    ports:
+    - protocol: TCP
+      port: 5432
+  
+  # Allow ingress from monitoring
+  - from:
+    - podSelector:
+        matchLabels:
+          app: prometheus
+    ports:
+    - protocol: TCP
+      port: 5432
+  
+  # Allow ingress from tenant metrics exporter
+  - from:
+    - podSelector:
+        matchLabels:
+          app: tenant-metrics-exporter
+    ports:
+    - protocol: TCP
+      port: 5432
+  
+  egress:
+  # Allow egress to external DNS
+  - to: []
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  
+  # Allow egress to external HTTPS
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 443
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-network-policy
+  namespace: oasys360
+spec:
+  podSelector:
+    matchLabels:
+      app: redis
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow ingress from Django app
+  - from:
+    - podSelector:
+        matchLabels:
+          app: django
+    ports:
+    - protocol: TCP
+      port: 6379
+  
+  # Allow ingress from FastAPI app
+  - from:
+    - podSelector:
+        matchLabels:
+          app: fastapi
+    ports:
+    - protocol: TCP
+      port: 6379
+  
+  # Allow ingress from monitoring
+  - from:
+    - podSelector:
+        matchLabels:
+          app: prometheus
+    ports:
+    - protocol: TCP
+      port: 6379
+  
+  egress:
+  # Allow egress to external DNS
+  - to: []
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  
+  # Allow egress to external HTTPS
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 443
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: monitoring-network-policy
+  namespace: oasys360
+spec:
+  podSelector:
+    matchLabels:
+      app: prometheus
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow ingress from Grafana
+  - from:
+    - podSelector:
+        matchLabels:
+          app: grafana
+    ports:
+    - protocol: TCP
+      port: 9090
+  
+  # Allow ingress from external monitoring
+  - from: []
+    ports:
+    - protocol: TCP
+      port: 9090
+  
+  egress:
+  # Allow egress to all pods for scraping
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 8000
+    - protocol: TCP
+      port: 8001
+    - protocol: TCP
+      port: 5432
+    - protocol: TCP
+      port: 6379
+    - protocol: TCP
+      port: 9090
+  
+  # Allow egress to external DNS
+  - to: []
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  
+  # Allow egress to external HTTPS
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 443

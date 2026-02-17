@@ -1,0 +1,44 @@
+{
+  "country_code": "TH",
+  "country_name": "Thailand",
+  "description": "VAT (Value Added Tax) rates for Thailand",
+  "tax_rates": [
+    {
+      "name": "VAT Standard Rate",
+      "code": "VAT_STANDARD",
+      "rate": 7.00,
+      "tax_type": "vat",
+      "region": "Thailand",
+      "category": "",
+      "is_default": true,
+      "is_active": true,
+      "description": "Standard VAT rate",
+      "effective_from": "1992-01-01"
+    },
+    {
+      "name": "VAT Zero Rate",
+      "code": "VAT_ZERO",
+      "rate": 0.00,
+      "tax_type": "vat",
+      "region": "Thailand",
+      "category": "Export",
+      "is_default": false,
+      "is_active": true,
+      "description": "Zero-rated supplies (exports)",
+      "effective_from": "1992-01-01"
+    },
+    {
+      "name": "VAT Exempt",
+      "code": "VAT_EXEMPT",
+      "rate": 0.00,
+      "tax_type": "vat",
+      "region": "Thailand",
+      "category": "Exempt",
+      "is_default": false,
+      "is_active": true,
+      "description": "Exempt supplies",
+      "effective_from": "1992-01-01"
+    }
+  ]
+}
+

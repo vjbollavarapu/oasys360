@@ -365,7 +365,7 @@ export default function PrivacyPolicyPage() {
                   <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <h4 className="font-semibold text-blue-900 mb-2">How to Exercise Your Rights</h4>
                     <p className="text-sm text-blue-700 mb-3">
-                      Contact our privacy team at privacy@oasys.com or use the form in your account settings.
+                      Contact our privacy team at privacy@oasys360.com or use the form in your account settings.
                     </p>
                     <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
                       <Mail className="w-4 h-4 mr-2" />
@@ -387,11 +387,11 @@ export default function PrivacyPolicyPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <h4 className="font-semibold mb-2">Email Us</h4>
-                      <p className="text-sm opacity-90">privacy@oasys.com</p>
+                      <p className="text-sm opacity-90">privacy@oasys360.com</p>
                     </div>
                     <div>
                       <h4 className="font-semibold mb-2">Data Protection Officer</h4>
-                      <p className="text-sm opacity-90">dpo@oasys.com</p>
+                      <p className="text-sm opacity-90">dpo@oasys360.com</p>
                     </div>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4 mt-6">

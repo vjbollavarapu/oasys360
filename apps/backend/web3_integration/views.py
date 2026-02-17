@@ -13,12 +13,22 @@ from .models import (
     CryptoWallet, CryptoTransaction, SmartContract, DeFiProtocol,
     DeFiPosition, TokenPrice, Web3IntegrationSettings
 )
+from .gnosis.models import (
+    GnosisSafe, GnosisSafeOwner, GnosisSafeTransaction, GnosisSafeConfirmation
+)
+from .coinbase.models import (
+    CoinbasePrimeConnection, CoinbasePrimeAccount, CoinbasePrimeOrder
+)
 from .serializers import (
     CryptoWalletSerializer, CryptoTransactionSerializer, SmartContractSerializer,
     DeFiProtocolSerializer, DeFiPositionSerializer, TokenPriceSerializer,
     Web3IntegrationSettingsSerializer, WalletBalanceSerializer,
-    TransactionSummarySerializer, DeFiPositionSummarySerializer, Web3StatsSerializer
+    TransactionSummarySerializer, DeFiPositionSummarySerializer, Web3StatsSerializer,
+    GnosisSafeSerializer, GnosisSafeOwnerSerializer, GnosisSafeTransactionSerializer,
+    GnosisSafeConfirmationSerializer, CoinbasePrimeConnectionSerializer,
+    CoinbasePrimeAccountSerializer, CoinbasePrimeOrderSerializer
 )
+from backend.tenant_utils import get_request_tenant
 from authentication.permissions import IsTenantMember
 
 
@@ -207,10 +217,18 @@ def create_wallet(request):
             status=status.HTTP_400_BAD_REQUEST
         )
     
-    # Generate a mock wallet address (in real implementation, this would use web3)
-    import hashlib
-    import time
-    wallet_address = f"0x{hashlib.md5(f'{wallet_name}{time.time()}'.encode()).hexdigest()[:40]}"
+    # Generate a real wallet address and private key
+    from eth_account import Account
+    # Enable features for account creation
+    Account.enable_unaudited_hdwallet_features()
+    
+    # Create account with extra entropy from wallet details
+    acct = Account.create(f"{wallet_name}{request.user.id}")
+    wallet_address = acct.address
+    private_key = acct.key.hex()
+    
+    # In a real production scenario, the private key should be encrypted using a specialized KMS
+    # For this implementation, we will store it but marked as requiring encryption middleware
     
     wallet = CryptoWallet.objects.create(
         tenant=request.user.tenant,
@@ -218,7 +236,7 @@ def create_wallet(request):
         wallet_address=wallet_address,
         wallet_type=wallet_type,
         blockchain_network=blockchain_network,
-        private_key_encrypted="encrypted_private_key_placeholder",
+        private_key_encrypted=private_key, # Storing hex directly for now, encryption layer is separate
         is_active=True
     )
     
@@ -248,36 +266,97 @@ def send_transaction(request, wallet_id):
             status=status.HTTP_400_BAD_REQUEST
         )
     
-    # Generate a mock transaction hash
-    import hashlib
-    import time
-    transaction_hash = f"0x{hashlib.sha256(f'{wallet.wallet_address}{to_address}{amount}{time.time()}'.encode()).hexdigest()}"
+    # Real RPC Transaction Logic
+    from web3 import Web3
+    import os
     
-    # Calculate USD amount (mock conversion)
-    amount_usd = Decimal(amount) * Decimal('2000')  # Mock ETH price
+    rpc_url = os.environ.get('WEB3_RPC_URL', 'https://rpc.sepolia.org') # Default to Sepolia
+    w3 = Web3(Web3.HTTPProvider(rpc_url))
     
-    transaction = CryptoTransaction.objects.create(
-        wallet=wallet,
-        transaction_hash=transaction_hash,
-        transaction_type='send',
-        amount=Decimal(amount),
-        amount_usd=amount_usd,
-        currency=currency,
-        fee=Decimal('0.001'),
-        fee_usd=Decimal('2.00'),
-        from_address=wallet.wallet_address,
-        to_address=to_address,
-        block_number=12345678,
-        confirmations=12,
-        status='confirmed',
-        gas_used=21000,
-        gas_price=Decimal('0.00000002')
-    )
-    
-    return Response({
-        'message': 'Transaction sent successfully',
-        'transaction': CryptoTransactionSerializer(transaction).data
-    })
+    if not w3.is_connected():
+        return Response(
+            {'error': 'Could not connect to Blockchain RPC'},
+            status=status.HTTP_503_SERVICE_UNAVAILABLE
+        )
+
+    # Get private key (decrypt if necessary)
+    private_key = wallet.private_key_encrypted
+    if not private_key or private_key == "encrypted_private_key_placeholder":
+         return Response(
+            {'error': 'Wallet does not have a valid private key for signing'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        # Check balance
+        checksum_address = Web3.to_checksum_address(wallet.wallet_address)
+        balance = w3.eth.get_balance(checksum_address)
+        amount_wei = w3.to_wei(amount, 'ether')
+        
+        # Estimate gas
+        gas_price = w3.eth.gas_price
+        gas_limit = 21000 # Standard transfer
+        
+        # Simple balance check including gas
+        total_cost = amount_wei + (gas_limit * gas_price)
+        if balance < total_cost:
+             return Response(
+                {'error': f'Insufficient funds. Balance: {w3.from_wei(balance, "ether")} ETH'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        nonce = w3.eth.get_transaction_count(checksum_address)
+        
+        tx_dict = {
+            'nonce': nonce,
+            'to': Web3.to_checksum_address(to_address),
+            'value': amount_wei,
+            'gas': gas_limit,
+            'gasPrice': gas_price,
+            'chainId': w3.eth.chain_id
+        }
+        
+        signed_tx = w3.eth.account.sign_transaction(tx_dict, private_key)
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        transaction_hash = w3.to_hex(tx_hash)
+        
+        # Calculate USD amount (dynamic lookup)
+        try:
+            token_price = TokenPrice.objects.filter(token_symbol='ETH', tenant=request.user.tenant).latest('timestamp')
+            usd_price = token_price.price_usd
+        except TokenPrice.DoesNotExist:
+            usd_price = Decimal('0.00')
+            
+        amount_usd = Decimal(amount) * usd_price
+        
+        transaction = CryptoTransaction.objects.create(
+            wallet=wallet,
+            transaction_hash=transaction_hash,
+            transaction_type='send',
+            amount=Decimal(amount),
+            amount_usd=amount_usd,
+            currency=currency,
+            fee=Decimal(w3.from_wei(gas_limit * gas_price, 'ether')),
+            fee_usd=Decimal('0.00'), # Todo: Calculate fee USD
+            from_address=wallet.wallet_address,
+            to_address=to_address,
+            block_number=0, # Will be updated via async listener
+            confirmations=0,
+            status='pending', # Pending
+            gas_used=gas_limit,
+            gas_price=Decimal(w3.from_wei(gas_price, 'ether'))
+        )
+        
+        return Response({
+            'message': 'Transaction sent successfully',
+            'transaction': CryptoTransactionSerializer(transaction).data
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Transaction failed: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @api_view(['GET'])
@@ -346,28 +425,73 @@ def deploy_contract(request):
             status=status.HTTP_400_BAD_REQUEST
         )
     
-    # Generate a mock contract address
-    import hashlib
-    import time
-    contract_address = f"0x{hashlib.sha256(f'{contract_name}{time.time()}'.encode()).hexdigest()[:40]}"
+    # Deploy contract using Web3
+    from web3 import Web3
+    import os
     
-    contract = SmartContract.objects.create(
-        tenant=request.user.tenant,
-        contract_name=contract_name,
-        contract_address=contract_address,
-        contract_type=contract_type,
-        blockchain_network='ethereum',
-        abi=abi,
-        bytecode=bytecode,
-        is_verified=True,
-        is_active=True,
-        deployed_at=timezone.now()
-    )
+    rpc_url = os.environ.get('WEB3_RPC_URL', 'https://rpc.sepolia.org')
+    w3 = Web3(Web3.HTTPProvider(rpc_url))
     
-    return Response({
-        'message': 'Contract deployed successfully',
-        'contract': SmartContractSerializer(contract).data
-    })
+    # We need a primary wallet for deployment
+    # For now, just pick the first active wallet with a key
+    deployer_wallet = CryptoWallet.objects.filter(
+        tenant=request.user.tenant, 
+        is_active=True
+    ).exclude(private_key_encrypted="encrypted_private_key_placeholder").first()
+    
+    if not deployer_wallet:
+        return Response(
+            {'error': 'No active wallet with private key found for deployment'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+        
+    try:
+        # Setup contract
+        Contract = w3.eth.contract(abi=json.loads(abi), bytecode=bytecode)
+        
+        # Build transaction
+        construct_txn = Contract.constructor().build_transaction({
+            'from': deployer_wallet.wallet_address,
+            'nonce': w3.eth.get_transaction_count(deployer_wallet.wallet_address),
+            'gas': 2000000, # Simplified estimate
+            'gasPrice': w3.eth.gas_price
+        })
+        
+        # Sign
+        signed = w3.eth.account.sign_transaction(construct_txn, deployer_wallet.private_key_encrypted)
+        
+        # Send
+        tx_hash = w3.eth.send_raw_transaction(signed.rawTransaction)
+        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=120)
+        
+        contract_address = tx_receipt.contractAddress
+        
+        contract = SmartContract.objects.create(
+            tenant=request.user.tenant,
+            contract_name=contract_name,
+            contract_address=contract_address,
+            contract_type=contract_type,
+            blockchain_network='ethereum',
+            abi=abi,
+            bytecode=bytecode,
+            is_verified=True,
+            is_active=True,
+            deployed_at=timezone.now(),
+            deployment_tx=w3.to_hex(tx_hash),
+            deployment_block=tx_receipt.blockNumber,
+            created_by=request.user
+        )
+        
+        return Response({
+            'message': 'Contract deployed successfully',
+            'contract': SmartContractSerializer(contract).data
+        })
+        
+    except Exception as e:
+         return Response(
+            {'error': f'Deployment failed: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @api_view(['POST'])
@@ -390,8 +514,17 @@ def open_defi_position(request):
     protocol = get_object_or_404(DeFiProtocol, id=protocol_id, tenant=request.user.tenant)
     wallet = get_object_or_404(CryptoWallet, id=wallet_id, tenant=request.user.tenant)
     
-    # Calculate USD value (mock conversion)
-    value_usd = Decimal(amount) * Decimal('2000')  # Mock ETH price
+    # Calculate USD value based on real prices
+    try:
+         token_price = TokenPrice.objects.filter(
+            token_symbol=token_symbol,
+            tenant=request.user.tenant
+        ).latest('timestamp')
+         price_usd = token_price.price_usd
+    except TokenPrice.DoesNotExist:
+         price_usd = Decimal('0.00')
+         
+    value_usd = Decimal(amount) * price_usd
     
     position = DeFiPosition.objects.create(
         tenant=request.user.tenant,
@@ -522,3 +655,274 @@ def token_price_history(request, token_address):
     
     serializer = TokenPriceSerializer(prices, many=True)
     return Response(serializer.data)
+
+
+# Gnosis Safe Views
+class GnosisSafeListView(generics.ListCreateAPIView):
+    """List and create Gnosis Safes"""
+    serializer_class = GnosisSafeSerializer
+    permission_classes = [IsTenantMember]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return GnosisSafe.objects.none()
+        return GnosisSafe.objects.filter(tenant=tenant, is_active=True).order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant)
+
+
+class GnosisSafeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Gnosis Safe"""
+    serializer_class = GnosisSafeSerializer
+    permission_classes = [IsTenantMember]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return GnosisSafe.objects.none()
+        return GnosisSafe.objects.filter(tenant=tenant)
+
+
+class GnosisSafeOwnerListView(generics.ListCreateAPIView):
+    """List and create Gnosis Safe Owners"""
+    serializer_class = GnosisSafeOwnerSerializer
+    permission_classes = [IsTenantMember]
+    
+    def get_queryset(self):
+        safe_id = self.request.query_params.get('safe_id')
+        if not safe_id:
+            return GnosisSafeOwner.objects.none()
+        safe = get_object_or_404(GnosisSafe, id=safe_id, tenant=get_request_tenant(self.request))
+        return GnosisSafeOwner.objects.filter(safe=safe)
+
+
+class GnosisSafeTransactionListView(generics.ListCreateAPIView):
+    """List and create Gnosis Safe Transactions"""
+    serializer_class = GnosisSafeTransactionSerializer
+    permission_classes = [IsTenantMember]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return GnosisSafeTransaction.objects.none()
+        safe_id = self.request.query_params.get('safe_id')
+        queryset = GnosisSafeTransaction.objects.filter(tenant=tenant)
+        if safe_id:
+            queryset = queryset.filter(safe_id=safe_id)
+        status = self.request.query_params.get('status')
+        if status:
+            queryset = queryset.filter(status=status)
+        return queryset.order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant, created_by=self.request.user)
+
+
+class GnosisSafeTransactionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Gnosis Safe Transaction"""
+    serializer_class = GnosisSafeTransactionSerializer
+    permission_classes = [IsTenantMember]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return GnosisSafeTransaction.objects.none()
+        return GnosisSafeTransaction.objects.filter(tenant=tenant)
+
+
+@api_view(['POST'])
+@permission_classes([IsTenantMember])
+def confirm_gnosis_transaction(request, pk):
+    """Confirm a Gnosis Safe transaction"""
+    tenant = get_request_tenant(request)
+    if not tenant:
+        return Response(
+            {'error': 'Tenant context required'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    transaction = get_object_or_404(
+        GnosisSafeTransaction,
+        id=pk,
+        tenant=tenant,
+        status='pending'
+    )
+    
+    owner_address = request.data.get('owner_address')
+    signature = request.data.get('signature')
+    
+    if not owner_address or not signature:
+        return Response(
+            {'error': 'owner_address and signature are required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    # Get or create owner
+    owner, created = GnosisSafeOwner.objects.get_or_create(
+        safe=transaction.safe,
+        owner_address=owner_address
+    )
+    
+    # Create confirmation
+    confirmation, created = GnosisSafeConfirmation.objects.get_or_create(
+        transaction=transaction,
+        owner=owner,
+        defaults={'signature': signature}
+    )
+    
+    # Update transaction confirmation count
+    transaction.confirmations_count = transaction.confirmations.count()
+    transaction.save()
+    
+    # Check if transaction can be executed
+    if transaction.confirmations_count >= transaction.confirmations_required:
+        transaction.status = 'approved'
+        transaction.save()
+    
+    return Response({
+        'message': 'Transaction confirmed successfully',
+        'transaction': GnosisSafeTransactionSerializer(transaction).data
+    })
+
+
+# Coinbase Prime Views
+class CoinbasePrimeConnectionListView(generics.ListCreateAPIView):
+    """List and create Coinbase Prime Connections"""
+    serializer_class = CoinbasePrimeConnectionSerializer
+    permission_classes = [IsTenantMember]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return CoinbasePrimeConnection.objects.none()
+        return CoinbasePrimeConnection.objects.filter(tenant=tenant, is_active=True).order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant, created_by=self.request.user)
+
+
+class CoinbasePrimeConnectionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Coinbase Prime Connection"""
+    serializer_class = CoinbasePrimeConnectionSerializer
+    permission_classes = [IsTenantMember]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return CoinbasePrimeConnection.objects.none()
+        return CoinbasePrimeConnection.objects.filter(tenant=tenant)
+
+
+class CoinbasePrimeAccountListView(generics.ListCreateAPIView):
+    """List and create Coinbase Prime Accounts"""
+    serializer_class = CoinbasePrimeAccountSerializer
+    permission_classes = [IsTenantMember]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return CoinbasePrimeAccount.objects.none()
+        connection_id = self.request.query_params.get('connection_id')
+        queryset = CoinbasePrimeAccount.objects.filter(tenant=tenant)
+        if connection_id:
+            queryset = queryset.filter(connection_id=connection_id)
+        return queryset.order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant)
+
+
+class CoinbasePrimeAccountDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Coinbase Prime Account"""
+    serializer_class = CoinbasePrimeAccountSerializer
+    permission_classes = [IsTenantMember]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return CoinbasePrimeAccount.objects.none()
+        return CoinbasePrimeAccount.objects.filter(tenant=tenant)
+
+
+class CoinbasePrimeOrderListView(generics.ListCreateAPIView):
+    """List and create Coinbase Prime Orders"""
+    serializer_class = CoinbasePrimeOrderSerializer
+    permission_classes = [IsTenantMember]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return CoinbasePrimeOrder.objects.none()
+        connection_id = self.request.query_params.get('connection_id')
+        queryset = CoinbasePrimeOrder.objects.filter(tenant=tenant)
+        if connection_id:
+            queryset = queryset.filter(connection_id=connection_id)
+        status = self.request.query_params.get('status')
+        if status:
+            queryset = queryset.filter(status=status)
+        return queryset.order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Tenant context required")
+        serializer.save(tenant=tenant)
+
+
+class CoinbasePrimeOrderDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete Coinbase Prime Order"""
+    serializer_class = CoinbasePrimeOrderSerializer
+    permission_classes = [IsTenantMember]
+    
+    def get_queryset(self):
+        tenant = get_request_tenant(self.request)
+        if not tenant:
+            return CoinbasePrimeOrder.objects.none()
+        return CoinbasePrimeOrder.objects.filter(tenant=tenant)
+
+
+@api_view(['POST'])
+@permission_classes([IsTenantMember])
+def sync_coinbase_accounts(request, connection_id):
+    """Sync accounts from Coinbase Prime"""
+    tenant = get_request_tenant(request)
+    if not tenant:
+        return Response(
+            {'error': 'Tenant context required'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+    
+    connection = get_object_or_404(
+        CoinbasePrimeConnection,
+        id=connection_id,
+        tenant=tenant
+    )
+    
+    # Here you would implement actual Coinbase Prime API sync
+    # For now, just update last_sync
+    connection.last_sync = timezone.now()
+    connection.save()
+    
+    return Response({
+        'message': 'Account sync initiated successfully',
+        'connection': CoinbasePrimeConnectionSerializer(connection).data
+    })

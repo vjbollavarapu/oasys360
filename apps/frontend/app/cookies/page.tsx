@@ -164,7 +164,7 @@ export default function CookiePolicyPage() {
                 </p>
                 <p className="text-sm text-gray-500 mt-2">
                   <strong>Contact:</strong> For questions about this Cookie Policy, please contact us at 
-                  <a href="mailto:privacy@oasys.com" className="text-blue-600 hover:underline"> privacy@oasys.com</a>
+                  <a href="mailto:privacy@oasys360.com" className="text-blue-600 hover:underline"> privacy@oasys360.com</a>
                 </p>
               </div>
             </div>

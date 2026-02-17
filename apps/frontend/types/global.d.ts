@@ -59,7 +59,7 @@ export interface PlatformPermission {
 export interface Tenant {
   id: string
   name: string
-  domain: string // subdomain.oasys.com
+  domain: string // subdomain.oasys360.com
   type: 'business' | 'firm'
   subscriptionPlan: SubscriptionPlan
   status: 'active' | 'suspended' | 'trial' | 'cancelled'

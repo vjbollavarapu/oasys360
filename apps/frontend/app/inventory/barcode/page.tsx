@@ -1,8 +1,19 @@
-"use client"
+/**
+ * Barcode Scanning Page
+ * Main page for barcode scanning and management
+ */
 
-import { useState, useEffect } from "react"
+"use client";
+
+import { DashboardLayout } from "@/components/dashboard-layout"
 import { BarcodeScanningOverview } from "@/components/pages/inventory/barcode"
 
 export default function BarcodePage() {
-  return <BarcodeScanningOverview />
+  return (
+    <DashboardLayout>
+      <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
+        <BarcodeScanningOverview />
+      </div>
+    </DashboardLayout>
+  )
 }

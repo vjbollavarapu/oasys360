@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OASYS360 Dashboard</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "card-dark": "#1c222e",
+                        "card-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased selection:bg-primary selection:text-white">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden pb-24">
+<!-- Header Section -->
+<header class="sticky top-0 z-30 flex flex-col bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md pt-12 pb-2 px-5 transition-colors duration-300">
+<div class="flex items-center justify-between w-full mb-1">
+<div class="flex items-center gap-3">
+<div class="relative group cursor-pointer">
+<div class="h-10 w-10 rounded-full bg-cover bg-center border-2 border-white dark:border-slate-700 shadow-sm" data-alt="Profile picture of Sarah" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC4oGJCGPLHlTaVgaIOtLmUVwBiTnPxQsVYQqEVb9vnGrqobtfVPt1y14mgdcg2hC04Se5B4hvn0gGKcHuB7K19-bWj8PEffVhlPBTjccRZZxnvfAxNz1XWpgaRqCxu16d6mfj71pQMPoCGXRJeVv4otxiUcrOwpPOQFpQ_3tAbkCT7tQ8U4Fguf4i5CuowEVqdhZYoAFLRJvG9UKscWxwbP0gaioRUFgxXVJ5abuPc7N15Pk2tNNr1iclsEZouZT-tY3uAPKn0Hwo');">
+</div>
+<div class="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-white dark:border-background-dark"></div>
+</div>
+<div class="flex flex-col">
+<h2 class="text-xl font-bold leading-tight tracking-tight text-slate-900 dark:text-white">Hello, Sarah</h2>
+<div class="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[14px]">business</span>
+<span class="text-xs font-medium tracking-wide uppercase">Global Dynamics Inc.</span>
+</div>
+</div>
+</div>
+<button class="relative flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-card-dark text-slate-600 dark:text-slate-300 shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10 transition active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-card-dark"></span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col gap-6 px-5 pt-2">
+<!-- Stats Grid -->
+<section class="grid grid-cols-2 gap-4">
+<!-- Total Revenue -->
+<div class="flex flex-col gap-3 rounded-2xl bg-white dark:bg-card-dark p-5 shadow-sm ring-1 ring-slate-900/5 dark:ring-white/5 transition-transform active:scale-[0.98]">
+<div class="flex justify-between items-start">
+<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-green-500/10 text-green-600 dark:text-green-400">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<span class="flex items-center text-xs font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-500/10 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span>
+                            12%
+                        </span>
+</div>
+<div>
+<p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Revenue</p>
+<p class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight mt-1">$4.25M</p>
+</div>
+</div>
+<!-- Active Projects -->
+<div class="flex flex-col gap-3 rounded-2xl bg-white dark:bg-card-dark p-5 shadow-sm ring-1 ring-slate-900/5 dark:ring-white/5 transition-transform active:scale-[0.98]">
+<div class="flex justify-between items-start">
+<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+<span class="material-symbols-outlined">folder_open</span>
+</div>
+</div>
+<div>
+<p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Projects</p>
+<p class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight mt-1">24</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">3 closing soon</p>
+</div>
+</div>
+<!-- Pending Approvals -->
+<div class="flex flex-col gap-3 rounded-2xl bg-white dark:bg-card-dark p-5 shadow-sm ring-1 ring-slate-900/5 dark:ring-white/5 transition-transform active:scale-[0.98]">
+<div class="flex justify-between items-start">
+<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+<span class="material-symbols-outlined">gavel</span>
+</div>
+<div class="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></div>
+</div>
+<div>
+<p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Pending</p>
+<p class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight mt-1">8</p>
+<p class="text-xs text-amber-600 dark:text-amber-400 font-medium mt-1">Needs attention</p>
+</div>
+</div>
+<!-- Recent Transactions -->
+<div class="flex flex-col gap-3 rounded-2xl bg-white dark:bg-card-dark p-5 shadow-sm ring-1 ring-slate-900/5 dark:ring-white/5 transition-transform active:scale-[0.98]">
+<div class="flex justify-between items-start">
+<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400">
+<span class="material-symbols-outlined">receipt_long</span>
+</div>
+</div>
+<div>
+<p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Txns</p>
+<p class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight mt-1">142</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Today</p>
+</div>
+</div>
+</section>
+<!-- Quick Actions -->
+<section>
+<div class="flex items-center justify-between mb-3 px-1">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Quick Actions</h3>
+</div>
+<div class="flex w-full overflow-x-auto no-scrollbar pb-2 -mx-5 px-5">
+<div class="flex flex-row items-start justify-start gap-4">
+<button class="flex flex-col items-center gap-2 group min-w-[80px]">
+<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-white shadow-lg shadow-primary/25 transition-all group-active:scale-95 group-active:shadow-none">
+<span class="material-symbols-outlined text-2xl">add_card</span>
+</div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-center">New Invoice</span>
+</button>
+<button class="flex flex-col items-center gap-2 group min-w-[80px]">
+<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white dark:bg-card-dark text-slate-700 dark:text-white shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10 transition-all group-active:scale-95">
+<span class="material-symbols-outlined text-2xl">check_circle</span>
+</div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-center">Approve</span>
+</button>
+<button class="flex flex-col items-center gap-2 group min-w-[80px]">
+<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white dark:bg-card-dark text-slate-700 dark:text-white shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10 transition-all group-active:scale-95">
+<span class="material-symbols-outlined text-2xl">group_add</span>
+</div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-center">Add User</span>
+</button>
+<button class="flex flex-col items-center gap-2 group min-w-[80px]">
+<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white dark:bg-card-dark text-slate-700 dark:text-white shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10 transition-all group-active:scale-95">
+<span class="material-symbols-outlined text-2xl">ios_share</span>
+</div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-center">Export</span>
+</button>
+<button class="flex flex-col items-center gap-2 group min-w-[80px]">
+<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white dark:bg-card-dark text-slate-700 dark:text-white shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10 transition-all group-active:scale-95">
+<span class="material-symbols-outlined text-2xl">more_horiz</span>
+</div>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 text-center">More</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Recent Activity -->
+<section>
+<div class="flex items-center justify-between mb-3 px-1">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Recent Activity</h3>
+<button class="text-sm font-semibold text-primary">View All</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Item 1 -->
+<div class="flex items-center gap-4 rounded-xl bg-white dark:bg-card-dark p-4 shadow-sm ring-1 ring-slate-900/5 dark:ring-white/5">
+<div class="relative h-12 w-12 flex-shrink-0">
+<div class="h-full w-full rounded-full bg-cover bg-center" data-alt="Portrait of James Smith" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA2ZOIdkEEFSHgXCQAd0dYN6mkF0-Q-k6vtw0Dn6eWQA85wlTj1XdeozXrIzHJJqvfmvFgPaI0f6OXUg17lBQc2E7RcCS6EEkK_YqeH1m1jvb-zVWMoCQBcBenh5zE6CpsbejOGUYuX_Prk_itM2q9jz30J-I1YcBSC4Fg8xGO3hsYMb66lPTB4jLc64zQJaGx9Po5wGgpsRku7ZOj3hjwnrIH9iSMTdoSzBnhcTEPo9fIldDpiasF1OZ_DL0YGj1mX0x63CfpK0bs');"></div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold text-slate-900 dark:text-white truncate">Invoice #4022 Paid</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 truncate">TechSoft Solutions • James Smith</p>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold text-green-600 dark:text-green-400">+$12,450</p>
+<p class="text-xs text-slate-400">2m ago</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-4 rounded-xl bg-white dark:bg-card-dark p-4 shadow-sm ring-1 ring-slate-900/5 dark:ring-white/5">
+<div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold text-slate-900 dark:text-white truncate">Q3 Audit Report</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 truncate">Uploaded by Finance Team</p>
+</div>
+<div class="text-right">
+<p class="text-xs text-slate-400">1h ago</p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center gap-4 rounded-xl bg-white dark:bg-card-dark p-4 shadow-sm ring-1 ring-slate-900/5 dark:ring-white/5">
+<div class="relative h-12 w-12 flex-shrink-0">
+<div class="h-full w-full rounded-full bg-cover bg-center" data-alt="Portrait of Elena Rodriguez" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA94eVnBJ-zi-zT-tYdwxc-bJ0Mg4ObJrjBtdC8NvRPEOVx7SJkCJecw0XnRgHYMdN-dlazc8LoUX3GxJV6XSj1OVHbCxma6sOdmJ9mCylHcIuS0U77L0IZOMKz3mWqsTgLc2byBrMgNOIAahu87V4z7QJmOXHlQnau2vXPjdcwNIzcKmmx6yCYU23xWupnpjH2oo1-7LDYfn406Fc9SxxAgrisewn5gqZr5gxJ9CKRVv4styXfTeTq_Jv1-YhfGJbdwCzOBQ-4DQc');"></div>
+<div class="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-amber-500 border-2 border-white dark:border-card-dark flex items-center justify-center">
+<span class="material-symbols-outlined text-[8px] text-white">priority_high</span>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold text-slate-900 dark:text-white truncate">Expense Approval</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 truncate">Elena Rodriguez • Travel</p>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold text-slate-900 dark:text-white">$840.00</p>
+<p class="text-xs text-slate-400">3h ago</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Upcoming Deadline -->
+<section class="mb-6">
+<div class="flex items-center justify-between mb-3 px-1">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Upcoming</h3>
+</div>
+<div class="bg-gradient-to-r from-slate-900 to-slate-800 dark:from-primary/20 dark:to-primary/5 rounded-2xl p-5 relative overflow-hidden">
+<div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/5 rounded-full blur-2xl"></div>
+<div class="flex items-start gap-4 relative z-10">
+<div class="bg-white/10 p-3 rounded-lg text-white">
+<span class="material-symbols-outlined">calendar_month</span>
+</div>
+<div>
+<p class="text-white font-bold text-base">Q3 Financial Report</p>
+<p class="text-slate-300 text-sm mt-1">Due in 2 days</p>
+<div class="mt-3 flex items-center gap-2">
+<div class="w-full max-w-[120px] bg-slate-700/50 rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full w-[75%]"></div>
+</div>
+<span class="text-xs text-slate-300">75%</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 w-full bg-white/95 dark:bg-[#151b26]/95 backdrop-blur-lg border-t border-slate-200 dark:border-white/5 z-50 pb-safe">
+<div class="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
+<a class="flex flex-col items-center justify-center w-full h-full gap-1 text-primary" href="#">
+<span class="material-symbols-outlined filled">dashboard</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="text-[10px] font-medium">Reports</span>
+</a>
+<div class="relative flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors cursor-pointer">
+<div class="absolute top-2 right-6 h-2 w-2 rounded-full bg-amber-500 ring-2 ring-white dark:ring-[#151b26]"></div>
+<span class="material-symbols-outlined">fact_check</span>
+<span class="text-[10px] font-medium">Approvals</span>
+</div>
+<a class="flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

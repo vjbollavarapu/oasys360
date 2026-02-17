@@ -64,9 +64,12 @@ class RateLimitMiddleware(MiddlewareMixin):
         # Check current request count
         current_requests = cache.get(rate_limit_key, 0)
         
-        # Rate limit: 100 requests per minute
-        max_requests = 100
-        window_seconds = 60
+        # Rate limit: Configurable via settings
+        # Development: Higher limit (1000/min) for testing
+        # Production: Stricter limit (100/min) for security
+        from django.conf import settings
+        max_requests = getattr(settings, 'RATE_LIMIT_MAX_REQUESTS', 1000 if settings.DEBUG else 100)
+        window_seconds = getattr(settings, 'RATE_LIMIT_WINDOW_SECONDS', 60)
         
         if current_requests >= max_requests:
             logger.warning(f"Rate limit exceeded for IP: {client_ip}")
@@ -161,8 +164,8 @@ class CSRFProtectionMiddleware(MiddlewareMixin):
         if request.method in ['GET', 'HEAD', 'OPTIONS', 'TRACE']:
             return None
         
-        # Skip CSRF for API endpoints with proper authentication
-        if request.path.startswith('/api/') and self.has_valid_auth(request):
+        # Skip CSRF for API endpoints (they use JWT authentication)
+        if request.path.startswith('/api/'):
             return None
         
         # Check CSRF token

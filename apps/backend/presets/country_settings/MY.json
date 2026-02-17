@@ -1,0 +1,38 @@
+{
+  "country_code": "MY",
+  "country_name": "Malaysia",
+  "currency": {
+    "code": "MYR",
+    "name": "Malaysian Ringgit",
+    "symbol": "RM"
+  },
+  "fiscal_year": {
+    "start_month": 1,
+    "start_day": 1,
+    "end_month": 12,
+    "end_day": 31,
+    "description": "Calendar year (January to December)"
+  },
+  "timezone": "Asia/Kuala_Lumpur",
+  "date_format": "DD/MM/YYYY",
+  "number_format": {
+    "decimal_separator": ".",
+    "thousands_separator": ",",
+    "decimal_places": 2
+  },
+  "tax": {
+    "system": "SST",
+    "registration_threshold": 500000,
+    "registration_threshold_currency": "MYR",
+    "filing_frequency": "monthly",
+    "filing_due_days": 30
+  },
+  "accounting_standards": "MFRS",
+  "features": {
+    "sst_enabled": true,
+    "multi_currency": true,
+    "bank_reconciliation": true,
+    "inventory_tracking": true
+  }
+}
+

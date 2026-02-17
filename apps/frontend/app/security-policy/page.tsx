@@ -216,7 +216,7 @@ export default function SecurityPolicyPage() {
               </p>
               <div className="bg-red-50 rounded-lg p-6 mb-6">
                 <h3 className="font-semibold text-gray-900 mb-2">Security Contact</h3>
-                <p className="text-gray-600 mb-2">Email: <a href="mailto:security@oasys.com" className="text-blue-600 hover:underline">security@oasys.com</a></p>
+                <p className="text-gray-600 mb-2">Email: <a href="mailto:security@oasys360.com" className="text-blue-600 hover:underline">security@oasys360.com</a></p>
                 <p className="text-gray-600 mb-2">Phone: +1 (555) 123-4567 (Emergency only)</p>
                 <p className="text-gray-600">Response Time: Within 24 hours</p>
               </div>

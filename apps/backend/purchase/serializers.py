@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from decimal import Decimal
-from .models import Supplier, PurchaseOrder, PurchaseOrderLine, PurchaseReceipt, PurchaseReceiptLine, PurchasePayment
+from .models import (
+    Supplier, PurchaseOrder, PurchaseOrderLine, PurchaseReceipt, PurchaseReceiptLine, PurchasePayment,
+    VendorWalletAddress, VendorVerificationLog, PaymentBlock, PurchaseApprovalRequest, PurchaseContract, PurchaseSettings
+)
 
 
 class SupplierSerializer(serializers.ModelSerializer):
@@ -186,3 +189,130 @@ class PurchaseOrderSummarySerializer(serializers.Serializer):
     status = serializers.CharField()
     total_amount = serializers.DecimalField(max_digits=15, decimal_places=2)
     currency = serializers.CharField()
+
+
+# ============================================================================
+# Vendor Verification Serializers
+# ============================================================================
+
+class VendorWalletAddressSerializer(serializers.ModelSerializer):
+    """Serializer for Vendor Wallet Address"""
+    supplier_name = serializers.CharField(source='supplier.name', read_only=True)
+    network_display = serializers.CharField(source='get_network_display', read_only=True)
+    
+    class Meta:
+        model = VendorWalletAddress
+        fields = [
+            'id', 'tenant', 'supplier', 'supplier_name', 'wallet_address', 'network',
+            'network_display', 'is_primary', 'is_verified', 'verification_date',
+            'verified_by', 'transaction_count', 'first_transaction_date',
+            'last_transaction_date', 'total_amount_received', 'risk_score', 'notes',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
+
+class VendorVerificationLogSerializer(serializers.ModelSerializer):
+    """Serializer for Vendor Verification Log"""
+    supplier_name = serializers.CharField(source='supplier.name', read_only=True)
+    verification_type_display = serializers.CharField(source='get_verification_type_display', read_only=True)
+    verification_status_display = serializers.CharField(source='get_verification_status_display', read_only=True)
+    recommendation_display = serializers.CharField(source='get_recommendation_display', read_only=True)
+    verified_by_name = serializers.CharField(source='verified_by.get_full_name', read_only=True)
+    
+    class Meta:
+        model = VendorVerificationLog
+        fields = [
+            'id', 'tenant', 'supplier', 'supplier_name', 'wallet_address', 'network',
+            'verification_type', 'verification_type_display', 'verification_status',
+            'verification_status_display', 'risk_factors', 'transaction_history_match',
+            'address_found_in_history', 'transaction_count_found', 'recommendation',
+            'recommendation_display', 'notes', 'verified_by', 'verified_by_name', 'created_at'
+        ]
+        read_only_fields = ['id', 'created_at']
+
+
+class PurchaseApprovalRequestSerializer(serializers.ModelSerializer):
+    """Serializer for Purchase Approval Request"""
+    purchase_order_number = serializers.CharField(source='purchase_order.order_number', read_only=True)
+    requested_by_name = serializers.CharField(source='requested_by.get_full_name', read_only=True)
+    approver_name = serializers.CharField(source='approver.get_full_name', read_only=True)
+    approved_by_name = serializers.CharField(source='approved_by.get_full_name', read_only=True)
+    
+    class Meta:
+        model = PurchaseApprovalRequest
+        fields = [
+            'id', 'tenant', 'purchase_order', 'purchase_order_number',
+            'requested_by', 'requested_by_name', 'approval_type', 'status',
+            'approval_level', 'approver', 'approver_name', 'approved_by',
+            'approved_by_name', 'approved_at', 'rejection_reason', 'notes',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'approved_at']
+
+
+class PurchaseContractSerializer(serializers.ModelSerializer):
+    """Serializer for Purchase Contract"""
+    supplier_name = serializers.CharField(source='supplier.name', read_only=True)
+    approved_by_name = serializers.CharField(source='approved_by.get_full_name', read_only=True)
+    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
+    is_active = serializers.SerializerMethodField()
+    is_expiring_soon = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = PurchaseContract
+        fields = [
+            'id', 'tenant', 'company', 'contract_number', 'supplier', 'supplier_name',
+            'title', 'description', 'contract_type', 'start_date', 'end_date',
+            'status', 'total_value', 'currency', 'payment_terms', 'renewal_option',
+            'auto_renew', 'renewal_notice_days', 'document_url', 'file_path',
+            'terms_conditions', 'signed_by_supplier', 'signed_by_company',
+            'signed_at', 'approved_by', 'approved_by_name', 'approved_at',
+            'notes', 'created_by', 'created_by_name', 'is_active', 'is_expiring_soon',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'approved_at', 'signed_at']
+    
+    def get_is_active(self, obj):
+        return obj.is_active()
+    
+    def get_is_expiring_soon(self, obj):
+        return obj.is_expiring_soon()
+
+
+class PurchaseSettingsSerializer(serializers.ModelSerializer):
+    """Serializer for Purchase Settings"""
+    default_warehouse_name = serializers.CharField(source='default_warehouse.name', read_only=True)
+    
+    class Meta:
+        model = PurchaseSettings
+        fields = [
+            'id', 'tenant', 'company', 'default_currency', 'default_payment_terms',
+            'order_number_prefix', 'order_number_format', 'require_order_approval',
+            'require_receipt_approval', 'approval_threshold', 'enable_receiving_inspection',
+            'default_warehouse', 'default_warehouse_name', 'enable_contract_management',
+            'default_contract_validity_days', 'auto_renewal_reminder_days',
+            'enable_purchase_analytics', 'analytics_retention_days',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
+
+class PaymentBlockSerializer(serializers.ModelSerializer):
+    """Serializer for Payment Block"""
+    supplier_name = serializers.CharField(source='supplier.name', read_only=True)
+    block_reason_display = serializers.CharField(source='get_block_reason_display', read_only=True)
+    status_display = serializers.CharField(source='get_status_display', read_only=True)
+    blocked_by_name = serializers.CharField(source='blocked_by.get_full_name', read_only=True)
+    resolved_by_name = serializers.CharField(source='resolved_by.get_full_name', read_only=True)
+    
+    class Meta:
+        model = PaymentBlock
+        fields = [
+            'id', 'tenant', 'supplier', 'supplier_name', 'purchase_order', 'invoice',
+            'wallet_address', 'network', 'amount', 'currency', 'block_reason',
+            'block_reason_display', 'risk_factors', 'status', 'status_display',
+            'resolution_notes', 'blocked_by', 'blocked_by_name', 'resolved_by',
+            'resolved_by_name', 'resolved_at', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']

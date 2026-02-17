@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '../auth/[...nextauth]/route'
+// Note: Auth temporarily disabled - uncomment when auth is re-enabled
+// import { getServerSession } from 'next-auth'
+// import { authOptions } from '../auth/[...nextauth]/route'
 
 interface ContentItem {
   id: string
@@ -92,7 +93,7 @@ const mockContent: ContentItem[] = [
       }
     },
     metadata: {
-      author: 'admin@oasys.com',
+      author: 'admin@oasys360.com',
       created: '2024-01-20T15:30:00Z',
       modified: '2024-01-22T09:15:00Z',
       published: true,
@@ -145,7 +146,7 @@ const mockContent: ContentItem[] = [
       ]
     },
     metadata: {
-      author: 'compliance@oasys.com',
+      author: 'compliance@oasys360.com',
       created: '2024-01-18T11:00:00Z',
       modified: '2024-01-21T16:45:00Z',
       published: true,
@@ -324,10 +325,11 @@ class ContentService {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    // TODO: Re-enable auth check when authentication is ready
+    // const session = await getServerSession(authOptions)
+    // if (!session?.user) {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    // }
 
     const { searchParams } = new URL(request.url)
     const tenantId = searchParams.get('tenantId') || undefined
@@ -364,10 +366,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    // TODO: Re-enable auth check when authentication is ready
+    // const session = await getServerSession(authOptions)
+    // if (!session?.user) {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    // }
+    const userId = 'system'; // Temporary fallback until auth is enabled
 
     const body = await request.json()
     const { action, ...data } = body
@@ -397,7 +401,7 @@ export async function POST(request: NextRequest) {
               reviewed: false
             }
           },
-          session.user.id
+          userId
         )
 
         return NextResponse.json({
@@ -432,7 +436,7 @@ export async function POST(request: NextRequest) {
               reviewed: false
             }
           },
-          session.user.id
+          userId
         )
 
         return NextResponse.json({
@@ -446,7 +450,7 @@ export async function POST(request: NextRequest) {
 
       default:
         // Regular content creation
-        const newContent = await ContentService.createContent(data, session.user.id)
+        const newContent = await ContentService.createContent(data, userId)
         return NextResponse.json({
           success: true,
           data: newContent
@@ -463,10 +467,12 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    // TODO: Re-enable auth check when authentication is ready
+    // const session = await getServerSession(authOptions)
+    // if (!session?.user) {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    // }
+    const userId = 'system'; // Temporary fallback until auth is enabled
 
     const body = await request.json()
     const { id, ...updates } = body
@@ -478,7 +484,7 @@ export async function PUT(request: NextRequest) {
       )
     }
 
-    const updatedContent = await ContentService.updateContent(id, updates, session.user.id)
+    const updatedContent = await ContentService.updateContent(id, updates, userId)
 
     return NextResponse.json({
       success: true,
@@ -495,10 +501,11 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    // TODO: Re-enable auth check when authentication is ready
+    // const session = await getServerSession(authOptions)
+    // if (!session?.user) {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    // }
 
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')

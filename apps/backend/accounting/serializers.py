@@ -1,6 +1,10 @@
 from rest_framework import serializers
 from decimal import Decimal
-from .models import ChartOfAccounts, JournalEntry, JournalEntryLine, BankReconciliation
+from .models import (
+    ChartOfAccounts, JournalEntry, JournalEntryLine, BankReconciliation,
+    FiscalYear, FiscalPeriod, PettyCashAccount, PettyCashTransaction,
+    CreditDebitNote, AccountingSettings
+)
 
 
 class ChartOfAccountsSerializer(serializers.ModelSerializer):
@@ -118,3 +122,98 @@ class BalanceSheetSerializer(serializers.Serializer):
     liabilities = serializers.DecimalField(max_digits=15, decimal_places=2)
     equity = serializers.DecimalField(max_digits=15, decimal_places=2)
     as_of_date = serializers.DateField()
+
+
+class FiscalPeriodSerializer(serializers.ModelSerializer):
+    """Serializer for Fiscal Period"""
+    
+    class Meta:
+        model = FiscalPeriod
+        fields = [
+            'id', 'tenant', 'fiscal_year', 'name', 'start_date', 'end_date',
+            'status', 'is_current', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
+
+class FiscalYearSerializer(serializers.ModelSerializer):
+    """Serializer for Fiscal Year"""
+    periods = FiscalPeriodSerializer(many=True, read_only=True)
+    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
+    periods_count = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = FiscalYear
+        fields = [
+            'id', 'tenant', 'company', 'name', 'start_date', 'end_date',
+            'status', 'is_current', 'periods', 'periods_count', 'created_by',
+            'created_by_name', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
+    
+    def get_periods_count(self, obj):
+        return obj.periods.count()
+
+
+class PettyCashAccountSerializer(serializers.ModelSerializer):
+    """Serializer for Petty Cash Account"""
+    custodian_name = serializers.CharField(source='custodian.get_full_name', read_only=True)
+    
+    class Meta:
+        model = PettyCashAccount
+        fields = [
+            'id', 'tenant', 'company', 'name', 'current_balance', 'initial_balance',
+            'max_balance', 'custodian', 'custodian_name', 'location', 'is_active',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
+
+class PettyCashTransactionSerializer(serializers.ModelSerializer):
+    """Serializer for Petty Cash Transaction"""
+    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
+    approved_by_name = serializers.CharField(source='approved_by.get_full_name', read_only=True)
+    account_name = serializers.CharField(source='account.name', read_only=True)
+    
+    class Meta:
+        model = PettyCashTransaction
+        fields = [
+            'id', 'tenant', 'account', 'account_name', 'date', 'type', 'description',
+            'amount', 'category', 'receipt_number', 'status', 'created_by',
+            'created_by_name', 'approved_by', 'approved_by_name', 'approved_at',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'approved_at']
+
+
+class CreditDebitNoteSerializer(serializers.ModelSerializer):
+    """Serializer for Credit/Debit Note"""
+    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
+    customer_name = serializers.CharField(source='customer.name', read_only=True)
+    supplier_name = serializers.CharField(source='supplier.name', read_only=True)
+    
+    class Meta:
+        model = CreditDebitNote
+        fields = [
+            'id', 'tenant', 'company', 'number', 'type', 'date', 'customer',
+            'customer_name', 'supplier', 'supplier_name', 'invoice_number',
+            'description', 'amount', 'reason', 'status', 'created_by',
+            'created_by_name', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
+
+class AccountingSettingsSerializer(serializers.ModelSerializer):
+    """Serializer for Accounting Settings"""
+    
+    class Meta:
+        model = AccountingSettings
+        fields = [
+            'id', 'tenant', 'company', 'base_currency', 'display_currency',
+            'fiscal_year_start_month', 'fiscal_year_start_day', 'accounting_method',
+            'decimal_places', 'thousands_separator', 'decimal_separator',
+            'date_format', 'journal_entry_prefix', 'journal_entry_number_format',
+            'lock_closed_periods', 'allow_backdating', 'max_backdate_days',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']

@@ -1,0 +1,127 @@
+{
+  "region": "Southeast Asia",
+  "description": "Currency presets for Southeast Asian countries",
+  "currencies": [
+    {
+      "code": "SGD",
+      "name": "Singapore Dollar",
+      "symbol": "S$",
+      "country": "Singapore",
+      "country_code": "SG",
+      "is_base_currency": false,
+      "decimal_places": 2,
+      "exchange_rate_provider": "exchangerate-api",
+      "auto_update": true,
+      "update_frequency_hours": 24
+    },
+    {
+      "code": "MYR",
+      "name": "Malaysian Ringgit",
+      "symbol": "RM",
+      "country": "Malaysia",
+      "country_code": "MY",
+      "is_base_currency": false,
+      "decimal_places": 2,
+      "exchange_rate_provider": "exchangerate-api",
+      "auto_update": true,
+      "update_frequency_hours": 24
+    },
+    {
+      "code": "THB",
+      "name": "Thai Baht",
+      "symbol": "฿",
+      "country": "Thailand",
+      "country_code": "TH",
+      "is_base_currency": false,
+      "decimal_places": 2,
+      "exchange_rate_provider": "exchangerate-api",
+      "auto_update": true,
+      "update_frequency_hours": 24
+    },
+    {
+      "code": "IDR",
+      "name": "Indonesian Rupiah",
+      "symbol": "Rp",
+      "country": "Indonesia",
+      "country_code": "ID",
+      "is_base_currency": false,
+      "decimal_places": 0,
+      "exchange_rate_provider": "exchangerate-api",
+      "auto_update": true,
+      "update_frequency_hours": 24
+    },
+    {
+      "code": "PHP",
+      "name": "Philippine Peso",
+      "symbol": "₱",
+      "country": "Philippines",
+      "country_code": "PH",
+      "is_base_currency": false,
+      "decimal_places": 2,
+      "exchange_rate_provider": "exchangerate-api",
+      "auto_update": true,
+      "update_frequency_hours": 24
+    },
+    {
+      "code": "VND",
+      "name": "Vietnamese Dong",
+      "symbol": "₫",
+      "country": "Vietnam",
+      "country_code": "VN",
+      "is_base_currency": false,
+      "decimal_places": 0,
+      "exchange_rate_provider": "exchangerate-api",
+      "auto_update": true,
+      "update_frequency_hours": 24
+    },
+    {
+      "code": "MMK",
+      "name": "Myanmar Kyat",
+      "symbol": "K",
+      "country": "Myanmar",
+      "country_code": "MM",
+      "is_base_currency": false,
+      "decimal_places": 0,
+      "exchange_rate_provider": "exchangerate-api",
+      "auto_update": true,
+      "update_frequency_hours": 24
+    },
+    {
+      "code": "KHR",
+      "name": "Cambodian Riel",
+      "symbol": "៛",
+      "country": "Cambodia",
+      "country_code": "KH",
+      "is_base_currency": false,
+      "decimal_places": 0,
+      "exchange_rate_provider": "exchangerate-api",
+      "auto_update": true,
+      "update_frequency_hours": 24
+    },
+    {
+      "code": "LAK",
+      "name": "Lao Kip",
+      "symbol": "₭",
+      "country": "Laos",
+      "country_code": "LA",
+      "is_base_currency": false,
+      "decimal_places": 0,
+      "exchange_rate_provider": "exchangerate-api",
+      "auto_update": true,
+      "update_frequency_hours": 24
+    },
+    {
+      "code": "BND",
+      "name": "Brunei Dollar",
+      "symbol": "B$",
+      "country": "Brunei",
+      "country_code": "BN",
+      "is_base_currency": false,
+      "decimal_places": 2,
+      "exchange_rate_provider": "exchangerate-api",
+      "auto_update": true,
+      "update_frequency_hours": 24
+    }
+  ]
+}
+

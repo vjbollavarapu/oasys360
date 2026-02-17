@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://oasys.com/sitemap.xml
+Sitemap: https://oasys360.com/sitemap.xml
 
 # Disallow admin and private areas
 Disallow: /admin/

@@ -671,7 +671,7 @@ curl http://localhost:8000/api/auth/login/
             "url": "http://localhost:8000/api/auth/login/",
             "body": {
               "mode": "raw",
-              "raw": "{\"email\":\"admin@oasys.com\",\"password\":\"admin123\"}",
+              "raw": "{\"email\":\"admin@oasys360.com\",\"password\":\"admin123\"}",
               "options": {
                 "raw": {
                   "language": "json"

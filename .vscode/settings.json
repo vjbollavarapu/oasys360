@@ -1,11 +1,14 @@
 {
-    // Sets the default Python interpreter for this workspace.
-    // This ensures VS Code always picks the right venv.
-    "python.defaultInterpreterPath": "${workspaceFolder}/apps/backend/venv/bin/python",
-  
-    // Tells the Pylance/Pyright linter where your source code is.
-    // This helps it find your Django apps for import resolution.
-    "python.analysis.extraPaths": [
-      "${workspaceFolder}/apps/backend"
-    ]
-  }
+  // Sets the default Python interpreter for this workspace.
+  // This ensures VS Code always picks the right venv.
+  "python.defaultInterpreterPath": "${workspaceFolder}/apps/backend/venv/bin/python",
+  // Tells the Pylance/Pyright linter where your source code is.
+  // This helps it find your Django apps for import resolution.
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/apps/backend"
+  ],
+  "cursorpyright.analysis.extraPaths": [
+    "${workspaceFolder}/apps/backend"
+  ],
+  "java.compile.nullAnalysis.mode": "automatic"
+}

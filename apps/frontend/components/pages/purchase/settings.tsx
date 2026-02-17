@@ -18,7 +18,7 @@ import {
 
 export function PurchaseSettingsOverview() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Purchase Settings</h1>
@@ -27,11 +27,11 @@ export function PurchaseSettingsOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <ShoppingCart className="h-4 w-4 mr-2" />
             Test Purchase
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Save Settings
           </Button>
@@ -39,7 +39,7 @@ export function PurchaseSettingsOverview() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-4 rounded-full p-1 h-auto">
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="approvals">Approvals</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
@@ -47,7 +47,7 @@ export function PurchaseSettingsOverview() {
         </TabsList>
 
         <TabsContent value="general" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>General Settings</CardTitle>
               <CardDescription>
@@ -59,7 +59,7 @@ export function PurchaseSettingsOverview() {
                 <div>
                   <Label htmlFor="default-currency">Default Currency</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
                     <SelectContent>

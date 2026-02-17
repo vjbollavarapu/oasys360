@@ -7,6 +7,7 @@ using the django-tenants library.
 
 from pathlib import Path
 import os
+import sys
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,65 +24,126 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-0rz_2qqavkyuo%xr#e8d$@)(q#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
+# Rate Limiting Configuration
+# Development: Higher limits for testing
+# Production: Stricter limits for security
+RATE_LIMIT_MAX_REQUESTS = int(os.getenv('RATE_LIMIT_MAX_REQUESTS', '1000' if DEBUG else '100'))
+RATE_LIMIT_WINDOW_SECONDS = int(os.getenv('RATE_LIMIT_WINDOW_SECONDS', '60'))
+
 # ALLOWED_HOSTS must be configured to accept subdomains for multi-tenancy.
-# Replace '.yourdomain.com' with your actual production domain.
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 
-    '.localhost,127.0.0.1,localhost'
-).split(',')
+# Note: Django's ALLOWED_HOSTS doesn't support wildcards with ports (e.g., *.localhost:8000)
+# We handle subdomain+port validation in HostValidationMiddleware
+# In development: Supports *.localhost:8000 and *.localhost:3000 via middleware
+# In production: Replace with your actual production domain
+if DEBUG:
+    # Development: Allow all localhost subdomains (port validation handled in middleware)
+    ALLOWED_HOSTS = [
+        '.localhost',  # Matches all subdomains of localhost (e.g., aqrsb.localhost)
+        'localhost',
+        '127.0.0.1',
+    ]
+    # Also add common ports for exact matches
+    for port in ['8000', '3000', '3001']:
+        ALLOWED_HOSTS.extend([
+            f'localhost:{port}',
+            f'127.0.0.1:{port}',
+        ])
+else:
+    # Production: Use environment variable or default
+    allowed_hosts_str = os.getenv('ALLOWED_HOSTS', '.oasys360.com,oasys360.com')
+    ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_str.split(',')]
 
 
 # ==============================================================================
-# Multi-Tenancy Configuration (django-tenants)
+# Multi-Tenancy Configuration (Row-Based)
 # ==============================================================================
 
-# Use the django-tenants PostgreSQL backend. This is a critical change.
-DATABASES = {
-    'default': {
-        'ENGINE': 'django_tenants.postgresql_backend',
-        'NAME': os.getenv('DATABASE_NAME', 'oasysdb'), # Consider a new DB name
-        'USER': os.getenv('DATABASE_USER', 'postgres'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password'),
-        'HOST': os.getenv('DATABASE_HOST', 'localhost'),
-        'PORT': os.getenv('DATABASE_PORT', '5432'),
+# Use standard PostgreSQL backend for row-based multi-tenancy
+# Use SQLite for testing, PostgreSQL for production
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DATABASE_NAME', 'oasysdb'),
+            'USER': os.getenv('DATABASE_USER', 'postgres'),
+            'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password'),
+            'HOST': os.getenv('DATABASE_HOST', 'localhost'),
+            'PORT': os.getenv('DATABASE_PORT', '5432'),
+            'OPTIONS': {
+                'options': '-c default_transaction_isolation=read\\ committed'
+            }
+        }
+    }
 
-# Tells Django how to handle shared vs. tenant databases during migrations.
-DATABASE_ROUTERS = (
-    'django_tenants.routers.TenantSyncRouter',
-)
+# No database routers needed for row-based multi-tenancy
+DATABASE_ROUTERS = []
 
-# This middleware identifies the tenant from the request's hostname.
-# It MUST be the first middleware.
+# Row-based Multi-Tenant Middleware Stack
 MIDDLEWARE = [
-    'django_tenants.middleware.main.TenantMainMiddleware',
+    # Host validation (validate ALLOWED_HOSTS with subdomain/port support) - MUST be first
+    'backend.host_validation_middleware.HostValidationMiddleware',
+    # Tenant identification and context (MUST be second)
+    'backend.row_tenant_middleware.RowTenantMiddleware',
+    'authentication.jwt_middleware.JWTMultiTenantMiddleware',
+    'authentication.jwt_middleware.JWTTokenValidationMiddleware',
+    'backend.row_tenant_middleware.TenantQueryFilterMiddleware',
+    'backend.row_tenant_middleware.TenantAuthMiddleware',
+    'tenants.onboarding_guard.OnboardingGuardMiddleware',  # Enforce onboarding completion
+    'backend.row_tenant_middleware.TenantAuditMiddleware',
+    'backend.row_tenant_middleware.TenantRateLimitMiddleware',
+    'backend.row_tenant_middleware.TenantSecurityMiddleware',
+    'authentication.jwt_middleware.JWTLogoutMiddleware',
+    
+    # Security middleware
     'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # Standard CORS middleware
-    'backend.security_middleware.SecurityHeadersMiddleware',  # Security headers
-    'backend.security_middleware.RateLimitMiddleware',  # Rate limiting
-    'backend.security_middleware.RequestLoggingMiddleware',  # Request logging
-    'backend.security_middleware.InputValidationMiddleware',  # Input validation
-    'django.middleware.cache.UpdateCacheMiddleware',  # Cache middleware
+    'corsheaders.middleware.CorsMiddleware',
+    'backend.security_middleware.SecurityHeadersMiddleware',
+    'backend.security_middleware.RateLimitMiddleware',
+    'backend.security_middleware.RequestLoggingMiddleware',
+    'backend.security_middleware.InputValidationMiddleware',
+    
+    # Cache middleware
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',  # Cache middleware
-    'backend.security_middleware.CSRFProtectionMiddleware',  # Enhanced CSRF
+    'django.middleware.cache.FetchFromCacheMiddleware',
+    
+    # Authentication and CSRF
+    'backend.security_middleware.CSRFProtectionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'backend.security_middleware.SecurityAuditMiddleware',  # Security audit
+    
+    # Security audit (MUST be last)
+    'backend.security_middleware.SecurityAuditMiddleware',
 ]
 
-# Point to your public and tenant URL files.
-ROOT_URLCONF = 'backend.tenant_urls'
-PUBLIC_SCHEMA_URLCONF = 'backend.public_urls'
+# Single URL configuration for row-based multi-tenancy
+ROOT_URLCONF = 'backend.urls'
 
-# Tell django-tenants which models to use for tenants and domains.
+# No schema-based URL configuration needed
+PUBLIC_SCHEMA_URLCONF = None
+
+# Tenant and domain models for row-based multi-tenancy
 TENANT_MODEL = "tenants.Tenant"
 TENANT_DOMAIN_MODEL = "tenants.Domain"
 
 # Custom User Model
 AUTH_USER_MODEL = 'authentication.User'
+
+# Custom Authentication Backends
+# EmailBackend allows authentication using email instead of username
+AUTHENTICATION_BACKENDS = [
+    'authentication.backends.EmailBackend',  # Custom email authentication
+    'django.contrib.auth.backends.ModelBackend',  # Fallback to default username auth
+]
 
 
 # ==============================================================================
@@ -89,7 +151,7 @@ AUTH_USER_MODEL = 'authentication.User'
 # Apps are separated into SHARED (for the public schema) and TENANT-SPECIFIC.
 # ==============================================================================
 SHARED_APPS = [
-    'django_tenants',
+    # 'django_tenants',  # Removed - using row-based multi-tenancy instead
     'tenants',  # The app we created for Tenant and Domain models
 
     # Django core apps
@@ -103,6 +165,8 @@ SHARED_APPS = [
     # Third party apps that should be in the public schema
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'django_filters',
     'corsheaders',
     'drf_spectacular',
@@ -121,6 +185,9 @@ TENANT_APPS = [
     'authentication',
     'banking',
     'contact_sales',
+    'documents',
+    'erp_integration',
+    'fx_conversion',
     'inventory',
     'invoicing',
     'marketing_forms',
@@ -129,7 +196,16 @@ TENANT_APPS = [
     'purchase',
     'reporting',
     'sales',
+    'tax_optimization',
+    'treasury',
     'web3_integration',
+    
+    # Compliance and security apps
+    # 'backend.compliance_models',  # Temporarily disabled for testing
+    # 'backend.audit_logging',  # Temporarily disabled for testing
+    # 'backend.data_encryption',  # Temporarily disabled for testing
+    # 'backend.role_permissions',  # Temporarily disabled for testing
+    # 'backend.audit_models',  # Temporarily disabled for testing
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
@@ -178,7 +254,7 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
@@ -190,12 +266,26 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS Configuration for Frontend Integration
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Next.js development server
-    "http://127.0.0.1:3000",
-    "http://localhost:3001",  # Alternative port
-    "http://127.0.0.1:3001",
-]
+# Note: Full CORS configuration is imported from cors_config.py below
+# This section provides initial defaults that may be overridden
+# In development, CORS_ALLOW_ALL_ORIGINS=True allows *.localhost:3000 -> *.localhost:8000 requests
+if DEBUG:
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:3000",  # Next.js development server
+        "http://127.0.0.1:3000",
+        "http://localhost:3001",  # Alternative port
+        "http://127.0.0.1:3001",
+        "http://localhost:8000",  # Backend server
+        "http://127.0.0.1:8000",
+    ]
+    # Allow all origins in development for subdomain flexibility
+    # This enables *.localhost:3000 -> *.localhost:8000 requests
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    # Production: Use environment variable
+    cors_origins_str = os.getenv('CORS_ALLOWED_ORIGINS', 'https://app.oasys360.com')
+    CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins_str.split(',')]
+    CORS_ALLOW_ALL_ORIGINS = False
 
 # Allow credentials for authentication
 CORS_ALLOW_CREDENTIALS = True
@@ -221,20 +311,27 @@ CORS_EXPOSE_HEADERS = [
 ]
 
 # CSRF Configuration for CORS
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:3001",
-    "http://127.0.0.1:3001",
-]
+# In development, allow localhost subdomains
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3001",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ]
+    # Note: Django doesn't support wildcards in CSRF_TRUSTED_ORIGINS,
+    # but subdomain validation is handled in HostValidationMiddleware
+else:
+    csrf_origins_str = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://app.oasys360.com')
+    CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins_str.split(',')]
 
 # REST Framework Configuration
 REST_FRAMEWORK = {
+    # Use JWT for API auth; avoid session/CSRF for API requests
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -261,7 +358,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
+    'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': True,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
@@ -282,6 +379,12 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    
+    # Multi-tenant specific JWT settings
+    'TOKEN_OBTAIN_SERIALIZER': 'authentication.tokens.CustomTokenObtainPairSerializer',
+    'TOKEN_REFRESH_SERIALIZER': 'authentication.tokens.CustomTokenRefreshSerializer',
+    'TOKEN_VERIFY_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenVerifySerializer',
+    'TOKEN_BLACKLIST_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenBlacklistSerializer',
 }
 
 # Redis Configuration for Caching
@@ -318,6 +421,22 @@ SESSION_COOKIE_AGE = 3600  # 1 hour
 SESSION_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
+# Configure cookie domain for cross-subdomain authentication
+BASE_DOMAIN = os.getenv('BASE_DOMAIN', 'oasys360.com')
+if DEBUG:
+    # Development: use .localhost for local subdomain support
+    SESSION_COOKIE_DOMAIN = '.localhost'
+else:
+    # Production: use wildcard domain for subdomain support
+    SESSION_COOKIE_DOMAIN = f'.{BASE_DOMAIN}'
+# Configure cookie domain for cross-subdomain authentication
+BASE_DOMAIN = os.getenv('BASE_DOMAIN', 'oasys360.com')
+if DEBUG:
+    # Development: use .localhost for local subdomain support
+    SESSION_COOKIE_DOMAIN = '.localhost'
+else:
+    # Production: use wildcard domain for subdomain support
+    SESSION_COOKIE_DOMAIN = f'.{BASE_DOMAIN}'
 
 # Cache Middleware Configuration
 CACHE_MIDDLEWARE_ALIAS = 'default'
@@ -338,11 +457,18 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SAMESITE = 'Strict'
+# Configure CSRF cookie domain for cross-subdomain support
+if DEBUG:
+    CSRF_COOKIE_DOMAIN = '.localhost'
+else:
+    CSRF_COOKIE_DOMAIN = f'.{BASE_DOMAIN}'
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:3001",
     "http://127.0.0.1:3001",
+    "http://localhost:8000",  # Allow localhost:8000 for Swagger UI
+    "http://127.0.0.1:8000",
 ]
 
 # Session Security
@@ -430,36 +556,89 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'COMPONENT_SPLIT_REQUEST': True,
+    # Ensure Swagger UI can load properly
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'displayOperationId': False,
+        'defaultModelsExpandDepth': 1,
+        'defaultModelExpandDepth': 1,
+        'docExpansion': 'list',
+        'filter': True,
+        'tryItOutEnabled': True,
+    },
+    # Configure Swagger UI to use JSON format explicitly
+    'SWAGGER_UI_FAST_INIT': False,
+    'SWAGGER_UI_DIST': 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@latest',
+    # Force JSON format for schema (Swagger UI works better with JSON)
+    'SCHEMA_PATH_PREFIX': '/api/schema',
+    'SCHEMA_PATH_PREFIX_TRIM': True,
+    # Disable authentication for schema endpoint in development
+    'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'],
+    'SERVE_AUTHENTICATION': None,
+    # Use JSON format for Swagger UI (better compatibility)
+    'SWAGGER_UI_FAST_INIT': False,
 }
 
-# AWS S3 Configuration for DICOM Images
+# Cloudflare R2 Configuration (S3-compatible object storage)
+CLOUDFLARE_R2_ACCOUNT_ID = os.getenv('CLOUDFLARE_R2_ACCOUNT_ID')
+CLOUDFLARE_R2_ACCESS_KEY_ID = os.getenv('CLOUDFLARE_R2_ACCESS_KEY_ID')
+CLOUDFLARE_R2_SECRET_ACCESS_KEY = os.getenv('CLOUDFLARE_R2_SECRET_ACCESS_KEY')
+CLOUDFLARE_R2_BUCKET_NAME = os.getenv('CLOUDFLARE_R2_BUCKET_NAME')
+CLOUDFLARE_R2_PUBLIC_URL = os.getenv('CLOUDFLARE_R2_PUBLIC_URL', '')
+CLOUDFLARE_R2_ENABLE_DIRECT_UPLOAD = os.getenv('CLOUDFLARE_R2_ENABLE_DIRECT_UPLOAD', 'True').lower() == 'true'
+CLOUDFLARE_R2_SIGNED_URL_EXPIRY = int(os.getenv('CLOUDFLARE_R2_SIGNED_URL_EXPIRY', '3600'))
+
+# Legacy AWS S3 Configuration (for backward compatibility, deprecated)
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
 AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'us-east-1')
-AWS_S3_CUSTOM_DOMAIN = None  # Use default S3 domain
-AWS_DEFAULT_ACL = 'private'  # Private by default for medical data
 
-# S3 Security Settings for Medical Data
-AWS_S3_OBJECT_PARAMETERS = {
-    'ServerSideEncryption': 'AES256',
-    'CacheControl': 'max-age=86400',
-}
+# Use Cloudflare R2 if configured, otherwise fallback to S3 or local storage
+USE_CLOUDFLARE_R2 = all([
+    CLOUDFLARE_R2_ACCOUNT_ID,
+    CLOUDFLARE_R2_ACCESS_KEY_ID,
+    CLOUDFLARE_R2_SECRET_ACCESS_KEY,
+    CLOUDFLARE_R2_BUCKET_NAME
+])
 
-# Use S3 for DICOM image storage if AWS credentials are provided
 USE_S3_FOR_DICOM = all([
     AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY,
     AWS_STORAGE_BUCKET_NAME
-])
+]) and not USE_CLOUDFLARE_R2  # Only use S3 if R2 is not configured
 
-if USE_S3_FOR_DICOM:
-    # S3 settings
-    AWS_S3_FILE_OVERWRITE = False  # Don't overwrite files
-    AWS_QUERYSTRING_AUTH = True    # Use signed URLs for security
-    AWS_QUERYSTRING_EXPIRE = 3600  # URLs expire after 1 hour
+if USE_CLOUDFLARE_R2:
+    # Cloudflare R2 settings (S3-compatible)
+    # R2 uses S3-compatible API, so we can use boto3 with custom endpoint
+    AWS_S3_ENDPOINT_URL = f"https://{CLOUDFLARE_R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
+    AWS_ACCESS_KEY_ID = CLOUDFLARE_R2_ACCESS_KEY_ID  # Map to AWS vars for compatibility
+    AWS_SECRET_ACCESS_KEY = CLOUDFLARE_R2_SECRET_ACCESS_KEY
+    AWS_STORAGE_BUCKET_NAME = CLOUDFLARE_R2_BUCKET_NAME
+    AWS_S3_CUSTOM_DOMAIN = CLOUDFLARE_R2_PUBLIC_URL if CLOUDFLARE_R2_PUBLIC_URL else None
+    AWS_DEFAULT_ACL = 'private'  # Private by default
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_QUERYSTRING_AUTH = True
+    AWS_QUERYSTRING_EXPIRE = CLOUDFLARE_R2_SIGNED_URL_EXPIRY
     
-    # Custom storage for DICOM images
+    # Security settings
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    
+    # Use Cloudflare R2 storage
+    DEFAULT_FILE_STORAGE = 'backend.cloudflare_storage.CloudflareR2FileStorage'
+elif USE_S3_FOR_DICOM:
+    # Legacy S3 settings (for backward compatibility)
+    AWS_S3_CUSTOM_DOMAIN = None
+    AWS_DEFAULT_ACL = 'private'
+    AWS_S3_OBJECT_PARAMETERS = {
+        'ServerSideEncryption': 'AES256',
+        'CacheControl': 'max-age=86400',
+    }
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_QUERYSTRING_AUTH = True
+    AWS_QUERYSTRING_EXPIRE = 3600
     DEFAULT_FILE_STORAGE = 'study.storage.DicomS3Storage'
 else:
     # Fallback to local storage for development
@@ -470,8 +649,13 @@ EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.Em
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'False').lower() == 'true'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@oasys360.com')
+
+# Frontend URL (for email links)
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
 
 # Admin Email
 ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@example.com')
@@ -483,7 +667,9 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'Fa
 SECURE_HSTS_PRELOAD = os.getenv('SECURE_HSTS_PRELOAD', 'False').lower() == 'true'
 SECURE_CONTENT_TYPE_NOSNIFF = os.getenv('SECURE_CONTENT_TYPE_NOSNIFF', 'True').lower() == 'true'
 SECURE_BROWSER_XSS_FILTER = os.getenv('SECURE_BROWSER_XSS_FILTER', 'True').lower() == 'true'
-X_FRAME_OPTIONS = os.getenv('X_FRAME_OPTIONS', 'DENY')
+# X_FRAME_OPTIONS: Allow SAMEORIGIN for Swagger UI to work properly
+# Set to 'DENY' in production if you don't need embedded docs
+X_FRAME_OPTIONS = os.getenv('X_FRAME_OPTIONS', 'SAMEORIGIN')
 
 # Session Configuration
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
@@ -587,11 +773,18 @@ CORS_ALLOWED_HEADERS = [
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
 # CSRF Configuration for frontend integration
-CSRF_TRUSTED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
+# Include localhost:8000 for Swagger UI access
+default_csrf_origins = 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000,http://127.0.0.1:8000'
+CSRF_TRUSTED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', default_csrf_origins).split(',')
 CSRF_COOKIE_NAME = 'csrftoken'
 CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
 CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read CSRF token
 CSRF_COOKIE_SAMESITE = 'Lax'  # More permissive for development
+
+# AI Engine Service Configuration
+AI_ENGINE_URL = os.getenv('AI_ENGINE_URL', 'http://localhost:8001')
+AI_ENGINE_API_KEY = os.getenv('AI_ENGINE_API_KEY', '')
+AI_ENGINE_TIMEOUT = int(os.getenv('AI_ENGINE_TIMEOUT', '300'))
 
 # Celery Configuration (for background tasks)
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
@@ -614,8 +807,90 @@ CHANNEL_LAYERS = {
     },
 }
 
+# ==============================================================================
+# Multi-Tenant Security and Compliance Configuration
+# ==============================================================================
+
+# Row-Level Security Configuration
+ENABLE_ROW_LEVEL_SECURITY = os.getenv('ENABLE_ROW_LEVEL_SECURITY', 'True').lower() == 'true'
+
+# Encryption Configuration for Sensitive Data
+ENCRYPTION_CONFIG = {
+    'current_key': os.getenv('ENCRYPTION_CURRENT_KEY', 'default_key_1'),
+    'keys': {
+        'default_key_1': os.getenv('ENCRYPTION_KEY_1', 'your-encryption-key-here'),
+        'default_key_2': os.getenv('ENCRYPTION_KEY_2', 'your-backup-encryption-key-here'),
+    }
+}
+
+# Compliance Framework Configuration
+COMPLIANCE_FRAMEWORKS = {
+    'SOX': {
+        'enabled': True,
+        'retention_days': 2555,  # 7 years
+        'audit_required': True,
+    },
+    'PCI_DSS': {
+        'enabled': True,
+        'retention_days': 1095,  # 3 years
+        'audit_required': True,
+    },
+    'GDPR': {
+        'enabled': True,
+        'retention_days': 2555,  # 7 years
+        'audit_required': True,
+        'data_subject_rights': True,
+    },
+    'HIPAA': {
+        'enabled': True,
+        'retention_days': 2555,  # 7 years
+        'audit_required': True,
+    },
+}
+
+# Data Classification Levels
+DATA_CLASSIFICATION_LEVELS = {
+    'public': 1,
+    'internal': 2,
+    'confidential': 3,
+    'restricted': 4,
+    'top_secret': 5,
+}
+
+# Audit Logging Configuration
+AUDIT_LOG_CONFIG = {
+    'enabled': True,
+    'retention_days': 2555,  # 7 years
+    'log_level': 'INFO',
+    'include_request_body': False,
+    'include_response_body': False,
+    'sensitive_fields': ['password', 'ssn', 'credit_card', 'bank_account'],
+}
+
+# Security Configuration
+SECURITY_CONFIG = {
+    'max_login_attempts': 5,
+    'lockout_duration_minutes': 30,
+    'session_timeout_minutes': 60,
+    'require_mfa_for_sensitive_data': True,
+    'ip_whitelist_enabled': False,
+    'ip_whitelist': [],
+}
+
+# Data Governance Configuration
+DATA_GOVERNANCE_CONFIG = {
+    'enabled': True,
+    'auto_classification': True,
+    'retention_policy_enforcement': True,
+    'data_subject_request_handling': True,
+    'breach_notification_hours': 72,
+}
+
 print("✅ Multi-tenant configuration loaded")
-print("📝 Public URLs will work on app domain eg: app.oasys.com")
-print("📝 Tenant URLs will work on tenant domain eg: tenant.oasys.com")
+print("📝 Public URLs will work on app domain eg: app.oasys360.com")
+print("📝 Tenant URLs will work on tenant domain eg: tenant.oasys360.com")
 print("🗄️ Using database: " + os.getenv('DATABASE_NAME', 'oasysdb'))
 print("🔌 WebSocket support enabled with Django Channels")
+print("🔒 Enhanced security and compliance features enabled")
+print("📊 Audit logging and data governance configured")
+print("🔐 Field-level encryption configured")

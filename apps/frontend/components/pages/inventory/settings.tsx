@@ -23,11 +23,11 @@ export function InventorySettingsOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Package className="h-4 w-4 mr-2" />
             Test
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Save Settings
           </Button>
@@ -43,7 +43,7 @@ export function InventorySettingsOverview() {
         </TabsList>
 
         <TabsContent value="general" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>General Settings</CardTitle>
               <CardDescription>
@@ -51,7 +51,7 @@ export function InventorySettingsOverview() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground">
+              <div className="text-center text-muted-foreground py-12">
                 <Settings className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>General settings interface will appear here</p>
               </div>
@@ -60,7 +60,7 @@ export function InventorySettingsOverview() {
         </TabsContent>
 
         <TabsContent value="alerts" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Alert Settings</CardTitle>
               <CardDescription>
@@ -68,7 +68,7 @@ export function InventorySettingsOverview() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground">
+              <div className="text-center text-muted-foreground py-12">
                 <AlertTriangle className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Alert settings interface will appear here</p>
               </div>
@@ -77,7 +77,7 @@ export function InventorySettingsOverview() {
         </TabsContent>
 
         <TabsContent value="valuation" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Valuation Settings</CardTitle>
               <CardDescription>
@@ -85,7 +85,7 @@ export function InventorySettingsOverview() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground">
+              <div className="text-center text-muted-foreground py-12">
                 <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Valuation settings interface will appear here</p>
               </div>
@@ -94,7 +94,7 @@ export function InventorySettingsOverview() {
         </TabsContent>
 
         <TabsContent value="automation" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Automation Settings</CardTitle>
               <CardDescription>
@@ -102,7 +102,7 @@ export function InventorySettingsOverview() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-muted-foreground">
+              <div className="text-center text-muted-foreground py-12">
                 <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Automation settings interface will appear here</p>
               </div>

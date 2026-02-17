@@ -1,8 +1,19 @@
-"use client"
+/**
+ * Inventory Items Page
+ * Main page for managing inventory items
+ */
 
-import { useState, useEffect } from "react"
+"use client";
+
+import { DashboardLayout } from "@/components/dashboard-layout"
 import { InventoryItemsOverview } from "@/components/pages/inventory/items"
 
 export default function InventoryItemsPage() {
-  return <InventoryItemsOverview />
+  return (
+    <DashboardLayout>
+      <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
+        <InventoryItemsOverview />
+      </div>
+    </DashboardLayout>
+  )
 }

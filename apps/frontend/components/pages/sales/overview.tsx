@@ -216,7 +216,7 @@ export function SalesOverview() {
     },
     {
       id: "REC-002",
-      customer: "TechFlow Solutions",
+      customer: "oasys360 Solutions",
       template: "Quarterly Maintenance",
       amount: "$15,750.00",
       frequency: "Quarterly",

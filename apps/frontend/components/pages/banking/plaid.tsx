@@ -27,11 +27,11 @@ export function PlaidConnectOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <CreditCard className="h-4 w-4 mr-2" />
             Connect Bank
           </Button>
@@ -47,49 +47,57 @@ export function PlaidConnectOverview() {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Connected Banks</CardTitle>
-                <CreditCard className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Connected Banks</CardTitle>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-2xl">
+                  <CreditCard className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">5</div>
-                <p className="text-xs text-muted-foreground">Via Plaid</p>
+                <p className="text-xs text-muted-foreground mt-2">Via Plaid</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Connection Status</CardTitle>
-                <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Connection Status</CardTitle>
+                <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-2xl">
+                  <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">4/5</div>
-                <p className="text-xs text-muted-foreground">Active connections</p>
+                <p className="text-xs text-muted-foreground mt-2">Active connections</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Last Sync</CardTitle>
-                <RefreshCw className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Last Sync</CardTitle>
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/20 rounded-2xl">
+                  <RefreshCw className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">2 min ago</div>
-                <p className="text-xs text-muted-foreground">Auto-sync enabled</p>
+                <p className="text-xs text-muted-foreground mt-2">Auto-sync enabled</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Security Score</CardTitle>
-                <Shield className="h-4 w-4 text-muted-foreground" />
+            <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Security Score</CardTitle>
+                <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-2xl">
+                  <Shield className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">98%</div>
-                <p className="text-xs text-muted-foreground">Bank-level security</p>
+                <p className="text-xs text-muted-foreground mt-2">Bank-level security</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Plaid Connections</CardTitle>
               <CardDescription>
@@ -98,41 +106,41 @@ export function PlaidConnectOverview() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <CreditCard className="h-5 w-5 text-blue-600" />
+                    <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
+                      <CreditCard className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
                       <p className="font-medium">Chase Bank</p>
                       <p className="text-sm text-muted-foreground">Connected via Plaid</p>
                     </div>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Connected</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Connected</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <CreditCard className="h-5 w-5 text-green-600" />
+                    <div className="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                      <CreditCard className="h-5 w-5 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
                       <p className="font-medium">Wells Fargo</p>
                       <p className="text-sm text-muted-foreground">Connected via Plaid</p>
                     </div>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Connected</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Connected</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <AlertCircle className="h-5 w-5 text-yellow-600" />
+                    <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center">
+                      <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                     </div>
                     <div>
                       <p className="font-medium">Bank of America</p>
                       <p className="text-sm text-muted-foreground">Reconnection required</p>
                     </div>
                   </div>
-                  <Badge className="bg-yellow-100 text-yellow-800">Needs Attention</Badge>
+                  <Badge className="rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">Needs Attention</Badge>
                 </div>
               </div>
             </CardContent>
@@ -140,7 +148,7 @@ export function PlaidConnectOverview() {
         </TabsContent>
 
         <TabsContent value="connect" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Connect New Bank</CardTitle>
               <CardDescription>
@@ -152,7 +160,7 @@ export function PlaidConnectOverview() {
                 <div>
                   <Label htmlFor="bank">Select Bank</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Choose your bank" />
                     </SelectTrigger>
                     <SelectContent>
@@ -167,7 +175,7 @@ export function PlaidConnectOverview() {
                 <div>
                   <Label htmlFor="account-type">Account Type</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select account type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -178,7 +186,7 @@ export function PlaidConnectOverview() {
                   </Select>
                 </div>
               </div>
-              <Button className="w-full">
+              <Button className="w-full rounded-full">
                 <CreditCard className="h-4 w-4 mr-2" />
                 Connect Bank Account
               </Button>
@@ -187,7 +195,7 @@ export function PlaidConnectOverview() {
         </TabsContent>
 
         <TabsContent value="security" className="space-y-4">
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardHeader>
               <CardTitle>Security & Privacy</CardTitle>
               <CardDescription>
@@ -196,26 +204,26 @@ export function PlaidConnectOverview() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">Bank-Level Security</p>
                     <p className="text-sm text-muted-foreground">256-bit encryption</p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Enabled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Enabled</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">Read-Only Access</p>
                     <p className="text-sm text-muted-foreground">No write access to accounts</p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Enabled</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Enabled</Badge>
                 </div>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-2xl">
                   <div>
                     <p className="font-medium">SOC 2 Compliant</p>
                     <p className="text-sm text-muted-foreground">Industry security standards</p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800">Certified</Badge>
+                  <Badge className="rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">Certified</Badge>
                 </div>
               </div>
             </CardContent>

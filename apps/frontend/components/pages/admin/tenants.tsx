@@ -44,8 +44,8 @@ export function TenantManagementOverview() {
     setTenants([
       {
         id: "1",
-        name: "TechFlow Solutions",
-        domain: "techflow",
+        name: "oasys360 Solutions",
+        domain: "oasys360",
         type: "business",
         status: "active",
         subscriptionPlan: "AI + Full Web3",
@@ -53,7 +53,7 @@ export function TenantManagementOverview() {
         maxUsers: 25,
         createdAt: "2024-01-15",
         lastActive: "2024-01-15T10:30:00Z",
-        billingEmail: "billing@techflow.com"
+        billingEmail: "billing@oasys360.com"
       },
       {
         id: "2",
@@ -125,19 +125,19 @@ export function TenantManagementOverview() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-      case "suspended": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-      case "pending": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+      case "active": return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
+      case "suspended": return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300"
+      case "pending": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300"
+      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300"
     }
   }
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "enterprise": return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
-      case "firm": return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
-      case "business": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+      case "enterprise": return "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300"
+      case "firm": return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300"
+      case "business": return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
+      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300"
     }
   }
 
@@ -146,7 +146,7 @@ export function TenantManagementOverview() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 bg-soft-gradient -m-10 p-10 rounded-4xl">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -156,11 +156,11 @@ export function TenantManagementOverview() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline">
+          <Button variant="outline" className="rounded-full">
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
-          <Button>
+          <Button className="rounded-full">
             <Plus className="h-4 w-4 mr-2" />
             Add Tenant
           </Button>
@@ -169,7 +169,7 @@ export function TenantManagementOverview() {
 
       {/* Main Content */}
       <Tabs defaultValue="tenants" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="rounded-full p-1 h-auto grid w-full grid-cols-3">
           <TabsTrigger value="tenants">All Tenants</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
@@ -177,7 +177,7 @@ export function TenantManagementOverview() {
 
         <TabsContent value="tenants" className="space-y-4">
           {/* Filters */}
-          <Card>
+          <Card className="rounded-4xl shadow-soft dark:shadow-soft-dark border-0">
             <CardContent className="p-4">
               <div className="flex items-center space-x-4">
                 <div className="flex-1">
@@ -194,7 +194,7 @@ export function TenantManagementOverview() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="p-2 border rounded text-sm"
+                  className="p-2 border rounded-xl text-sm"
                 >
                   <option value="all">All Status</option>
                   <option value="active">Active</option>
@@ -208,7 +208,7 @@ export function TenantManagementOverview() {
           {/* Tenants List */}
           <div className="space-y-4">
             {filteredTenants.map((tenant) => (
-              <Card key={tenant.id} className="hover:shadow-md transition-shadow">
+              <Card key={tenant.id} className="rounded-2xl shadow-soft dark:shadow-soft-dark border hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
